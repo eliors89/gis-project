@@ -24,9 +24,7 @@ public class SQL_db {
 			statement.execute("USE GIS_DB;");
 			statement.execute("CREATE TABLE IF NOT EXISTS updatedLocation (cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), routineOrEmerg INT, createdDate DATE, createdTime TIME, lastUpdatedDate DATE, lastUpdatedTime TIME);");/*  */
 			statement.execute("CREATE TABLE IF NOT EXISTS locationHistory (cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), createdDate DATE, createdTime TIME, lastUpdatedDate DATE, lastUpdatedTime TIME);");
-		 //   statement.execute("CREATE TABLE IF NOT EXISTS decisionTable (eventID VARCHAR(20), cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), state VARCHAR(20), region_type VARCHAR(15), medical_condition_description VARCHAR(25), age DOUBLE(5,2), radius INT;");
 			statement.execute("CREATE TABLE IF NOT EXISTS decisionTable (eventID VARCHAR(20), cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), state VARCHAR(20), region_type VARCHAR(20), medical_condition VARCHAR(30), age DOUBLE(5,2), radius INT);");
-		//	statement.execute("CREATE TABLE IF NOT EXISTS decisionTable (eventID VARCHAR(20), cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), state VARCHAR(20), region_type VARCHAR(20), medical_condition_description VARCHAR(30), age DOUBLE(5,2), radius INT;"); 
 			statement.execute("CREATE TABLE IF NOT EXISTS emergencyProcess (eventID VARCHAR(20), cmid VARCHAR(20), radius INT, type INT);");
 		}
 		catch(SQLException se){
@@ -55,7 +53,7 @@ public class SQL_db {
 		
 		return radius;
 	}
-	
+	// get cmid that relevant in this radius for emergency process
 	public List<String> getCMIDByRadius(int radius, double x, double y) {
 		List<String> cmidAtRadius = new ArrayList<String>();
 		int countCMIDAtRadius=0;
@@ -118,7 +116,7 @@ public class SQL_db {
 		}
 		return cmidNum;
 	}
-	
+	//update location table
 	public void updateLocation(String cmid, double x, double y) {
 		try {
 			connect();
@@ -161,7 +159,7 @@ public class SQL_db {
 			disconnect();
 		}
 	}
-	
+	//update the table of decisionTable
 	public void updateDecisionTable(String eventID, String cmid, double x, double y, String state, String region_type, String medical_condition_description, float age, int radius){
 		try {
 			connect();
@@ -198,7 +196,7 @@ public class SQL_db {
 			disconnect();
 		}
 	}
-
+	//update the table of emergency process
 	public void updateEmergencyProcess(String eventID,String cmid,int radius,int type)
 	{
 		try {
@@ -230,43 +228,7 @@ public class SQL_db {
 		}
 	}
 	
-	private void connect() {
-		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			String dbUrl = "jdbc:mysql://localhost";
-			connection = DriverManager.getConnection(dbUrl,"root", "");
-			MysqlDataSource ds = new MysqlConnectionPoolDataSource();
-			ds.setServerName("localhost");
-			ds.setDatabaseName("GIS_DB");
-			statement=connection.createStatement();
-			String dbName = new String("GIS_DB");
-			statement.execute("CREATE DATABASE IF NOT EXISTS " + dbName);
-		}
-		catch(SQLException se){
-		      //Handle errors for JDBC
-		      se.printStackTrace();
-		 }
-		 catch(Exception e){
-		      //Handle errors for Class.forName
-		      e.printStackTrace();
-		 }
-	}
-	private void disconnect() {
-	      //finally block used to close resources
-	      try {
-	         if(statement!=null)
-	        	 statement.close();
-	      }
-	      catch(SQLException se2) {
-	      }// nothing we can do
-	      try{
-	         if(connection!=null)
-	        	 connection.close();
-	      }
-	      catch(SQLException se) {
-	         se.printStackTrace();
-	      }//end finally try
-	}
+
 	
 	//check if the cmid at routine proccess return 0 or emergency proccess return 1
 	public int checkRoutineOrEmerg(String cmid) {
@@ -288,9 +250,109 @@ public class SQL_db {
 		finally {
 			disconnect();
 		}
+		//emergency
 		if(routineOrEmerg == 1)
 			return 1;
 		else
+			//routin
 			return 0;
 	}
+	//status of cmid change to emergeny
+	public void updateEmergency(String cmid) {
+		try {
+			connect();
+			statement.execute("USE GIS_DB;");
+			statement.executeUpdate("UPDATE updatedLocation SET routineOrEmerg="+1+" WHERE cmid='"+cmid+"';");
+		}
+		catch(SQLException se){
+		      //Handle errors for JDBC
+		      se.printStackTrace();
+		 }
+		 catch(Exception e){
+		      //Handle errors for Class.forName
+		      e.printStackTrace();
+		 }
+		finally {
+			disconnect();
+		}
+	}
+	//status of cmid change to routine
+	public void updateRoutine(String cmid) {
+		try {
+			connect();
+			statement.execute("USE GIS_DB;");
+			statement.executeUpdate("UPDATE updatedLocation SET routineOrEmerg="+0+" WHERE cmid='"+cmid+"';");
+		}
+		catch(SQLException se){
+		      //Handle errors for JDBC
+		      se.printStackTrace();
+		 }
+		 catch(Exception e){
+		      //Handle errors for Class.forName
+		      e.printStackTrace();
+		 }
+		finally {
+			disconnect();
+		}
+	}
+	
+	public String getEventID(String cmid) {
+		String eventID="";
+		try {
+			connect();
+			statement.execute("USE GIS_DB;");
+			ResultSet rs=statement.executeQuery("SELECT * FROM emergencyProcess WHERE cmid='"+cmid+"';");
+			eventID = rs.getString("eventID");
+		}
+		catch(SQLException se){
+		      //Handle errors for JDBC
+		      se.printStackTrace();
+		 }
+		 catch(Exception e){
+		      //Handle errors for Class.forName
+		      e.printStackTrace();
+		 }
+		finally {
+			disconnect();
+		}
+		return eventID;
+	}
+	private void connect() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			String dbUrl = "jdbc:mysql://localhost";
+			connection = DriverManager.getConnection(dbUrl,"root", "");
+			MysqlDataSource ds = new MysqlConnectionPoolDataSource();
+			ds.setServerName("localhost");
+			ds.setDatabaseName("GIS_DB");
+			statement=connection.createStatement();
+			String dbName = new String("GIS_DB");
+			statement.execute("CREATE DATABASE IF NOT EXISTS " + dbName);
+		}
+		catch(SQLException se){
+		      //Handle errors for JDBC
+		      se.printStackTrace();
+		 }
+		 catch(Exception e){
+		      //Handle errors for Class.forName
+		      e.printStackTrace();
+		 }
+	}
+	
+	private void disconnect() {
+	      //finally block used to close resources
+	      try {
+	         if(statement!=null)
+	        	 statement.close();
+	      }
+	      catch(SQLException se2) {
+	      }// nothing we can do
+	      try{
+	         if(connection!=null)
+	        	 connection.close();
+	      }
+	      catch(SQLException se) {
+	         se.printStackTrace();
+	      }//end finally try
+	}	
 }
