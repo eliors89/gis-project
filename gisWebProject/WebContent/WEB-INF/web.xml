@@ -17,7 +17,7 @@
     <servlet-name>Routine</servlet-name>
     <url-pattern>/routine</url-pattern>
   </servlet-mapping>
-    <servlet>
+  <servlet>
     <servlet-name>testConnection</servlet-name>
     <servlet-class>connectinWithServer.testConnection</servlet-class>
   </servlet>

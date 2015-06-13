@@ -1,15 +1,11 @@
-package routineProcess;
+package emergencyProcess;
 import java.io.BufferedReader;
 import java.io.IOException;
-//import java.io.PrintWriter;
 import java.util.Iterator;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-
 
 //import org.json.*;
 import org.json.simple.JSONArray;
@@ -17,14 +13,18 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import emergencyProcess.RequestGoogle;
 import SQL_DataBase.SQL_db;
 
-
-public class Routine extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+public class FollowUser extends HttpServlet {
 	
-	public Routine() {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	
+
+	public FollowUser() {
 		super();
 	}
 
@@ -43,6 +43,7 @@ public class Routine extends HttpServlet {
 			SQL_db sqlDataBase = new SQL_db();
 			StringBuffer jb = new StringBuffer();
 			String stringToParse = null;
+			//get data of requset from server
 			try {
 				BufferedReader reader = request.getReader();
 			    while ((stringToParse = reader.readLine()) != null){
@@ -50,59 +51,25 @@ public class Routine extends HttpServlet {
 			    }
 			  } catch (Exception e) { /*report an error*/ }
 			JSONParser parser = new JSONParser();
+			//convert the data to json object
 			JSONObject jsonObject = (JSONObject) parser.parse(stringToParse);
-			JSONArray jsonToSend=new JSONArray();
-	        JSONObject obj=new JSONObject();
-	        
-	        RequestGoogle req=new RequestGoogle();
+			
 			JSONArray jsonArrayOb=(JSONArray) jsonObject.get("JSONFile");
 			// take each value from the json array separately
-			int routineOrEmerg;
 			Iterator i = jsonArrayOb.iterator();
-			double x, y;
-			String cmid;
-			String[] split;
 	        while (i.hasNext()) {
 	             	JSONObject innerObj = (JSONObject) i.next();
-	                if (innerObj.get("RequestID").equals("routineLocation")){
-	                	cmid  = innerObj.get("comunity_member_id").toString();
-	                	x = Double.parseDouble(innerObj.get("x").toString());
-	                	y = Double.parseDouble(innerObj.get("y").toString());
-	                	sqlDataBase.updateLocation(cmid, x, y);
-	                	String address="";
-	                	routineOrEmerg = sqlDataBase.checkRoutineOrEmerg(cmid);
-	                	//enum for emergency 
-	                	if(routineOrEmerg == 1) {
-	            	        address=req.getAddresss(x, y);
-	            	        split=address.split(",");
-	            	        
-	            	        obj.put("location_remark",address);
-	            	        obj.put("comunity_member_id", cmid);
-	            	        //TODO   michal need to check how to get sick person address
-	            	        try{
-	            	        String driving=req.sendGet("driving",x,y,34.663870,31.812951);
-	        				obj.put("eta_by_car",driving);
-	        				String walking=req.sendGet("walking",x,y,34.663870,31.812951);
-	        				obj.put("eta_by_foot", walking);
-	            	        }
-	            	        catch (Exception ex){}
-	            	        obj.put("event_id", sqlDataBase.getEventID(cmid));
-	            	        jsonToSend.add(obj);
-	                	}
-	                }
+	                if (innerObj.get("RequestID").equals("followUser")){
+	                	//get from Json the data
+	                	String eventID = innerObj.get("eventID").toString();
+	                	String cmid  = innerObj.get("comunity_member_id").toString();	                	
+	                	sqlDataBase.updateEmergency(cmid);
+	               	}
             }
 		} catch (ParseException ex) {
-
 			ex.printStackTrace();
-
 		} catch (NullPointerException ex) {
-
 			ex.printStackTrace();
-
 		}
-
 	}
 }
-
-
-
