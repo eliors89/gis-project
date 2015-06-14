@@ -12,12 +12,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 //import org.json.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import connectinWithServer.connection;
 import SQL_DataBase.SQL_db;
 
 public class Emergency extends HttpServlet {
@@ -56,7 +58,7 @@ public class Emergency extends HttpServlet {
 			Iterator i = jsonArrayOb.iterator();
 			List<String> cmidAtRadius = new ArrayList<String>();
 			double x = 0,y = 0;
-			int radius;
+			int radius = 0;
 	        while (i.hasNext()) {
 	             	JSONObject innerObj = (JSONObject) i.next();
 	                if (innerObj.get("RequestID").equals("AroundLocation")){
@@ -90,13 +92,18 @@ public class Emergency extends HttpServlet {
 	        RequestGoogle req=new RequestGoogle();
 	        String address=req.getAddresss(x, y);
 	        String[] split=address.split(",");
+	        obj.put("RequestID", "AroundLocation");
 	        obj.put("state", split[2]);
 	        obj.put("location_remark",address);
 	        obj.put("region_type", sqlDataBase.getregion_type());
+	        obj.put("radius", radius);
 	        for (int j=0; j<cmidAtRadius.size();j++) {
 	        	obj.put(cmidAtRadius.get(j), "NULL");
 	        }
 	        jsonToSend.add(obj);
+	        connection con=new connection();
+	        //need to ask server what url to send
+	        con.sendJsonObject(jsonToSend, url);
 	        //obj.sendResponse();
 	        //send with sendResponse
 		} catch (ParseException ex) {

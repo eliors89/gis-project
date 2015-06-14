@@ -11,12 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+
 //import org.json.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import connectinWithServer.connection;
 import emergencyProcess.RequestGoogle;
 import SQL_DataBase.SQL_db;
 
@@ -84,10 +86,14 @@ public class Routine extends HttpServlet {
 	        				obj.put("eta_by_car",driving);
 	        				String walking=req.sendGet("walking",x,y,34.663870,31.812951);
 	        				obj.put("eta_by_foot", walking);
+	        				obj.put("event_id", sqlDataBase.getEventID(cmid));
+	            	        jsonToSend.add(obj);
+	            	        connection con= new connection();
+	            	        //need to check with server url for this
+	            	        con.sendJsonObject(jsonToSend, url);
 	            	        }
 	            	        catch (Exception ex){}
-	            	        obj.put("event_id", sqlDataBase.getEventID(cmid));
-	            	        jsonToSend.add(obj);
+	            	        
 	                	}
 	                }
             }

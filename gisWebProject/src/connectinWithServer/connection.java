@@ -98,7 +98,36 @@ public class connection {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
+	}
 
+
+	public void sendJsonObject(JSONObject sendJson,String to)
+	{
+		String strJson=sendJson.toString();
+		HttpURLConnection httpcon;  
+		String url = to;
+		String data = strJson;
+		String result = null;
+		try{
+			//Connect
+			httpcon = (HttpURLConnection) ((new URL (url).openConnection()));
+			httpcon.setDoOutput(true);
+			httpcon.setRequestProperty("Content-Type", "application/json");
+			httpcon.setRequestProperty("Accept", "application/json");
+			httpcon.setRequestMethod("POST");
+			httpcon.connect();
+
+			//Write         
+			OutputStream os = httpcon.getOutputStream();
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+			writer.write(data);
+			writer.close();
+			os.close();
+
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
 
 	}
 }
