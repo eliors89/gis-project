@@ -57,6 +57,10 @@ public class SQL_db {
 		
 		return radius;
 	}
+	
+	
+	
+	
 	// get cmid that relevant in this radius for emergency process
 	public List<String> getCMIDByRadius(int radius, double x, double y) {
 		List<String> cmidAtRadius = new ArrayList<String>();
@@ -353,6 +357,84 @@ public class SQL_db {
 		 }
 	}
 	
+	public String getCmidByEventId(String eventID) {
+		String cmidNum = "";
+		try {
+			connect();
+			statement.execute("USE GIS_DB;");
+			ResultSet rs=statement.executeQuery("SELECT * FROM decisionTable WHERE eventID='"+eventID+"';");
+			cmidNum = rs.getString("cmid");
+		}
+		catch(SQLException se){
+		      //Handle errors for JDBC
+		      se.printStackTrace();
+		 }
+		 catch(Exception e){
+		      //Handle errors for Class.forName
+		      e.printStackTrace();
+		 }
+		finally {
+			disconnect();
+		}
+		return cmidNum;
+	}
+	
+	public double[] getPointByCmid(String cmid) {
+		double[] point;
+		try {
+			connect();
+			statement.execute("USE GIS_DB;");
+			ResultSet rs=statement.executeQuery("SELECT * FROM updateLocation WHERE cmid='"+cmid+"';");
+			point[0] = rs.getDouble("x");
+			point[1] = rs.getDouble("y");
+		}
+		catch(SQLException se){
+		      //Handle errors for JDBC
+		      se.printStackTrace();
+		 }
+		 catch(Exception e){
+		      //Handle errors for Class.forName
+		      e.printStackTrace();
+		 }
+		finally {
+			disconnect();
+		}
+		return point;
+	}
+	
+	public int getRadiusByEventID(String eventID) {
+		int radius;
+		try {
+			connect();
+			statement.execute("USE GIS_DB;");
+			ResultSet rs=statement.executeQuery("SELECT * FROM decisionTable WHERE eventID='"+eventID+"';");
+			radius = rs.getInt("radius");
+		}
+		catch(SQLException se){
+		      //Handle errors for JDBC
+		      se.printStackTrace();
+		 }
+		 catch(Exception e){
+		      //Handle errors for Class.forName
+		      e.printStackTrace();
+		 }
+		finally {
+			disconnect();
+		}
+		return radius;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	private void disconnect() {
 	      //finally block used to close resources
 	      try {
@@ -370,47 +452,6 @@ public class SQL_db {
 	      }//end finally try
 	}
 	
-//	public String getCmidByEventId(String eventID) {
-//		String cmidNum = "";
-//		try {
-//			connect();
-//			statement.execute("USE GIS_DB;");
-//			ResultSet rs=statement.executeQuery("SELECT * FROM decisionTable WHERE eventID='"+eventID+"';");
-//			cmidNum = rs.getString("cmid");
-//		}
-//		catch(SQLException se){
-//		      //Handle errors for JDBC
-//		      se.printStackTrace();
-//		 }
-//		 catch(Exception e){
-//		      //Handle errors for Class.forName
-//		      e.printStackTrace();
-//		 }
-//		finally {
-//			disconnect();
-//		}
-//		return cmidNum;
-//	}
-	public double[] getPointByCmid(String cmid) {
-		double point;
-		try {
-			connect();
-			statement.execute("USE GIS_DB;");
-			ResultSet rs=statement.executeQuery("SELECT * FROM updateLocation WHERE cmid='"+cmid+"';");
-			point = rs.getDouble("x");
-//			point[1] = rs.getDouble("y");
-		}
-		catch(SQLException se){
-		      //Handle errors for JDBC
-		      se.printStackTrace();
-		 }
-		 catch(Exception e){
-		      //Handle errors for Class.forName
-		      e.printStackTrace();
-		 }
-		finally {
-			disconnect();
-		}
-		return point;
-	}
+	
+	
 }

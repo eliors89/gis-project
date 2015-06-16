@@ -56,38 +56,51 @@ public class ArriveTime extends HttpServlet {
 			JSONArray jsonArrayOb=(JSONArray) jsonObject.get("JSONFile");
 			// take each value from the json array separately
 			Iterator i = jsonArrayOb.iterator();
+			
 			List<String> cmidAtRadius = new ArrayList<String>();
 			String walking, driving, location_remark,  eventID;
-			int x, y;
-			double[] point = new double[2]; 
+			double x, y;
+			int j;
+			double[] sickPoint = new double[2]; 
+			double[] cmidPoint = new double[2];
+			String sickCmid;
+			String[] split;
+			JSONArray jsonarr=new JSONArray();
+			JSONArray jsonToSend=new JSONArray();
+			JSONObject obj=new JSONObject();
+			JSONObject send=new JSONObject();
 			while (i.hasNext()) {
 				JSONObject innerObj = (JSONObject) i.next();
 				if (innerObj.get("RequestID").equals("Times")){
-					//get from Json the data
+				
 					eventID = innerObj.get("eventID").toString();
-					//TODO get list
-					String cmid = innerObj.get("comunity_member_id").toString();
-					List<String> listCmid = innerObj.getListOfCMID("comunity_member_id").toString();
-					point = sqlDataBase.getPointByCmid(eventID);
+					sickCmid = sqlDataBase.getCmidByEventId(eventID);
+					sickPoint = sqlDataBase.getPointByCmid(sickCmid);
 					RequestGoogle googleReq = new RequestGoogle();
-					walking = RequestGoogle.sendGet("walking", point[1], point[0], y, x);
-					driving = RequestGoogle.sendGet("driving", point[1], point[0], y, x);
-					location_remark = googleReq.getAddresss(point[0], point[1]);
-					String[] split=location_remark.split(",");
+					
+					ArrayList<String> cmidFromKey = new ArrayList<String>();
+					cmidFromKey=sqlDataBase.getListOfKeys(jsonObject);
+					for(j=0; j < cmidFromKey.size(); j++) {
+						if(!(cmidFromKey.get(j).equals("eventID"))) {
+							JSONObject cmidJson = new JSONObject();
+							cmidJson.put("subRequest", "cmid");
+							cmidPoint = sqlDataBase.getPointByCmid(cmidFromKey.get(j));
+							walking = RequestGoogle.sendGet("walking", cmidPoint[1], cmidPoint[0],sickPoint[1], sickPoint[0]);
+							driving = RequestGoogle.sendGet("driving", cmidPoint[1], cmidPoint[0],sickPoint[1], sickPoint[0]);
+							location_remark = googleReq.getAddress(cmidPoint[0], cmidPoint[1]);
+							cmidJson.put("eta_by_foot",walking);
+							cmidJson.put("eta_by_car",driving);
+							cmidJson.put("location_remark",location_remark);
+							obj.put(sickCmid, cmidJson.toString());
+						}
+					}
 				}
-				JSONArray jsonToSend=new JSONArray();
-				JSONObject obj=new JSONObject();
-				JSONObject send=new JSONObject();
 				obj.put("RequestID", "UsersArrivalTimes");
 				obj.put("eventID", eventID);
-				obj.put("location_remark",location_remark);
-				obj.put("radius",3);
-				obj.put("eta_by_foot",walking);
-				obj.put("eta_by_car",driving);
-
-				//	        for (int j=0; j<cmidAtRadius.size();j++) {
-				//	        	obj.put(cmidAtRadius.get(j), "NULL");
-				//	        }
+				
+				int radius = sqlDataBase.getRadiusByEventID(eventID);
+				obj.put("radius",radius);
+				
 				jsonToSend.add(obj);
 				send.put("JSONFile", jsonToSend.toString());
 				connection con=new connection();
