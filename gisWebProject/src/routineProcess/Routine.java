@@ -25,7 +25,7 @@ import SQL_DataBase.SQL_db;
 
 public class Routine extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
+
 	public Routine() {
 		super();
 	}
@@ -47,16 +47,16 @@ public class Routine extends HttpServlet {
 			String stringToParse = null;
 			try {
 				BufferedReader reader = request.getReader();
-			    while ((stringToParse = reader.readLine()) != null){
-			    	jb.append(stringToParse);
-			    }
-			  } catch (Exception e) { /*report an error*/ }
+				while ((stringToParse = reader.readLine()) != null){
+					jb.append(stringToParse);
+				}
+			} catch (Exception e) { /*report an error*/ }
 			JSONParser parser = new JSONParser();
 			JSONObject jsonObject = (JSONObject) parser.parse(stringToParse);
 			JSONArray jsonToSend=new JSONArray();
-	        JSONObject obj=new JSONObject();
-	        
-	        RequestGoogle req=new RequestGoogle();
+			JSONObject obj=new JSONObject();
+			JSONObject send =new JSONObject();
+			RequestGoogle req=new RequestGoogle();
 			JSONArray jsonArrayOb=(JSONArray) jsonObject.get("JSONFile");
 			// take each value from the json array separately
 			int routineOrEmerg;
@@ -64,39 +64,40 @@ public class Routine extends HttpServlet {
 			double x, y;
 			String cmid;
 			String[] split;
-	        while (i.hasNext()) {
-	             	JSONObject innerObj = (JSONObject) i.next();
-	                if (innerObj.get("RequestID").equals("routineLocation")){
-	                	cmid  = innerObj.get("comunity_member_id").toString();
-	                	x = Double.parseDouble(innerObj.get("x").toString());
-	                	y = Double.parseDouble(innerObj.get("y").toString());
-	                	sqlDataBase.updateLocation(cmid, x, y);
-	                	String address="";
-	                	routineOrEmerg = sqlDataBase.checkRoutineOrEmerg(cmid);
-	                	//enum for emergency 
-	                	if(routineOrEmerg == 1) {
-	            	        address=req.getAddresss(x, y);
-	            	        split=address.split(",");
-	            	        
-	            	        obj.put("location_remark",address);
-	            	        obj.put("comunity_member_id", cmid);
-	            	        //TODO   michal need to check how to get sick person address
-	            	        try{
-	            	        String driving=req.sendGet("driving",x,y,34.663870,31.812951);
-	        				obj.put("eta_by_car",driving);
-	        				String walking=req.sendGet("walking",x,y,34.663870,31.812951);
-	        				obj.put("eta_by_foot", walking);
-	        				obj.put("event_id", sqlDataBase.getEventID(cmid));
-	            	        jsonToSend.add(obj);
-	            	        connection con= new connection();
-	            	        //need to check with server url for this
-	            	        con.sendJsonObject(jsonToSend, url);
-	            	        }
-	            	        catch (Exception ex){}
-	            	        
-	                	}
-	                }
-            }
+			while (i.hasNext()) {
+				JSONObject innerObj = (JSONObject) i.next();
+				if (innerObj.get("RequestID").equals("routineLocation")){
+					cmid  = innerObj.get("comunity_member_id").toString();
+					x = Double.parseDouble(innerObj.get("x").toString());
+					y = Double.parseDouble(innerObj.get("y").toString());
+					sqlDataBase.updateLocation(cmid, x, y);
+					String address="";
+					routineOrEmerg = sqlDataBase.checkRoutineOrEmerg(cmid);
+					//enum for emergency 
+					if(routineOrEmerg == 1) {
+						address=req.getAddresss(x, y);
+						split=address.split(",");
+						obj.put("RequestID", "followUser");
+						obj.put("location_remark",address);
+						obj.put("comunity_member_id", cmid);
+						//TODO   michal need to check how to get sick person address
+						try{
+							String driving=req.sendGet("driving",x,y,34.663870,31.812951);
+							obj.put("eta_by_car",driving);
+							String walking=req.sendGet("walking",x,y,34.663870,31.812951);
+							obj.put("eta_by_foot", walking);
+							obj.put("event_id", sqlDataBase.getEventID(cmid));
+							jsonToSend.add(obj);
+							send.put("JSONFile", jsonToSend.toString());
+							connection con= new connection();
+							//need to check with server url for this
+							con.sendJsonObject(jsonToSend, url);
+						}
+						catch (Exception ex){}
+
+					}
+				}
+			}
 		} catch (ParseException ex) {
 
 			ex.printStackTrace();

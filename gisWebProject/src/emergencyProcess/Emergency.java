@@ -89,6 +89,7 @@ public class Emergency extends HttpServlet {
             }
 	        JSONArray jsonToSend=new JSONArray();
 	        JSONObject obj=new JSONObject();
+	        JSONObject send=new JSONObject();
 	        RequestGoogle req=new RequestGoogle();
 	        String address=req.getAddresss(x, y);
 	        String[] split=address.split(",");
@@ -101,8 +102,9 @@ public class Emergency extends HttpServlet {
 	        	obj.put(cmidAtRadius.get(j), "NULL");
 	        }
 	        jsonToSend.add(obj);
+	        send.put("JSONFile", jsonToSend.toString());
 	        connection con=new connection();
-	        //need to ask server what url to send
+	        //need to ask from server what url to send
 	        con.sendJsonObject(jsonToSend, url);
 	        //obj.sendResponse();
 	        //send with sendResponse
