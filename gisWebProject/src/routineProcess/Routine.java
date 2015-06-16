@@ -75,7 +75,7 @@ public class Routine extends HttpServlet {
 					routineOrEmerg = sqlDataBase.checkRoutineOrEmerg(cmid);
 					//enum for emergency 
 					if(routineOrEmerg == 1) {
-						address=req.getAddresss(x, y);
+						address=req.getAddress(x, y);
 						split=address.split(",");
 						obj.put("RequestID", "followUser");
 						obj.put("location_remark",address);

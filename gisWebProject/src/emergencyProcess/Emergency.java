@@ -91,7 +91,7 @@ public class Emergency extends HttpServlet {
 	        JSONObject obj=new JSONObject();
 	        JSONObject send=new JSONObject();
 	        RequestGoogle req=new RequestGoogle();
-	        String address=req.getAddresss(x, y);
+	        String address=req.getAddress(x, y);
 	        String[] split=address.split(",");
 	        obj.put("RequestID", "AroundLocation");
 	        obj.put("state", split[2]);

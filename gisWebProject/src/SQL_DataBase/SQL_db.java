@@ -6,8 +6,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.sql.Time;
+
+import org.json.simple.JSONObject;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
@@ -315,6 +319,17 @@ public class SQL_db {
 			disconnect();
 		}
 		return eventID;
+	}
+	public ArrayList<String> getListOfKeys(JSONObject json)
+	{
+		ArrayList<String> keyList=new ArrayList<String>();
+		Set keys = json.keySet();
+		Iterator a = keys.iterator();
+		while(a.hasNext()) {
+			String key = (String)a.next();
+			keyList.add(key);
+		}
+		return keyList;
 	}
 	private void connect() {
 		try {
