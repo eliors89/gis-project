@@ -380,7 +380,7 @@ public class SQL_db {
 	}
 	
 	public double[] getPointByCmid(String cmid) {
-		double[] point;
+		double[] point =new double[2];
 		try {
 			connect();
 			statement.execute("USE GIS_DB;");
@@ -403,7 +403,7 @@ public class SQL_db {
 	}
 	
 	public int getRadiusByEventID(String eventID) {
-		int radius;
+		int radius=0;
 		try {
 			connect();
 			statement.execute("USE GIS_DB;");

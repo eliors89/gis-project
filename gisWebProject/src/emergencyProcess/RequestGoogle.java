@@ -73,7 +73,7 @@ public class RequestGoogle extends HttpServlet {
 				obj.put("eta_by_car",driving);
 				String walking=sendGet("walking",34.731161,31.880611,34.663870,31.812951);
 				obj.put("eta_by_foot", walking);
-				String address=getAddresss(34.731161,31.880611);
+				String address=getAddress(34.731161,31.880611);
 				obj.put("address", address);
 				jsonToSent.add(obj);
 			} catch (Exception e) {
