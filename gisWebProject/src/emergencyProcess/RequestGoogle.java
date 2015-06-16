@@ -62,34 +62,7 @@ public class RequestGoogle extends HttpServlet {
 					jb.append(stringToParse);
 				}
 			} catch (Exception e) { /*report an error*/ }
-			//start work with json obj
-			//create parser to saperte the data from json array
-			//	JSONParser parser = new JSONParser();
-			//	JSONObject jsonObject = (JSONObject) parser.parse(stringToParse);
-
-			//	JSONArray jsonArrayOb=(JSONArray) jsonObject.get("JSONFile");
-			// take each value from the json array separately
-			//	Iterator i = jsonArrayOb.iterator();
-			//			JSONObject innerObj = (JSONObject) i.next();
-			//{"RequestID":"routineLocation"}
-			//if (innerObj.get("RequestID").equals("routineLocation")){
-			//{"comunity_member_id":123456, "x":7.777, "y":8.999}
-			/*
-			 * need to check if we need this
-			 * while (i.hasNext()) {
-				// create inner obj to get the data from all json obd in json array
-				JSONObject innerObj = (JSONObject) i.next();
-				if (innerObj.get("RequestID").equals("UsersArrivalTimes")){
-					//int cmid = Integer.parseInt(innerObj.get("comunity_member_id").toString());
-					String cmid  = innerObj.get("comunity_member_id").toString();
-					int eventid = Integer.parseInt(innerObj.get("event_id").toString());
-					//         	double radius=Double.parseDouble((innerObj.get("radius").toString()))
-					System.out.println("comunity_member_id "+ innerObj.get("comunity_member_id") +
-							" with eventid cor. " + innerObj.get("eventid"));
-					//		"radius "+innerObj.get(radius));*/
-			//create new sql table by michal with eventid cmid and attribute helper or sick person (String)
-			//get the location by cmid michal
-			double x=0; double y=0;
+			double x = 0; double y = 0;
 			String cmid = sqlDataBase.getCMIDByPoint(x,y);
 
 			try {

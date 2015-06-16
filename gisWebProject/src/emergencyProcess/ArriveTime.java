@@ -22,10 +22,10 @@ import org.json.simple.parser.ParseException;
 import connectinWithServer.connection;
 import SQL_DataBase.SQL_db;
 
-public class Emergency extends HttpServlet {
+public class ArriveTime extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	public Emergency() {
+	public ArriveTime() {
 		super();
 	}
 
@@ -57,57 +57,43 @@ public class Emergency extends HttpServlet {
 			// take each value from the json array separately
 			Iterator i = jsonArrayOb.iterator();
 			List<String> cmidAtRadius = new ArrayList<String>();
-			double x = 0,y = 0;
-			int radius = 0;
+			String walking, driving, location_remark,  eventID;
+			int x, y;
+			double[] point = new double[2]; 
 	        while (i.hasNext()) {
 	             	JSONObject innerObj = (JSONObject) i.next();
-	                if (innerObj.get("RequestID").equals("AroundLocation")){
-	                	String region_type;
+	                if (innerObj.get("RequestID").equals("Times")){
 	                	//get from Json the data
-	                	String eventID = innerObj.get("eventID").toString();
-	                	String cmid  = innerObj.get("comunity_member_id").toString();
-	                	x = Double.parseDouble(innerObj.get("x").toString());
-	                    y = Double.parseDouble(innerObj.get("y").toString());
-	                	String state = innerObj.get("region_type").toString();	                	
-	                	String medical_condition_description  = innerObj.get("medical_condition_description").toString();
-	                	float age = Float.parseFloat(innerObj.get("age").toString());
-	                	radius = Integer.parseInt(innerObj.get("radius").toString());
-	                	
-	                	//need to implement the function
-	                	region_type = sqlDataBase.getregion_type();
-	                	
-	                	/**/radius=3;
-	                	//if we haven't a radius
-	                	//TODO
-	                	if(radius == 0 /*|| radius == null*/) {
-	                		//need to implement the function
-	                		radius = sqlDataBase.getRadiusFromDesicionTable(eventID, cmid, x, y, state, region_type, medical_condition_description, age);
-	                	}
-                		sqlDataBase.updateDecisionTable(eventID, cmid, x, y, state, region_type, medical_condition_description, age, radius);
-            			cmidAtRadius = sqlDataBase.getCMIDByRadius(radius, x, y);
-	               	}
+	                	eventID = innerObj.get("eventID").toString();
+	                	//TODO get list
+	                	String cmid = innerObj.get("comunity_member_id").toString();
+	                	List<String> listCmid = innerObj.getListOfCMID("comunity_member_id").toString();
+	                	point = sqlDataBase.getPointByCmid(eventID);
+	                	RequestGoogle googleReq = new RequestGoogle();
+	                	walking = googleReq.sendGet("walking", point[1], point[0], y, x);
+	                	driving = googleReq.sendGet("driving", point[1], point[0], y, x);
+	                	location_remark = googleReq.getAddresss(point[0], point[1]);
+	                	String[] split=location_remark.split(",");
             }
 	        JSONArray jsonToSend=new JSONArray();
 	        JSONObject obj=new JSONObject();
 	        JSONObject send=new JSONObject();
-	        RequestGoogle req=new RequestGoogle();
-	        String address=req.getAddresss(x, y);
-	        String[] split=address.split(",");
-	        obj.put("RequestID", "AroundLocation");
-	        obj.put("state", split[2]);
-	        obj.put("location_remark",address);
-	        obj.put("region_type", sqlDataBase.getregion_type());
-	        obj.put("radius", radius);
-	        for (int j=0; j<cmidAtRadius.size();j++) {
-	        	obj.put(cmidAtRadius.get(j), "NULL");
-	        }
+	        obj.put("RequestID", "UsersArrivalTimes");
+	        obj.put("eventID", eventID);
+	        obj.put("location_remark",location_remark);
+	        obj.put("radius",3);
+	        obj.put("eta_by_foot",walking);
+	        obj.put("eta_by_car",driving);
+	        
+//	        for (int j=0; j<cmidAtRadius.size();j++) {
+//	        	obj.put(cmidAtRadius.get(j), "NULL");
+//	        }
 	        jsonToSend.add(obj);
 	        send.put("JSONFile", jsonToSend.toString());
 	        connection con=new connection();
 	        //TODO
 	        //need to ask from server what url to send
 	        con.sendJsonObject(jsonToSend, url);
-	        //obj.sendResponse();
 	        //send with sendResponse
 		} catch (ParseException ex) {
 			ex.printStackTrace();

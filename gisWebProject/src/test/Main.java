@@ -13,7 +13,7 @@ import emergencyProcess.RequestGoogle;
 //
 //import routineProcess.Routine;
 import SQL_DataBase.SQL_db;
-//michal test
+
 public class Main {
 	public static void main(String[] args) throws Exception {
 //		SQL_db sqlDataBase = new SQL_db();
