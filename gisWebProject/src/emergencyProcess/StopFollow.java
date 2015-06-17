@@ -1,11 +1,15 @@
 package emergencyProcess;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+
 
 //import org.json.*;
 import org.json.simple.JSONArray;
@@ -53,16 +57,17 @@ public class StopFollow extends HttpServlet {
 			JSONArray jsonArrayOb=(JSONArray) jsonObject.get("JSONFile");
 			// take each value from the json array separately
 			Iterator i = jsonArrayOb.iterator();
+			int j;
+			ArrayList<String> cmidFromKey;
 	        while (i.hasNext()) {
 	             	JSONObject innerObj = (JSONObject) i.next();
 	                if (innerObj.get("RequestID").equals("followUser")){
-	                	//get data from Json  
 	                	String eventID = innerObj.get("eventID").toString();
-	                	String cmid  = innerObj.get("comunity_member_id").toString();
-	                	
-	                	//TODO
-	                	
-	                	sqlDataBase.updateRoutine(cmid);
+	                	cmidFromKey = new ArrayList<String>();
+	                	cmidFromKey = sqlDataBase.getListOfKeys(jsonObject);
+						for(j=0; j < cmidFromKey.size(); j++) {
+							sqlDataBase.updateRoutine(cmidFromKey.get(j));
+						}
 	               	}
             }
 		} catch (ParseException ex) {

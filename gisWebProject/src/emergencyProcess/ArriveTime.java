@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
+
 //import org.json.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -63,6 +64,7 @@ public class ArriveTime extends HttpServlet {
 			int j;
 			double[] sickPoint = new double[2]; 
 			double[] cmidPoint = new double[2];
+			ArrayList<String> cmidFromKey;
 			String sickCmid;
 			String[] split;
 			JSONArray jsonarr=new JSONArray();
@@ -77,8 +79,7 @@ public class ArriveTime extends HttpServlet {
 					sickCmid = sqlDataBase.getCmidByEventId(eventID);
 					sickPoint = sqlDataBase.getPointByCmid(sickCmid);
 					RequestGoogle googleReq = new RequestGoogle();
-					
-					ArrayList<String> cmidFromKey = new ArrayList<String>();
+					cmidFromKey = new ArrayList<String>();
 					cmidFromKey=sqlDataBase.getListOfKeys(jsonObject);
 					for(j=0; j < cmidFromKey.size(); j++) {
 						if(!(cmidFromKey.get(j).equals("eventID"))) {
