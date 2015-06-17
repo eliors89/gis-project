@@ -29,7 +29,7 @@ public class SQL_db {
 			statement.execute("CREATE TABLE IF NOT EXISTS updatedLocation (cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), routineOrEmerg INT, createdDate DATE, createdTime TIME, lastUpdatedDate DATE, lastUpdatedTime TIME);");/*  */
 			statement.execute("CREATE TABLE IF NOT EXISTS locationHistory (cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), createdDate DATE, createdTime TIME, lastUpdatedDate DATE, lastUpdatedTime TIME);");
 			statement.execute("CREATE TABLE IF NOT EXISTS decisionTable (eventID VARCHAR(20), cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), state VARCHAR(20), region_type VARCHAR(20), medical_condition VARCHAR(30), age DOUBLE(5,2), radius INT);");
-			statement.execute("CREATE TABLE IF NOT EXISTS emergencyProcess (eventID VARCHAR(20), cmid VARCHAR(20), radius INT, type INT);");
+//			statement.execute("CREATE TABLE IF NOT EXISTS emergencyProcess (eventID VARCHAR(20), cmid VARCHAR(20), radius INT, type INT);");
 		}
 		catch(SQLException se){
 		      //Handle errors for JDBC
@@ -203,38 +203,38 @@ public class SQL_db {
 			disconnect();
 		}
 	}
-	//update the table of emergency process
-	public void updateEmergencyProcess(String eventID,String cmid,int radius,int type)
-	{
-		try {
-			connect();
-			statement.execute("USE GIS_DB;");
-			ResultSet rs=statement.executeQuery("SELECT * FROM emergencyProcess WHERE cmid='"+cmid+"';");
-			if(!rs.next()){
-				statement.executeUpdate("INSERT INTO emergencyProcess VALUES ('"+eventID+"','"+cmid+"',"+radius+",'"+type+"');");
-			}
-			else {
-				String ID=rs.getString("eventID");
-				String cmID=rs.getString("cmid");
-				int radiusEvent=rs.getInt("radius");
-				int typeOfPerson=rs.getInt("type");
-				statement.executeUpdate("UPDATE emergencyProcess SET eventID="+ID+", cmid="+cmID+", radius="+radiusEvent+",type= "+typeOfPerson+" WHERE cmid='"+cmid+"';");
-			}
-		}
-		catch(SQLException se) {
-			//Handle errors for JDBC
-			se.printStackTrace();
-		}
-		catch(Exception e) {
-			//Handle errors for Class.forName
-			e.printStackTrace();
-		}
-		// disconnect
-		finally {
-			disconnect();
-		}
-	}
-	
+//	//update the table of emergency process
+//	public void updateEmergencyProcess(String eventID,String cmid,int radius,int type)
+//	{
+//		try {
+//			connect();
+//			statement.execute("USE GIS_DB;");
+//			ResultSet rs=statement.executeQuery("SELECT * FROM emergencyProcess WHERE cmid='"+cmid+"';");
+//			if(!rs.next()){
+//				statement.executeUpdate("INSERT INTO emergencyProcess VALUES ('"+eventID+"','"+cmid+"',"+radius+",'"+type+"');");
+//			}
+//			else {
+//				String ID=rs.getString("eventID");
+//				String cmID=rs.getString("cmid");
+//				int radiusEvent=rs.getInt("radius");
+//				int typeOfPerson=rs.getInt("type");
+//				statement.executeUpdate("UPDATE emergencyProcess SET eventID="+ID+", cmid="+cmID+", radius="+radiusEvent+",type= "+typeOfPerson+" WHERE cmid='"+cmid+"';");
+//			}
+//		}
+//		catch(SQLException se) {
+//			//Handle errors for JDBC
+//			se.printStackTrace();
+//		}
+//		catch(Exception e) {
+//			//Handle errors for Class.forName
+//			e.printStackTrace();
+//		}
+//		// disconnect
+//		finally {
+//			disconnect();
+//		}
+//	}
+//	
 
 	
 	//check if the cmid at routine proccess return 0 or emergency proccess return 1
