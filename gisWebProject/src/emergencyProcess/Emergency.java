@@ -87,9 +87,9 @@ public class Emergency extends HttpServlet {
             			cmidAtRadius = sqlDataBase.getCMIDByRadius(radius, x, y);
 	               	}
             }
-	        JSONArray jsonToSend=new JSONArray();
+//	        JSONArray jsonToSend=new JSONArray();
 	        JSONObject obj=new JSONObject();
-	        JSONObject send=new JSONObject();
+//	        JSONObject send=new JSONObject();
 	        RequestGoogle req=new RequestGoogle();
 	        String address=req.getAddress(x, y);
 	        String[] split=address.split(",");
@@ -101,12 +101,12 @@ public class Emergency extends HttpServlet {
 	        for (int j=0; j<cmidAtRadius.size();j++) {
 	        	obj.put(cmidAtRadius.get(j), "NULL");
 	        }
-	        jsonToSend.add(obj);
-	        send.put("JSONFile", jsonToSend.toString());
+	//        jsonToSend.add(obj);
+	  //      send.put("JSONFile", jsonToSend.toString());
 	        connection con=new connection();
 	        //TODO
 	        //need to ask from server what url to send
-	        con.sendJsonObject(jsonToSend, url);
+	        con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis");
 	        //obj.sendResponse();
 	        //send with sendResponse
 		} catch (ParseException ex) {

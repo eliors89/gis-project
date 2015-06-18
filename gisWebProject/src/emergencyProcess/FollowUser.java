@@ -58,7 +58,7 @@ public class FollowUser extends HttpServlet {
 	                	//get from Json the data
 	                	String eventID = innerObj.get("eventID").toString();
 	                	String cmid  = innerObj.get("comunity_member_id").toString();	                	
-	                	sqlDataBase.updateEmergency(cmid);
+	                	sqlDataBase.updateEmergency(cmid, eventID);
 	               	}
             }
 		} catch (ParseException ex) {

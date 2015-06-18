@@ -61,7 +61,7 @@ public class StopFollow extends HttpServlet {
 			ArrayList<String> cmidFromKey;
 	        while (i.hasNext()) {
 	             	JSONObject innerObj = (JSONObject) i.next();
-	                if (innerObj.get("RequestID").equals("followUser")){
+	                if (innerObj.get("RequestID").equals("stopFollow")){
 	                	String eventID = innerObj.get("eventID").toString();
 	                	cmidFromKey = new ArrayList<String>();
 	                	cmidFromKey = sqlDataBase.getListOfKeys(jsonObject);

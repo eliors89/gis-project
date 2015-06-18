@@ -26,10 +26,10 @@ public class SQL_db {
 		try {
 			connect();
 			statement.execute("USE GIS_DB;");
-			statement.execute("CREATE TABLE IF NOT EXISTS updatedLocation (cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), routineOrEmerg INT, createdDate DATE, createdTime TIME, lastUpdatedDate DATE, lastUpdatedTime TIME);");/*  */
+			statement.execute("CREATE TABLE IF NOT EXISTS updatedLocation (cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), eventID VARCHAR(20), createdDate DATE, createdTime TIME, lastUpdatedDate DATE, lastUpdatedTime TIME);");/*  */
 			statement.execute("CREATE TABLE IF NOT EXISTS locationHistory (cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), createdDate DATE, createdTime TIME, lastUpdatedDate DATE, lastUpdatedTime TIME);");
 			statement.execute("CREATE TABLE IF NOT EXISTS decisionTable (eventID VARCHAR(20), cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), state VARCHAR(20), region_type VARCHAR(20), medical_condition VARCHAR(30), age DOUBLE(5,2), radius INT);");
-//			statement.execute("CREATE TABLE IF NOT EXISTS emergencyProcess (eventID VARCHAR(20), cmid VARCHAR(20), radius INT, type INT);");
+			statement.execute("CREATE TABLE IF NOT EXISTS emergencyProcess (eventID VARCHAR(20), cmid VARCHAR(20), radius INT, type INT);");
 		}
 		catch(SQLException se){
 		      //Handle errors for JDBC
@@ -53,7 +53,8 @@ public class SQL_db {
 	//TODO
 	//if we dont have a radius we take radius from decision table
 	public int getRadiusFromDesicionTable(String eventID, String cmid, double x, double y, String state, String region_type, String medical_condition_description, float age) {
-		int radius=0;
+		//for test at future need to insert func 
+		int radius=5;
 		
 		return radius;
 	}
@@ -129,9 +130,16 @@ public class SQL_db {
 		try {
 			connect();
 			statement.execute("USE GIS_DB;");
+			String ID=getEventID(cmid);
 			ResultSet rs=statement.executeQuery("SELECT * FROM updatedLocation WHERE cmid='"+cmid+"';");
 			if(!rs.next()){
-				statement.executeUpdate("INSERT INTO updatedLocation VALUES ('"+cmid+"',"+x+","+y+",CURDATE(),CURTIME(),CURDATE(),CURTIME());");
+				if(ID==null)
+				{
+					statement.executeUpdate("INSERT INTO updatedLocation VALUES ('"+cmid+"',"+x+","+y+",NULL,CURDATE(),CURTIME(),CURDATE(),CURTIME());");
+				}
+				else{
+					statement.executeUpdate("INSERT INTO updatedLocation VALUES ('"+cmid+"',"+x+","+y+","+ID+",CURDATE(),CURTIME(),CURDATE(),CURTIME());");
+				}
 			}
 			else{
 				//rs.previous();
@@ -145,7 +153,14 @@ public class SQL_db {
 				// if the location changed
 				if((x!=x_val)||(y!=y_val)){
 					statement.executeUpdate("INSERT INTO locationHistory VALUES ('"+cmid_val+"',"+x_val+","+y_val+",'"+date_val+"','"+time_val+"','"+lastUpdatedDate_val+"','"+lastUpdatedTime_val+"');");
-					statement.executeUpdate("UPDATE updatedLocation SET x="+x+", y="+y+", createdDate = CURDATE(), createdTime = CURTIME(), lastUpdatedDate = CURDATE(), lastUpdatedTime = CURTIME() WHERE cmid='"+cmid+"';");
+					if(ID!=null)
+					{
+						statement.executeUpdate("UPDATE updatedLocation SET x="+x+", y="+y+",eventID="+ID+", createdDate = CURDATE(), createdTime = CURTIME(), lastUpdatedDate = CURDATE(), lastUpdatedTime = CURTIME() WHERE cmid='"+cmid+"';");
+					}
+					else
+					{
+						statement.executeUpdate("UPDATE updatedLocation SET x="+x+", y="+y+",eventID=NULL, createdDate = CURDATE(), createdTime = CURTIME(), lastUpdatedDate = CURDATE(), lastUpdatedTime = CURTIME() WHERE cmid='"+cmid+"';");
+					}
 				}
 				else{// the location didn't changed
 					statement.executeUpdate("UPDATE updatedLocation SET lastUpdatedDate = CURDATE(), lastUpdatedTime = CURTIME() WHERE cmid='"+cmid+"';");
@@ -203,48 +218,48 @@ public class SQL_db {
 			disconnect();
 		}
 	}
-//	//update the table of emergency process
-//	public void updateEmergencyProcess(String eventID,String cmid,int radius,int type)
-//	{
-//		try {
-//			connect();
-//			statement.execute("USE GIS_DB;");
-//			ResultSet rs=statement.executeQuery("SELECT * FROM emergencyProcess WHERE cmid='"+cmid+"';");
-//			if(!rs.next()){
-//				statement.executeUpdate("INSERT INTO emergencyProcess VALUES ('"+eventID+"','"+cmid+"',"+radius+",'"+type+"');");
-//			}
-//			else {
-//				String ID=rs.getString("eventID");
-//				String cmID=rs.getString("cmid");
-//				int radiusEvent=rs.getInt("radius");
-//				int typeOfPerson=rs.getInt("type");
-//				statement.executeUpdate("UPDATE emergencyProcess SET eventID="+ID+", cmid="+cmID+", radius="+radiusEvent+",type= "+typeOfPerson+" WHERE cmid='"+cmid+"';");
-//			}
-//		}
-//		catch(SQLException se) {
-//			//Handle errors for JDBC
-//			se.printStackTrace();
-//		}
-//		catch(Exception e) {
-//			//Handle errors for Class.forName
-//			e.printStackTrace();
-//		}
-//		// disconnect
-//		finally {
-//			disconnect();
-//		}
-//	}
-//	
+	//update the table of emergency process
+	public void updateEmergencyProcess(String eventID,String cmid,int radius,int type)
+	{
+		try {
+			connect();
+			statement.execute("USE GIS_DB;");
+			ResultSet rs=statement.executeQuery("SELECT * FROM emergencyProcess WHERE cmid='"+cmid+"';");
+			if(!rs.next()){
+				statement.executeUpdate("INSERT INTO emergencyProcess VALUES ('"+eventID+"','"+cmid+"',"+radius+",'"+type+"');");
+			}
+			else {
+				String ID=rs.getString("eventID");
+				String cmID=rs.getString("cmid");
+				int radiusEvent=rs.getInt("radius");
+				int typeOfPerson=rs.getInt("type");
+				statement.executeUpdate("UPDATE emergencyProcess SET eventID="+ID+", cmid="+cmID+", radius="+radiusEvent+",type= "+typeOfPerson+" WHERE cmid='"+cmid+"';");
+			}
+		}
+		catch(SQLException se) {
+			//Handle errors for JDBC
+			se.printStackTrace();
+		}
+		catch(Exception e) {
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}
+		// disconnect
+		finally {
+			disconnect();
+		}
+	}
+	
 
 	
-	//check if the cmid at routine proccess return 0 or emergency proccess return 1
-	public int checkRoutineOrEmerg(String cmid) {
-		int routineOrEmerg = 0;
+	//check if the cmid at routine process return 0 or emergency process return 1
+	public String checkRoutineOrEmerg(String cmid) {
+		String eventID = "";
 		try {
 			connect();
 			statement.execute("USE GIS_DB;");
 			ResultSet rs=statement.executeQuery("SELECT * FROM updatedLocation WHERE cmid='"+cmid+"';");
-			routineOrEmerg = rs.getInt("routineOrEmerg");
+			eventID = rs.getString("eventID");
 		}
 		catch(SQLException se){
 		      //Handle errors for JDBC
@@ -258,18 +273,18 @@ public class SQL_db {
 			disconnect();
 		}
 		//emergency
-		if(routineOrEmerg == 1)
-			return 1;
+		if(eventID != null)
+			return eventID;
 		else
 			//routin
-			return 0;
+			return null;
 	}
 	//status of cmid change to emergeny
-	public void updateEmergency(String cmid) {
+	public void updateEmergency(String cmid, String eventID) {
 		try {
 			connect();
 			statement.execute("USE GIS_DB;");
-			statement.executeUpdate("UPDATE updatedLocation SET routineOrEmerg="+1+" WHERE cmid='"+cmid+"';");
+			statement.executeUpdate("UPDATE updatedLocation SET eventID="+eventID+" WHERE cmid='"+cmid+"';");
 		}
 		catch(SQLException se){
 		      //Handle errors for JDBC
@@ -288,7 +303,7 @@ public class SQL_db {
 		try {
 			connect();
 			statement.execute("USE GIS_DB;");
-			statement.executeUpdate("UPDATE updatedLocation SET routineOrEmerg="+0+" WHERE cmid='"+cmid+"';");
+			statement.executeUpdate("UPDATE updatedLocation SET eventID=NULL WHERE cmid='"+cmid+"';");
 		}
 		catch(SQLException se){
 		      //Handle errors for JDBC
@@ -308,7 +323,36 @@ public class SQL_db {
 		try {
 			connect();
 			statement.execute("USE GIS_DB;");
-			ResultSet rs=statement.executeQuery("SELECT * FROM emergencyProcess WHERE cmid='"+cmid+"';");
+			ResultSet rs=statement.executeQuery("SELECT * FROM updatedLocation WHERE cmid='"+cmid+"';");
+			if(!rs.next())
+			{
+				return null;
+			}
+			else
+			{
+				eventID = rs.getString("eventID");
+			}
+		}
+		catch(SQLException se){
+		      //Handle errors for JDBC
+		      se.printStackTrace();
+		 }
+		 catch(Exception e){
+		      //Handle errors for Class.forName
+		      e.printStackTrace();
+		 }
+		finally {
+			
+		}
+		return eventID;
+	}
+	
+	public String getEventIDFromUpdate(String cmid) {
+		String eventID="";
+		try {
+			connect();
+			statement.execute("USE GIS_DB;");
+			ResultSet rs=statement.executeQuery("SELECT * FROM updateLocation WHERE cmid='"+cmid+"';");
 			eventID = rs.getString("eventID");
 		}
 		catch(SQLException se){
@@ -324,6 +368,7 @@ public class SQL_db {
 		}
 		return eventID;
 	}
+	
 	public ArrayList<String> getListOfKeys(JSONObject json)
 	{
 		ArrayList<String> keyList=new ArrayList<String>();
