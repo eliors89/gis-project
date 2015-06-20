@@ -189,7 +189,7 @@ public class SQL_db {
 			statement.execute("USE GIS_DB;");
 			ResultSet rs=statement.executeQuery("SELECT * FROM updatedLocation WHERE eventID='"+eventID+"';");
 			if(!rs.next()) {
-				statement.executeUpdate("INSERT INTO updatedLocation VALUES ('"+eventID+"','"+cmid+"',"+x+","+y+",'"+state+"','"+region_type+"','"+medical_condition_description+"',"+age+", "+radius+");");
+				statement.executeUpdate("INSERT INTO DecisionTable VALUES ('"+eventID+"','"+cmid+"',"+x+","+y+",'"+state+"','"+region_type+"','"+medical_condition_description+"',"+age+", "+radius+");");
 			}
 			else {
 				String eventID_val = rs.getString("eventID");

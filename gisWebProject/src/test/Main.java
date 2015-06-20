@@ -27,6 +27,7 @@ public class Main {
 				sqlDataBase.updateLocation("1234", 7.7, 8.7);
 				sqlDataBase.updateRoutine("1234");
 				sqlDataBase.updateLocation("1234", 8.8, 9.9);
+				
 	}
 }
 		//		RequestGoogle req=new RequestGoogle();

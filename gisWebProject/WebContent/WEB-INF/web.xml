@@ -25,4 +25,12 @@
     <servlet-name>testConnection</servlet-name>
     <url-pattern>/test</url-pattern>
   </servlet-mapping>
+    <servlet>
+    <servlet-name>ArriveTime</servlet-name>
+    <servlet-class>emergencyProcess.ArriveTime</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ArriveTime</servlet-name>
+    <url-pattern>/ArriveTime</url-pattern>
+  </servlet-mapping>
 </web-app>

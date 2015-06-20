@@ -25,28 +25,36 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import SQL_DataBase.SQL_db;
+
 
 // מוסיף משהו בשביל אליאור
 
 public class connection {
 
 	public static void main(String[] args) throws ParseException {
+		SQL_db sqlDataBase = new SQL_db();
 
-
+		
+		//(String eventID, String cmid, double x, double y, String state, String region_type, String medical_condition_description, float age, int radius){
+		sqlDataBase.updateDecisionTable("1234567", "1234", 5.5, 6.6, "israel", "0", "batta", (float) 18.5, 3);
 		//public class connection {
+//		JSONArray arr=new JSONArray();
 		JSONObject json=new JSONObject();
-		json.put("kk", 5);
-		System.out.println(json.get("kk"));
-		System.out.println(json.toString());
+
+		json.put("eventID", 1234567);
+		json.put("2345","NULL");
+		json.put("3456","NULL");
+
 		JSONArray jsonarr= new JSONArray();
 		jsonarr.add(json.toString());
 		JSONObject js=new JSONObject();
-		js.put("js", jsonarr);
+		js.put("JSONFile", jsonarr);
 
 		JSONParser parser = new JSONParser();
 		JSONObject jsonn = (JSONObject) parser.parse(js.toString());
 		HttpURLConnection httpcon;  
-		String url = "http://mba4.ad.biu.ac.il/gisWebProject/test";
+		String url = "http://mba4.ad.biu.ac.il/gisWebProject/ArriveTime";
 		String data = js.toString();
 		String result = null;
 		try{
@@ -128,6 +136,39 @@ public class connection {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
+
+	}
+
+
+	public void sendJsonObject(JSONArray jsonToSend, String to) {
+		// TODO Auto-generated method stub
+		HttpURLConnection httpcon; 
+		String strJson=jsonToSend.toString();
+		String url = to;
+		String data = strJson;
+		String result = null;
+		try{
+			//Connect
+			httpcon = (HttpURLConnection) ((new URL (url).openConnection()));
+			httpcon.setDoOutput(true);
+			httpcon.setRequestProperty("Content-Type", "application/json");
+			httpcon.setRequestProperty("Accept", "application/json");
+			httpcon.setRequestMethod("POST");
+			httpcon.connect();
+
+			//Write         
+			OutputStream os = httpcon.getOutputStream();
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+			writer.write(data);
+			writer.close();
+			os.close();
+
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+
+
 
 	}
 }
