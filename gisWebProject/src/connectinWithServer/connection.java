@@ -39,14 +39,15 @@ public class connection {
 
 		
 		//(String eventID, String cmid, double x, double y, String state, String region_type, String medical_condition_description, float age, int radius){
-		sqlDataBase.updateDecisionTable("1234567", "1234", 5.5, 6.6, "israel", "0", "batta", (float) 18.5, 3);
+	//	sqlDataBase.updateDecisionTable("1234567", "1234", 5.5, 6.6, "israel", "0", "batta", (float) 18.5, 3);
 		//public class connection {
 //		JSONArray arr=new JSONArray();
 		JSONObject json=new JSONObject();
 
-		json.put("eventID", 1234567);
-		json.put("2345","NULL");
-		json.put("3456","NULL");
+		json.put("RequestID", "test");
+		json.put("comunity_member_id","8888");
+		json.put("x",5.5);
+		json.put("y", 6.6);
 
 		JSONArray jsonarr= new JSONArray();
 		jsonarr.add(json.toString());
@@ -56,7 +57,7 @@ public class connection {
 		JSONParser parser = new JSONParser();
 		JSONObject jsonn = (JSONObject) parser.parse(js.toString());
 		HttpURLConnection httpcon;  
-		String url = "http://mba4.ad.biu.ac.il/gisWebProject/ArriveTime";
+		String url = "http://mba4.ad.biu.ac.il/gisWebProject/mapping";
 		String data = js.toString();
 		String result = null;
 		try{
@@ -97,7 +98,7 @@ public class connection {
 				while (i.hasNext()) {
 					JSONObject innerObj =  (JSONObject) parser.parse(i.next().toString());
 
-					System.out.println(innerObj.get("kk"));
+					
 				}
 
 
