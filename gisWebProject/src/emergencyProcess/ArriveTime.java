@@ -43,16 +43,17 @@ public class ArriveTime extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			SQL_db sqlDataBase = new SQL_db();
-			StringBuffer jb = new StringBuffer();
-			String stringToParse = null;
-			try {
-				BufferedReader reader = request.getReader();
-				while ((stringToParse = reader.readLine()) != null){
-					jb.append(stringToParse);
-				}
-			} catch (Exception e) { /*report an error*/ }
-			JSONParser parser = new JSONParser();
-			JSONObject jsonObject = (JSONObject) parser.parse(stringToParse);
+//			StringBuffer jb = new StringBuffer();
+//			String stringToParse = null;
+//			try {
+//				BufferedReader reader = request.getReader();
+//				while ((stringToParse = reader.readLine()) != null){
+//					jb.append(stringToParse);
+//				}
+//			} catch (Exception e) { /*report an error*/ }
+//			JSONParser parser = new JSONParser();
+			connection con=new connection();
+			JSONObject jsonObject = con.getRequest(request);
 
 			JSONArray jsonArrayOb=(JSONArray) jsonObject.get("JSONFile");
 			// take each value from the json array separately
@@ -109,7 +110,7 @@ public class ArriveTime extends HttpServlet {
 				
 				jsonToSend.add(obj);
 	//			send.put("JSONFile", jsonToSend.toString());
-				connection con=new connection();
+//				connection con=new connection();
 				//TODO
 				//need to ask from server what url to send
 				con.sendJsonObject(jsonToSend, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis-times");

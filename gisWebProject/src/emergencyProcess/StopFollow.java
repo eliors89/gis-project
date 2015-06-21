@@ -11,12 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+
 //import org.json.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import connectinWithServer.connection;
 import SQL_DataBase.SQL_db;
 
 public class StopFollow extends HttpServlet {
@@ -43,17 +45,18 @@ public class StopFollow extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			SQL_db sqlDataBase = new SQL_db();
-			StringBuffer jb = new StringBuffer();
-			String stringToParse = null;
-			try {
-				BufferedReader reader = request.getReader();
-			    while ((stringToParse = reader.readLine()) != null){
-			    	jb.append(stringToParse);
-			    }
-			  } catch (Exception e) { /*report an error*/ }
-			JSONParser parser = new JSONParser();
-			JSONObject jsonObject = (JSONObject) parser.parse(stringToParse);
-			
+//			StringBuffer jb = new StringBuffer();
+//			String stringToParse = null;
+//			try {
+//				BufferedReader reader = request.getReader();
+//			    while ((stringToParse = reader.readLine()) != null){
+//			    	jb.append(stringToParse);
+//			    }
+//			  } catch (Exception e) { /*report an error*/ }
+//			JSONParser parser = new JSONParser();
+//			JSONObject jsonObject = (JSONObject) parser.parse(stringToParse);
+			connection con=new connection();
+			JSONObject jsonObject = con.getRequest(request);
 			JSONArray jsonArrayOb=(JSONArray) jsonObject.get("JSONFile");
 			// take each value from the json array separately
 			Iterator i = jsonArrayOb.iterator();
@@ -70,8 +73,6 @@ public class StopFollow extends HttpServlet {
 						}
 	               	}
             }
-		} catch (ParseException ex) {
-			ex.printStackTrace();
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 		}

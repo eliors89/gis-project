@@ -42,17 +42,19 @@ public class Emergency extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			SQL_db sqlDataBase = new SQL_db();
-			StringBuffer jb = new StringBuffer();
-			String stringToParse = null;
-			try {
-				BufferedReader reader = request.getReader();
-			    while ((stringToParse = reader.readLine()) != null){
-			    	jb.append(stringToParse);
-			    }
-			  } catch (Exception e) { /*report an error*/ }
-			JSONParser parser = new JSONParser();
-			JSONObject jsonObject = (JSONObject) parser.parse(stringToParse);
-			
+//			StringBuffer jb = new StringBuffer();
+//			String stringToParse = null;
+//			try {
+//				BufferedReader reader = request.getReader();
+//			    while ((stringToParse = reader.readLine()) != null){
+//			    	jb.append(stringToParse);
+//			    }
+//			  } catch (Exception e) { /*report an error*/ }
+//			JSONParser parser = new JSONParser();
+//			JSONObject jsonObject = (JSONObject) parser.parse(stringToParse);
+//			
+			connection con=new connection();
+			JSONObject jsonObject = con.getRequest(request);
 			JSONArray jsonArrayOb=(JSONArray) jsonObject.get("JSONFile");
 			// take each value from the json array separately
 			Iterator i = jsonArrayOb.iterator();
@@ -103,9 +105,9 @@ public class Emergency extends HttpServlet {
 	        }
 	//        jsonToSend.add(obj);
 	  //      send.put("JSONFile", jsonToSend.toString());
-	        connection con=new connection();
+	   //     connection con=new connection();
 	        //TODO
-	        //need to ask from server what url to send
+	       
 	        con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis");
 	        //obj.sendResponse();
 	        //send with sendResponse

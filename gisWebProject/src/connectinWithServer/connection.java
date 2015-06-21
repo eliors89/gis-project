@@ -20,6 +20,8 @@ import java.net.URL;
 
 import java.util.Iterator;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -108,7 +110,28 @@ public class connection {
 		} 
 	}
 
-
+	public JSONObject getRequest(HttpServletRequest request)
+	{
+		StringBuffer jb = new StringBuffer();
+		String stringToParse = null;
+		//get data of requset from server
+		try {
+			BufferedReader reader = request.getReader();
+		    while ((stringToParse = reader.readLine()) != null){
+		    	jb.append(stringToParse);
+		    }
+		  } catch (Exception e) { /*report an error*/ }
+		JSONParser parser = new JSONParser();
+		//convert the data to json object
+		JSONObject jsonObject = new JSONObject();;
+		try {
+			jsonObject = (JSONObject) parser.parse(stringToParse);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return jsonObject;
+	}
 	public void sendJsonObject(JSONObject sendJson,String to)
 	{
 		String strJson=sendJson.toString();

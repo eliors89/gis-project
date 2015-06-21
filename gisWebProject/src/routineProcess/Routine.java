@@ -160,17 +160,20 @@ public class Routine extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			SQL_db sqlDataBase = new SQL_db();
-			StringBuffer jb = new StringBuffer();
-			String stringToParse = null;
-			try {
-				BufferedReader reader = request.getReader();
-				while ((stringToParse = reader.readLine()) != null){
-					jb.append(stringToParse);
-				}
-			} catch (Exception e) { /*report an error*/ }
-			JSONParser parser = new JSONParser();
-			JSONObject jsonObject = (JSONObject) parser.parse(stringToParse);
+//			StringBuffer jb = new StringBuffer();
+//			String stringToParse = null;
+//			try {
+//				BufferedReader reader = request.getReader();
+//				while ((stringToParse = reader.readLine()) != null){
+//					jb.append(stringToParse);
+//				}
+//			} catch (Exception e) { /*report an error*/ }
+//			JSONParser parser = new JSONParser();
+//			JSONObject jsonObject = (JSONObject) parser.parse(stringToParse);
+			
 			//JSONArray jsonToSend=new JSONArray();
+			connection con=new connection();
+			JSONObject jsonObject = con.getRequest(request);
 			JSONObject obj=new JSONObject();
 			//JSONObject send =new JSONObject();
 			RequestGoogle req=new RequestGoogle();
@@ -211,7 +214,7 @@ public class Routine extends HttpServlet {
 							obj.put("event_id", sqlDataBase.getEventID(cmid));
 				//			jsonToSend.add(obj);
 				//			send.put("JSONFile", jsonToSend.toString());
-							connection con= new connection();
+				//			connection con= new connection();
 							//need to check with server url for this
 							con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis");
 						}

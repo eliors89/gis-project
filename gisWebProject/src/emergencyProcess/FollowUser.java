@@ -2,10 +2,12 @@ package emergencyProcess;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Iterator;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 //import org.json.*;
 import org.json.simple.JSONArray;
@@ -13,6 +15,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import connectinWithServer.connection;
 import SQL_DataBase.SQL_db;
 
 public class FollowUser extends HttpServlet {
@@ -36,18 +39,19 @@ public class FollowUser extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			SQL_db sqlDataBase = new SQL_db();
-			StringBuffer jb = new StringBuffer();
-			String stringToParse = null;
-			//get data of requset from server
-			try {
-				BufferedReader reader = request.getReader();
-			    while ((stringToParse = reader.readLine()) != null){
-			    	jb.append(stringToParse);
-			    }
-			  } catch (Exception e) { /*report an error*/ }
-			JSONParser parser = new JSONParser();
-			//convert the data to json object
-			JSONObject jsonObject = (JSONObject) parser.parse(stringToParse);
+//			StringBuffer jb = new StringBuffer();
+//			String stringToParse = null;
+//			//get data of requset from server
+//			try {
+//				BufferedReader reader = request.getReader();
+//			    while ((stringToParse = reader.readLine()) != null){
+//			    	jb.append(stringToParse);
+//			    }
+//			  } catch (Exception e) { /*report an error*/ }
+//			JSONParser parser = new JSONParser();
+//			//convert the data to json object
+			connection con=new connection();
+			JSONObject jsonObject = con.getRequest(request);
 			
 			JSONArray jsonArrayOb=(JSONArray) jsonObject.get("JSONFile");
 			// take each value from the json array separately
@@ -61,8 +65,6 @@ public class FollowUser extends HttpServlet {
 	                	sqlDataBase.updateEmergency(cmid, eventID);
 	               	}
             }
-		} catch (ParseException ex) {
-			ex.printStackTrace();
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 		}
