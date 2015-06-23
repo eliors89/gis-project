@@ -57,7 +57,7 @@ public class connection {
 		JSONParser parser = new JSONParser();
 		JSONObject jsonn = (JSONObject) parser.parse(js.toString());
 		HttpURLConnection httpcon;  
-		String url = "http://mba4.ad.biu.ac.il/gisWebProject/mapping";
+		String url = "http://mba4.ad.biu.ac.il/gisWebProject/test";
 		String data = js.toString();
 		String result = null;
 		try{

@@ -2,9 +2,13 @@ package connectinWithServer;
 
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -38,6 +42,13 @@ public class testConnection extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		Writer writer=null; {
+
+			try {
+			    writer = new BufferedWriter(new OutputStreamWriter(
+			          new FileOutputStream("testclass.txt"), "utf-8"));
+			    writer.write("enter");
+			} catch (IOException ex) {}
 		InputStream is=request.getInputStream();
 		OutputStream os=response.getOutputStream();
 		byte[] buf = new byte[1000];
@@ -48,4 +59,5 @@ public class testConnection extends HttpServlet {
 		
 
 	}
+}
 }

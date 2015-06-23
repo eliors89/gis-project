@@ -15,7 +15,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>Mapping</servlet-name>
-    <url-pattern>/Mapping</url-pattern>
+    <url-pattern>/mapping</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>Routine</servlet-name>
