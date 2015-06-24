@@ -47,8 +47,20 @@ public class testConnection extends HttpServlet {
 			try {
 			    writer = new BufferedWriter(new OutputStreamWriter(
 			          new FileOutputStream("testclass.txt"), "utf-8"));
-			    writer.write("enter");
+			    writer.write("enter 5 ");
+			    writer.write(request.getInputStream().toString());
 			} catch (IOException ex) {}
+			finally
+			{
+				try 
+				{
+					writer.close();
+				} 
+				catch (Exception ex)
+				{
+					//catch block
+				}
+			}
 		InputStream is=request.getInputStream();
 		OutputStream os=response.getOutputStream();
 		byte[] buf = new byte[1000];
@@ -56,8 +68,6 @@ public class testConnection extends HttpServlet {
 		{
 		    os.write(buf, 0, nChunk);
 		} 
-		
-
 	}
 }
 }

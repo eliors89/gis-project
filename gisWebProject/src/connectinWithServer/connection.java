@@ -57,7 +57,7 @@ public class connection {
 		JSONParser parser = new JSONParser();
 		JSONObject jsonn = (JSONObject) parser.parse(js.toString());
 		HttpURLConnection httpcon;  
-		String url = "http://mba4.ad.biu.ac.il/gisWebProject/test";
+		String url = "http://mba4.ad.biu.ac.il/gisWebProject/mapping";
 		String data = js.toString();
 		String result = null;
 		try{
@@ -126,13 +126,14 @@ public class connection {
 		//convert the data to json object
 		JSONObject jsonObject = new JSONObject();;
 		try {
-			jsonObject = (JSONObject) parser.parse(stringToParse);
+			jsonObject = (JSONObject) parser.parse(jb.toString());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return jsonObject;
 	}
+	
 	public void sendJsonObject(JSONObject sendJson,String to)
 	{
 		String strJson=sendJson.toString();
