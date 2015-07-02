@@ -135,7 +135,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import connectinWithServer.connection;
+import connectinWithServer.Connection;
 import emergencyProcess.RequestGoogle;
 import SQL_DataBase.SQL_db;
 
@@ -172,7 +172,7 @@ public class Routine extends HttpServlet {
 //			JSONObject jsonObject = (JSONObject) parser.parse(stringToParse);
 			
 			//JSONArray jsonToSend=new JSONArray();
-			connection con=new connection();
+			Connection con=new Connection();
 			JSONObject jsonObject = con.getRequest(request);
 			JSONObject obj=new JSONObject();
 			//JSONObject send =new JSONObject();

@@ -19,13 +19,13 @@ import javax.servlet.http.HttpServletResponse;
  * Servlet implementation class testConnection
  */
 //@WebServlet("/testConnection")
-public class testConnection extends HttpServlet {
+public class TestConnection extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 //    /**
 //     * @see HttpServlet#HttpServlet()
 //     */
-    public testConnection() {
+    public TestConnection() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -42,32 +42,42 @@ public class testConnection extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		Writer writer=null; {
-
-			try {
-			    writer = new BufferedWriter(new OutputStreamWriter(
-			          new FileOutputStream("testclass.txt"), "utf-8"));
-			    writer.write("enter 5 ");
-			    writer.write(request.getInputStream().toString());
-			} catch (IOException ex) {}
-			finally
-			{
-				try 
-				{
-					writer.close();
-				} 
-				catch (Exception ex)
-				{
-					//catch block
-				}
+		Writer writer=null;
+		try {
+		    writer = new BufferedWriter(new OutputStreamWriter(
+		          new FileOutputStream("testclass.txt"), "utf-8"));
+		    writer.write("enter 112 ");
+		    StringBuffer jb = new StringBuffer();
+			String stringToParse = null;
+			
+			BufferedReader reader = request.getReader();
+			while ((stringToParse = reader.readLine()) != null){
+				writer.write("enter 122 ");
+				jb.append(stringToParse);
 			}
-		InputStream is=request.getInputStream();
-		OutputStream os=response.getOutputStream();
-		byte[] buf = new byte[1000];
-		for (int nChunk = is.read(buf); nChunk!=-1; nChunk = is.read(buf))
+			writer.write("enter 132 ");
+			writer.write(reader.toString());
+			writer.write("enter 14 ");
+		    writer.write(request.getInputStream().toString());
+		    writer.write("enter 15 ");
+		} catch (IOException ex) {}
+		finally
 		{
-		    os.write(buf, 0, nChunk);
-		} 
+			try 
+			{
+				writer.close();
+			} 
+			catch (Exception ex)
+			{
+				//catch block
+			}
+		}
+	InputStream is=request.getInputStream();
+	OutputStream os=response.getOutputStream();
+	byte[] buf = new byte[1000];
+	for (int nChunk = is.read(buf); nChunk!=-1; nChunk = is.read(buf)){
+	    os.write(buf, 0, nChunk);
+	    } 
 	}
 }
-}
+

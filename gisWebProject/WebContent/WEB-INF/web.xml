@@ -26,11 +26,11 @@
     <url-pattern>/routine</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>testConnection</servlet-name>
-    <servlet-class>connectinWithServer.testConnection</servlet-class>
+    <servlet-name>TestConnection</servlet-name>
+    <servlet-class>connectinWithServer.TestConnection</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>testConnection</servlet-name>
+    <servlet-name>TestConnection</servlet-name>
     <url-pattern>/test</url-pattern>
   </servlet-mapping>
   <servlet>
@@ -39,7 +39,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>ArriveTime</servlet-name>
-    <url-pattern>/ArriveTime</url-pattern>
+    <url-pattern>/arriveTime</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>FollowUser</servlet-name>
@@ -47,7 +47,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>FollowUser</servlet-name>
-    <url-pattern>/FollowUser</url-pattern>
+    <url-pattern>/followUser</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>StopFollow</servlet-name>
@@ -55,7 +55,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>StopFollow</servlet-name>
-    <url-pattern>/StopFollow</url-pattern>
+    <url-pattern>/stopFollow</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>Emergency</servlet-name>

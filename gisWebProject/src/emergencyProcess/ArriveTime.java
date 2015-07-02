@@ -20,7 +20,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import connectinWithServer.connection;
+import connectinWithServer.Connection;
 import SQL_DataBase.SQL_db;
 
 public class ArriveTime extends HttpServlet {
@@ -52,7 +52,7 @@ public class ArriveTime extends HttpServlet {
 //				}
 //			} catch (Exception e) { /*report an error*/ }
 //			JSONParser parser = new JSONParser();
-			connection con=new connection();
+			Connection con=new Connection();
 			JSONObject jsonObject = con.getRequest(request);
 
 			JSONArray jsonArrayOb=(JSONArray) jsonObject.get("JSONFile");

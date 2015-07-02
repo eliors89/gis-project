@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
+import org.jsoup.*;
 
 
 
@@ -26,13 +26,14 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.jsoup.Jsoup;
 
 import SQL_DataBase.SQL_db;
 
 
-// מוסיף משהו בשביל אליאור
+// מוסיף משהו בשביל אליאור2
 
-public class connection {
+public class Connection {
 
 	public static void main(String[] args) throws ParseException {
 		SQL_db sqlDataBase = new SQL_db();
@@ -50,63 +51,47 @@ public class connection {
 		json.put("y", 6.6);
 
 		JSONArray jsonarr= new JSONArray();
-		jsonarr.add(json.toString());
-		JSONObject js=new JSONObject();
-		js.put("JSONFile", jsonarr);
+		jsonarr.add(json);
+		//JSONObject js=new JSONObject();
+		//js.put("JSONFile", jsonarr);
 
 		JSONParser parser = new JSONParser();
-		JSONObject jsonn = (JSONObject) parser.parse(js.toString());
+		//JSONObject jsonn = (JSONObject) parser.parse(js.toString());
 		HttpURLConnection httpcon;  
 		String url = "http://mba4.ad.biu.ac.il/gisWebProject/mapping";
-		String data = js.toString();
+		String data = jsonarr.toString();
 		String result = null;
 		try{
-			//Connect
-			httpcon = (HttpURLConnection) ((new URL (url).openConnection()));
-			httpcon.setDoOutput(true);
-			httpcon.setRequestProperty("Content-Type", "application/json");
-			httpcon.setRequestProperty("Accept", "application/json");
-			httpcon.setRequestMethod("POST");
-			httpcon.connect();
+			org.jsoup.Connection.Response resp = Jsoup.connect(url)
+//            .data("username", targets.get(i+1))
+//            .data("password", targets.get(i+2))
+            .data("JSONFile", data)
+            .header("Content-Type", "Application/json")
+            .timeout(10 * 1000 * 60) // milliseconds
+            .method(org.jsoup.Connection.Method.POST)
+            .execute();
 
-			//Write         
-			OutputStream os = httpcon.getOutputStream();
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-			writer.write(data);
-			writer.close();
-			os.close();
-
-			//Read      
-			BufferedReader in = new BufferedReader(
-					new InputStreamReader(httpcon.getInputStream()));
-			String inputLine;
-			StringBuffer response = new StringBuffer();
-
-			while ((inputLine = in.readLine()) != null) {
-				response.append(inputLine);
-			}              
-
-			in.close();  
-			result = response.toString();
-			System.out.println(result);
-			try {
-				JSONObject jso = (JSONObject)new JSONParser().parse(result);
-				JSONArray jsonArrayOb=(JSONArray) jso.get("js");
-				System.out.println(jsonArrayOb);
-				// take each value from the json array separately
-				Iterator i = jsonArrayOb.iterator();
-				while (i.hasNext()) {
-					JSONObject innerObj =  (JSONObject) parser.parse(i.next().toString());
-
-					
-				}
-
-
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} catch (IOException e) {
+			System.out.println(resp.body());
+		}
+			
+//			try {
+//				JSONObject jso = (JSONObject)new JSONParser().parse(result);
+//				JSONArray jsonArrayOb=(JSONArray) jso.get("js");
+//				System.out.println(jsonArrayOb);
+//				// take each value from the json array separately
+//				Iterator i = jsonArrayOb.iterator();
+//				while (i.hasNext()) {
+//					JSONObject innerObj =  (JSONObject) parser.parse(i.next().toString());
+//
+//					
+//				}
+//
+//
+//			} catch (ParseException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+		catch (IOException e) {
 			e.printStackTrace();
 		} 
 	}
@@ -136,6 +121,42 @@ public class connection {
 	
 	public void sendJsonObject(JSONObject sendJson,String to)
 	{
+		
+//		JSONObject json=new JSONObject();
+//
+//		json.put("RequestID", "test");
+//		json.put("comunity_member_id","8888");
+//		json.put("x",5.5);
+//		json.put("y", 6.6);
+//
+//		JSONArray jsonarr= new JSONArray();
+//		jsonarr.add(json.toString());
+//		JSONObject js=new JSONObject();
+//		js.put("JSONFile", jsonarr);
+//
+//		JSONParser parser = new JSONParser();
+//		//JSONObject jsonn = (JSONObject) parser.parse(js.toString());
+//		HttpURLConnection httpcon;  
+//		String url = "http://mba4.ad.biu.ac.il/gisWebProject/mapping";
+//		String data = js.toString();
+//		String result = null;
+//		try{
+//			//Connect
+//			httpcon = (HttpURLConnection) ((new URL (url).openConnection()));
+//			httpcon.setDoOutput(true);
+//			httpcon.setRequestProperty("Content-Type", "application/json");
+//			httpcon.setRequestProperty("Accept", "application/json");
+//			httpcon.setRequestMethod("POST");
+//			httpcon.connect();
+//
+//			//Write         
+//			OutputStream os = httpcon.getOutputStream();
+//			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+//			writer.write(data);
+//			writer.close();
+//			os.close();
+
+		
 		String strJson=sendJson.toString();
 		HttpURLConnection httpcon;  
 		String url = to;
@@ -149,6 +170,7 @@ public class connection {
 			httpcon.setRequestProperty("Accept", "application/json");
 			httpcon.setRequestMethod("POST");
 			httpcon.connect();
+//			
 
 			//Write         
 			OutputStream os = httpcon.getOutputStream();
@@ -156,7 +178,7 @@ public class connection {
 			writer.write(data);
 			writer.close();
 			os.close();
-
+			
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -164,7 +186,7 @@ public class connection {
 
 	}
 
-
+	
 	public void sendJsonObject(JSONArray jsonToSend, String to) {
 		// TODO Auto-generated method stub
 		HttpURLConnection httpcon; 
