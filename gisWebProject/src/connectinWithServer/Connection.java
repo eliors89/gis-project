@@ -59,7 +59,7 @@ public class Connection {
 		//JSONObject jsonn = (JSONObject) parser.parse(js.toString());
 		HttpURLConnection httpcon;  
 		String url = "http://mba4.ad.biu.ac.il/gisWebProject/mapping";
-		String data = jsonarr.toString();
+		String data = jsonarr.toJSONString();
 		String result = null;
 		try{
 			org.jsoup.Connection.Response resp = Jsoup.connect(url)
@@ -67,7 +67,7 @@ public class Connection {
 //            .data("password", targets.get(i+2))
             .data("JSONFile", data)
             .header("Content-Type", "Application/json")
-            .timeout(10 * 1000 * 60) // milliseconds
+//            .timeout(100 * 1000 * 100) // milliseconds
             .method(org.jsoup.Connection.Method.POST)
             .execute();
 

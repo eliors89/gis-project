@@ -2,9 +2,11 @@ package mapping;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -24,13 +26,26 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 
+
+
+
+
+
+
+import org.codehaus.jettison.json.JSONArray;
 //import org.codehaus.jettison.json.*;
-import org.json.simple.JSONArray;
+import org.json.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 //import com.sun.javafx.collections.MappingChange.Map;
+
+
+
+
+
+
 
 
 
@@ -76,26 +91,36 @@ public class Mapping extends HttpServlet {
 		  // report
 		
 		writer.write("enter 2\n");
-		
-		StringBuffer jb = new StringBuffer();
-		JSONArray jsonArrayOb;
+		StringBuffer stringBuf = new StringBuffer();
+		String stringToParse = null;
+		JSONArray jsonArrayOb = null;
 		JSONParser parser = new JSONParser();
-		JSONObject jsonObject;
+		JSONObject jsonObject = null;
 		
 		//String stringToParse = null;
 		try {
 			writer.write("enter 3 \n");
-			writer.write(request.getParameterMap().toString());
+			JSONObject json = new JSONObject(request.getParameterMap());
 			writer.write("enter 4 \n");
-			jsonObject = new JSONObject(request.getParameterMap());
-			writer.write("enter 41 \n");
-			jsonArrayOb = new JSONArray();
+			//jsonArrayOb=(JSONArray) jsonObject.get("JSONFile");
 			writer.write("enter 42 \n");
 			writer.write(jsonArrayOb.toString());
-			//int parSize = reqParameter.size();
 			writer.write("enter 43 \n");
-			//writer.write(parSize);
+			writer.write(jsonArrayOb.getString(0));
 			writer.write("enter 44 \n");
+			//Map<String,String[]> prMap = request.getParameterMap();
+			
+			//String str = prMap.get("JSONFile").toString();
+			//writer.write(str);
+			//(reversePalindrome);
+//			(JSONObject) parser.parse(i.next().toString());
+			stringToParse = jsonObject.get("JSONFile").toString();
+			jsonArrayOb = (JSONArray) parser.parse(stringBuf.toString());
+			//jsonArrayOb = (JSONArray) parser.parse(new InputStreamReader(new FileInputStream(jsonObject.get("JSONFile").toString())))
+			writer.write(jsonArrayOb.toString());
+			//int parSize = reqParameter.size();
+			//writer.write(parSize);
+			
 //			for(int i=0;i<parSize;i++){
 //				writer.write("enter 5\n");
 //				//writer.write(reqParameter.toString());
@@ -106,33 +131,26 @@ public class Mapping extends HttpServlet {
 //				writer.write("enter 53\n");
 //				jsonArrayOb=(JSONArray) jsonObject.get("JSONFile");
 //			}
-		} catch (Exception e) { /*report an error*/ }
+		} catch (Exception e) { /*writer.write(e.toString()); /*report an error*/ }
 		finally{
 			writer.write("finally 55");
-			//writer.close();
+			writer.close();
 		}
 		try {
 			writer.write("enter 9 \n");
-			jsonObject = (JSONObject) parser.parse(jb.toString()); // בעיית פארסינג
+			//jsonObject = (JSONObject) parser.parse(stringBuf.toString()); // בעיית פארסינג
 			writer.write("enter 10 \n");
 			writer.write(jsonObject.toString());
 			writer.write("enter 11 \n");
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			writer.write("enter 12 \n");
 			e.printStackTrace();
 		}
 		finally
 		{
-			try 
-			{
-				writer.write("enter 13 \n");
-				//writer.close();
-			} 
-			catch (Exception ex)
-			{
-				//catch block
-			}
+			writer.write("enter 13 \n");
+			writer.close();
 		}
 		// take each value from the json array separately
 		Iterator i = null;
