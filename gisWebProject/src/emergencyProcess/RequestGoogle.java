@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,15 +13,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-//import com.sun.org.apache.xml.internal.resolver.readers.XCatalogReader;
-
-
 
 import SQL_DataBase.SQL_db;
 
@@ -147,29 +141,18 @@ public class RequestGoogle extends HttpServlet {
 		// routesArray contains ALL routes
 		JSONArray routesArray;
 		JSONObject durationObject = null;
-		try {
-			routesArray = (JSONArray)jb.get("routes");
-			// Grab the first route
-			JSONObject route = (JSONObject)routesArray.get(0);
-			// Take all legs from the route
-			JSONArray legs = (JSONArray)route.get("legs");
-			// Grab first leg
-			JSONObject leg = (JSONObject)legs.get(0);
-			//duration time
-			durationObject = (JSONObject)leg.get("duration");
-			
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//convert to streng and send beck
+		routesArray = (JSONArray)jb.get("routes");
+		// Grab the first route
+		JSONObject route = (JSONObject)routesArray.get(0);
+		// Take all legs from the route
+		JSONArray legs = (JSONArray)route.get("legs");
+		// Grab first leg
+		JSONObject leg = (JSONObject)legs.get(0);
+		//duration time
+		durationObject = (JSONObject)leg.get("duration");
+		//convert to string and send back
 		String str = null;
-		try {
-			str = durationObject.get("text").toString();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		str = durationObject.get("text").toString();
 		return str;
 	}
 
