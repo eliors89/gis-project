@@ -129,6 +129,8 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+
+import org.json.JSONException;
 //import org.json.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -173,11 +175,17 @@ public class Routine extends HttpServlet {
 			
 			//JSONArray jsonToSend=new JSONArray();
 			Connection con=new Connection();
-			JSONObject jsonObject = con.getRequest(request);
-			JSONObject obj=new JSONObject();
+			org.json.JSONObject jsonObject = con.getRequest(request);
+			org.json.JSONArray obj=new org.json.JSONArray();
 			//JSONObject send =new JSONObject();
 			RequestGoogle req=new RequestGoogle();
-			JSONArray jsonArrayOb=(JSONArray) jsonObject.get("JSONFile");
+			JSONArray jsonArrayOb = null;
+			try {
+				jsonArrayOb = (JSONArray) jsonObject.get("JSONFile");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			// take each value from the json array separately
 			String routineOrEmerg;
 			Iterator i = jsonArrayOb.iterator();
@@ -198,9 +206,9 @@ public class Routine extends HttpServlet {
 					if(routineOrEmerg != null){
 						address=req.getAddress(x, y);
 						split=address.split(",");
-						obj.put("RequestID", "followUser");
-						obj.put("location_remark",address);
-						obj.put("comunity_member_id", cmid);
+						obj.put(new JSONObject().put("RequestID", "followUser"));
+						obj.put(new JSONObject().put("location_remark",address));
+						obj.put(new JSONObject().put("comunity_member_id", cmid));
 						
 						eventId = sqlDataBase.getEventIDFromUpdate(cmid);
 						sickCmid = sqlDataBase.getCmidByEventId(eventId);
@@ -208,10 +216,10 @@ public class Routine extends HttpServlet {
 
 						try{
 							String driving=req.sendGet("driving", x, y, sickPoint[0], sickPoint[1]);
-							obj.put("eta_by_car",driving);
+							obj.put(new JSONObject().put("eta_by_car",driving));
 							String walking=req.sendGet("walking", x ,y, sickPoint[0], sickPoint[1]);
-							obj.put("eta_by_foot", walking);
-							obj.put("event_id", sqlDataBase.getEventID(cmid));
+							obj.put(new JSONObject().put("eta_by_foot", walking));
+							obj.put(new JSONObject().put("event_id", sqlDataBase.getEventID(cmid)));
 				//			jsonToSend.add(obj);
 				//			send.put("JSONFile", jsonToSend.toString());
 				//			connection con= new connection();

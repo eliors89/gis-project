@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+
+import org.json.JSONException;
 //import org.json.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -53,9 +55,15 @@ public class ArriveTime extends HttpServlet {
 //			} catch (Exception e) { /*report an error*/ }
 //			JSONParser parser = new JSONParser();
 			Connection con=new Connection();
-			JSONObject jsonObject = con.getRequest(request);
+			org.json.JSONObject jsonObject = con.getRequest(request);
 
-			JSONArray jsonArrayOb=(JSONArray) jsonObject.get("JSONFile");
+			JSONArray jsonArrayOb = null;
+			try {
+				jsonArrayOb = (JSONArray) jsonObject.get("JSONFile");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			// take each value from the json array separately
 			Iterator i = jsonArrayOb.iterator();
 			
@@ -70,7 +78,7 @@ public class ArriveTime extends HttpServlet {
 			String sickCmid;
 			String[] split;
 			JSONArray jsonarr=new JSONArray();
-			JSONArray jsonToSend=new JSONArray();
+			org.json.JSONArray jsonToSend=new org.json.JSONArray();
 			JSONObject obj=new JSONObject();
 	//		JSONObject send=new JSONObject();
 			while (i.hasNext()) {
@@ -98,7 +106,7 @@ public class ArriveTime extends HttpServlet {
 							cmidJson.put("eta_by_car",driving);
 							cmidJson.put("location_remark",location_remark);
 							obj.put(sickCmid, cmidJson.toString());
-							jsonToSend.add(obj);
+							jsonToSend.put(obj);
 						}
 					}
 				}
@@ -108,7 +116,7 @@ public class ArriveTime extends HttpServlet {
 				int radius = sqlDataBase.getRadiusByEventID(eventID);
 				obj.put("radius",radius);
 				
-				jsonToSend.add(obj);
+				jsonToSend.put(obj);
 	//			send.put("JSONFile", jsonToSend.toString());
 //				connection con=new connection();
 				//TODO

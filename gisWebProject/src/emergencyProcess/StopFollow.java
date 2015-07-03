@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+
+import org.json.JSONException;
 //import org.json.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -56,8 +58,14 @@ public class StopFollow extends HttpServlet {
 //			JSONParser parser = new JSONParser();
 //			JSONObject jsonObject = (JSONObject) parser.parse(stringToParse);
 			Connection con=new Connection();
-			JSONObject jsonObject = con.getRequest(request);
-			JSONArray jsonArrayOb=(JSONArray) jsonObject.get("JSONFile");
+			org.json.JSONObject jsonObject = con.getRequest(request);
+			JSONArray jsonArrayOb = null;
+			try {
+				jsonArrayOb = (JSONArray) jsonObject.get("JSONFile");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			// take each value from the json array separately
 			Iterator i = jsonArrayOb.iterator();
 			int j;

@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
+
+import org.json.JSONException;
 //import org.json.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -51,9 +53,15 @@ public class FollowUser extends HttpServlet {
 //			JSONParser parser = new JSONParser();
 //			//convert the data to json object
 			Connection con=new Connection();
-			JSONObject jsonObject = con.getRequest(request);
+			org.json.JSONObject jsonObject = con.getRequest(request);
 			
-			JSONArray jsonArrayOb=(JSONArray) jsonObject.get("JSONFile");
+			JSONArray jsonArrayOb = null;
+			try {
+				jsonArrayOb = (JSONArray) jsonObject.get("JSONFile");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			// take each value from the json array separately
 			Iterator i = jsonArrayOb.iterator();
 	        while (i.hasNext()) {

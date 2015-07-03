@@ -13,9 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-//import org.json.*;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+
+import org.json.JSONException;
+import org.json.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -40,8 +42,8 @@ public class Emergency extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-			SQL_db sqlDataBase = new SQL_db();
+			try{
+				SQL_db sqlDataBase = new SQL_db();
 //			StringBuffer jb = new StringBuffer();
 //			String stringToParse = null;
 //			try {
@@ -54,27 +56,44 @@ public class Emergency extends HttpServlet {
 //			JSONObject jsonObject = (JSONObject) parser.parse(stringToParse);
 //			
 			Connection con=new Connection();
-			JSONObject jsonObject = con.getRequest(request);
-			JSONArray jsonArrayOb=(JSONArray) jsonObject.get("JSONFile");
+			org.json.JSONObject jsonObject = con.getRequest(request);
+			JSONArray jsonArrayOb = null;
+			try {
+				jsonArrayOb = (JSONArray) jsonObject.get("JSONFile");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			// take each value from the json array separately
-			Iterator i = jsonArrayOb.iterator();
+			int arrSize = jsonArrayOb.length();
+			int i = 0;
 			List<String> cmidAtRadius = new ArrayList<String>();
 			double x = 0,y = 0;
 			int radius = 0;
-	        while (i.hasNext()) {
-	             	JSONObject innerObj = (JSONObject) i.next();
-	                if (innerObj.get("RequestID").equals("AroundLocation")){
-	                	String region_type;
-	                	//get from Json the data
-	                	String eventID = innerObj.get("eventID").toString();
-	                	String cmid  = innerObj.get("comunity_member_id").toString();
-	                	x = Double.parseDouble(innerObj.get("x").toString());
-	                    y = Double.parseDouble(innerObj.get("y").toString());
-	                	String state = innerObj.get("region_type").toString();	                	
-	                	String medical_condition_description  = innerObj.get("medical_condition_description").toString();
-	                	float age = Float.parseFloat(innerObj.get("age").toString());
-	                	radius = Integer.parseInt(innerObj.get("radius").toString());
-	                	
+	        while (i<arrSize) {
+	             	JSONObject innerObj;
+	             	String region_type;
+	             	String eventID = null,cmid = null,state = null,medical_condition_description = null;
+	             	float age = 0;
+					try {
+						innerObj = (JSONObject) jsonArrayOb.get(i);
+						if (innerObj.get("RequestID").equals("AroundLocation")){
+		                	
+		                	//get from Json the data
+		                	eventID = innerObj.get("eventID").toString();
+		                	cmid  = innerObj.get("comunity_member_id").toString();
+		                	x = Double.parseDouble(innerObj.get("x").toString());
+		                    y = Double.parseDouble(innerObj.get("y").toString());
+		                	state = innerObj.get("region_type").toString();	                	
+		                	medical_condition_description  = innerObj.get("medical_condition_description").toString();
+		                	age = Float.parseFloat(innerObj.get("age").toString());
+		                	radius = Integer.parseInt(innerObj.get("radius").toString());
+						}
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	                	                	
 	                	//need to implement the function
 	                	region_type = sqlDataBase.getregion_type();
 	                	
@@ -88,21 +107,27 @@ public class Emergency extends HttpServlet {
                 		sqlDataBase.updateDecisionTable(eventID, cmid, x, y, state, region_type, medical_condition_description, age, radius);
             			cmidAtRadius = sqlDataBase.getCMIDByRadius(radius, x, y);
 	               	}
-            }
+            
 //	        JSONArray jsonToSend=new JSONArray();
-	        JSONObject obj=new JSONObject();
+	        JSONArray obj=new JSONArray();
 //	        JSONObject send=new JSONObject();
 	        RequestGoogle req=new RequestGoogle();
 	        String address=req.getAddress(x, y);
 	        String[] split=address.split(",");
-	        obj.put("RequestID", "AroundLocation");
-	        obj.put("state", split[2]);
-	        obj.put("location_remark",address);
-	        obj.put("region_type", sqlDataBase.getregion_type());
-	        obj.put("radius", radius);
-	        for (int j=0; j<cmidAtRadius.size();j++) {
-	        	obj.put(cmidAtRadius.get(j), "NULL");
-	        }
+	        try {
+				obj.put(new JSONObject().append("RequestID", "AroundLocation"));
+				obj.put(new JSONObject().append("state", split[2]));
+		        obj.put(new JSONObject().append("location_remark",address));
+		        obj.put(new JSONObject().append("region_type", sqlDataBase.getregion_type()));
+		        obj.put(new JSONObject().append("radius", radius));
+		        for (int j=0; j<cmidAtRadius.size();j++) {
+		        	obj.put(new JSONObject().append(cmidAtRadius.get(j), "NULL"));
+		        }
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        
 	//        jsonToSend.add(obj);
 	  //      send.put("JSONFile", jsonToSend.toString());
 	   //     connection con=new connection();
@@ -111,11 +136,9 @@ public class Emergency extends HttpServlet {
 	        con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis");
 	        //obj.sendResponse();
 	        //send with sendResponse
-		} catch (ParseException ex) {
-			ex.printStackTrace();
-		} catch (NullPointerException ex) {
-			ex.printStackTrace();
-		}
+		} catch (ParseException ex1) {
+			ex1.printStackTrace();
+		} 
 	}
 }
 

@@ -100,9 +100,10 @@ public class Mapping extends HttpServlet {
 		//String stringToParse = null;
 		try {
 			writer.write("enter 3 \n");
-			JSONObject json = new JSONObject(request.getParameterMap());
+			jsonObject = new JSONObject(request.getParameterMap());
 			writer.write("enter 4 \n");
-			//jsonArrayOb=(JSONArray) jsonObject.get("JSONFile");
+			writer.write(jsonObject.toString()+"  ");
+			jsonArrayOb=(JSONArray) jsonObject.get("JSONFile");
 			writer.write("enter 42 \n");
 			writer.write(jsonArrayOb.toString());
 			writer.write("enter 43 \n");
@@ -131,7 +132,7 @@ public class Mapping extends HttpServlet {
 //				writer.write("enter 53\n");
 //				jsonArrayOb=(JSONArray) jsonObject.get("JSONFile");
 //			}
-		} catch (Exception e) { /*writer.write(e.toString()); /*report an error*/ }
+		} catch (Exception e) { writer.write(e.toString()); /*report an error*/ }
 		finally{
 			writer.write("finally 55");
 			writer.close();

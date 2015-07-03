@@ -369,11 +369,10 @@ public class SQL_db {
 		return eventID;
 	}
 	
-	public ArrayList<String> getListOfKeys(JSONObject json)
+	public ArrayList<String> getListOfKeys(org.json.JSONObject jsonObject)
 	{
 		ArrayList<String> keyList=new ArrayList<String>();
-		Set keys = json.keySet();
-		Iterator a = keys.iterator();
+		Iterator a = jsonObject.keys();
 		while(a.hasNext()) {
 			String key = (String)a.next();
 			keyList.add(key);

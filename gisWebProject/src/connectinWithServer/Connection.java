@@ -8,22 +8,16 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
 import org.jsoup.*;
-
-
-
-
-
-
-
-
 
 import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.jsoup.Jsoup;
@@ -45,13 +39,19 @@ public class Connection {
 //		JSONArray arr=new JSONArray();
 		JSONObject json=new JSONObject();
 
-		json.put("RequestID", "test");
-		json.put("comunity_member_id","8888");
-		json.put("x",5.5);
-		json.put("y", 6.6);
+		try {
+			json.put("RequestID", "test");
+			json.put("comunity_member_id","8888");
+			json.put("x",5.5);
+			json.put("y", 6.6);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 
 		JSONArray jsonarr= new JSONArray();
-		jsonarr.add(json);
+		jsonarr.put(json);
 		//JSONObject js=new JSONObject();
 		//js.put("JSONFile", jsonarr);
 
@@ -59,7 +59,7 @@ public class Connection {
 		//JSONObject jsonn = (JSONObject) parser.parse(js.toString());
 		HttpURLConnection httpcon;  
 		String url = "http://mba4.ad.biu.ac.il/gisWebProject/mapping";
-		String data = jsonarr.toJSONString();
+		String data = jsonarr.toString();
 		String result = null;
 		try{
 			org.jsoup.Connection.Response resp = Jsoup.connect(url)
@@ -119,7 +119,7 @@ public class Connection {
 		return jsonObject;
 	}
 	
-	public void sendJsonObject(JSONObject sendJson,String to)
+	public void sendJsonObject(org.json.JSONArray obj,String to)
 	{
 		
 //		JSONObject json=new JSONObject();
@@ -157,7 +157,7 @@ public class Connection {
 //			os.close();
 
 		
-		String strJson=sendJson.toString();
+		String strJson=obj.toString();
 		HttpURLConnection httpcon;  
 		String url = to;
 		String data = strJson;
@@ -187,7 +187,7 @@ public class Connection {
 	}
 
 	
-	public void sendJsonObject(JSONArray jsonToSend, String to) {
+	public void sendJsonObject(org.json.simple.JSONArray jsonToSend, String to) {
 		// TODO Auto-generated method stub
 		HttpURLConnection httpcon; 
 		String strJson=jsonToSend.toString();
