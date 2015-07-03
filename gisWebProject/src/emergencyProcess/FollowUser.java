@@ -10,10 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+
 import org.json.JSONException;
 //import org.json.*;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -63,15 +64,27 @@ public class FollowUser extends HttpServlet {
 				e.printStackTrace();
 			}
 			// take each value from the json array separately
-			Iterator i = jsonArrayOb.iterator();
-	        while (i.hasNext()) {
-	             	JSONObject innerObj = (JSONObject) i.next();
-	                if (innerObj.get("RequestID").equals("followUser")){
-	                	//get from Json the data
-	                	String eventID = innerObj.get("eventID").toString();
-	                	String cmid  = innerObj.get("comunity_member_id").toString();	                	
-	                	sqlDataBase.updateEmergency(cmid, eventID);
-	               	}
+			int i = 0;
+			int a = jsonArrayOb.length();
+			while(i < a) {
+             	JSONObject innerObj = null;
+				try {
+					innerObj = (JSONObject) jsonArrayOb.get(i);
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+                try {
+					if (innerObj.get("RequestID").equals("followUser")){
+						//get from Json the data
+						String eventID = innerObj.get("eventID").toString();
+						String cmid  = innerObj.get("comunity_member_id").toString();	                	
+						sqlDataBase.updateEmergency(cmid, eventID);
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();

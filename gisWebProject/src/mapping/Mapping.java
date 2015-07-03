@@ -32,14 +32,17 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
-import org.codehaus.jettison.json.JSONArray;
+
+//import org.codehaus.jettison.json.JSONArray;
 //import org.codehaus.jettison.json.*;
 import org.json.*;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 //import com.sun.javafx.collections.MappingChange.Map;
+
 
 
 
@@ -177,7 +180,12 @@ public class Mapping extends HttpServlet {
 			try{
 				writer.write("enter 14 \n");
 				innerObj = (JSONObject) parser.parse(i.next().toString());
-				reqID = innerObj.get("RequestID").toString();
+				try {
+					reqID = innerObj.get("RequestID").toString();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				writer.write("enter 15 \n");
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block

@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 //import org.json.*;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -65,7 +65,9 @@ public class ArriveTime extends HttpServlet {
 				e.printStackTrace();
 			}
 			// take each value from the json array separately
-			Iterator i = jsonArrayOb.iterator();
+			//int i = 0;
+			int curr =0; 
+			int i = jsonArrayOb.length();
 			
 			List<String> cmidAtRadius = new ArrayList<String>();
 			String walking="", driving="",
@@ -76,45 +78,59 @@ public class ArriveTime extends HttpServlet {
 			double[] cmidPoint = new double[2];
 			ArrayList<String> cmidFromKey;
 			String sickCmid;
-			String[] split;
-			JSONArray jsonarr=new JSONArray();
+			//String[] split;
+			//JSONArray jsonarr=new JSONArray();
 			org.json.JSONArray jsonToSend=new org.json.JSONArray();
 			JSONObject obj=new JSONObject();
 	//		JSONObject send=new JSONObject();
-			while (i.hasNext()) {
-				JSONObject innerObj = (JSONObject) i.next();
-				if (innerObj.get("RequestID").equals("Times")){
-				
-					eventID = innerObj.get("eventID").toString();
-					sickCmid = sqlDataBase.getCmidByEventId(eventID);
-					sickPoint = sqlDataBase.getPointByCmid(sickCmid);
-					RequestGoogle googleReq = new RequestGoogle();
-					cmidFromKey = new ArrayList<String>();
-					cmidFromKey=sqlDataBase.getListOfKeys(jsonObject);
-					for(j=0; j < cmidFromKey.size(); j++) {
-						if(!(cmidFromKey.get(j).equals("eventID"))) {
-							JSONObject cmidJson = new JSONObject();
-							cmidJson.put("subRequest", "cmid");
-							cmidPoint = sqlDataBase.getPointByCmid(cmidFromKey.get(j));
-							try{
-								walking = RequestGoogle.sendGet("walking", cmidPoint[1], cmidPoint[0],sickPoint[1], sickPoint[0]);
-								driving = RequestGoogle.sendGet("driving", cmidPoint[1], cmidPoint[0],sickPoint[1], sickPoint[0]);
+			while (curr < i) {
+				JSONObject innerObj;
+				try {
+					innerObj = (JSONObject) jsonArrayOb.get(i);
+					if (innerObj.get("RequestID").equals("Times")){
+						
+						eventID = innerObj.get("eventID").toString();
+						sickCmid = sqlDataBase.getCmidByEventId(eventID);
+						sickPoint = sqlDataBase.getPointByCmid(sickCmid);
+						RequestGoogle googleReq = new RequestGoogle();
+						cmidFromKey = new ArrayList<String>();
+						cmidFromKey=sqlDataBase.getListOfKeys(jsonObject);
+						for(j=0; j < cmidFromKey.size(); j++) {
+							if(!(cmidFromKey.get(j).equals("eventID"))) {
+								JSONObject cmidJson = new JSONObject();
+								cmidJson.put("subRequest", "cmid");
+								cmidPoint = sqlDataBase.getPointByCmid(cmidFromKey.get(j));
+								try{
+									walking = RequestGoogle.sendGet("walking", cmidPoint[1], cmidPoint[0],sickPoint[1], sickPoint[0]);
+									driving = RequestGoogle.sendGet("driving", cmidPoint[1], cmidPoint[0],sickPoint[1], sickPoint[0]);
+								}
+								catch(Exception ex){}
+								location_remark = googleReq.getAddress(cmidPoint[0], cmidPoint[1]);
+								cmidJson.put("eta_by_foot",walking);
+								cmidJson.put("eta_by_car",driving);
+								cmidJson.put("location_remark",location_remark);
+								obj.put(sickCmid, cmidJson.toString());
+								jsonToSend.put(obj);
 							}
-							catch(Exception ex){}
-							location_remark = googleReq.getAddress(cmidPoint[0], cmidPoint[1]);
-							cmidJson.put("eta_by_foot",walking);
-							cmidJson.put("eta_by_car",driving);
-							cmidJson.put("location_remark",location_remark);
-							obj.put(sickCmid, cmidJson.toString());
-							jsonToSend.put(obj);
 						}
 					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				obj.put("RequestID", "UsersArrivalTimes");
-				obj.put("eventID", eventID);
 				
-				int radius = sqlDataBase.getRadiusByEventID(eventID);
-				obj.put("radius",radius);
+				try {
+					obj.put("RequestID", "UsersArrivalTimes");
+					obj.put("eventID", eventID);
+					int radius = sqlDataBase.getRadiusByEventID(eventID);
+					obj.put("radius",radius);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				
 				
 				jsonToSend.put(obj);
 	//			send.put("JSONFile", jsonToSend.toString());

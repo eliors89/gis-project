@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 //import org.json.*;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -67,19 +67,27 @@ public class StopFollow extends HttpServlet {
 				e.printStackTrace();
 			}
 			// take each value from the json array separately
-			Iterator i = jsonArrayOb.iterator();
+			int i = 0;
+			int curr = jsonArrayOb.length();
 			int j;
 			ArrayList<String> cmidFromKey;
-	        while (i.hasNext()) {
-	             	JSONObject innerObj = (JSONObject) i.next();
-	                if (innerObj.get("RequestID").equals("stopFollow")){
-	                	String eventID = innerObj.get("eventID").toString();
-	                	cmidFromKey = new ArrayList<String>();
-	                	cmidFromKey = sqlDataBase.getListOfKeys(jsonObject);
-						for(j=0; j < cmidFromKey.size(); j++) {
-							sqlDataBase.updateRoutine(cmidFromKey.get(j));
-						}
-	               	}
+	        while (curr < i) {
+	             	JSONObject innerObj;
+					try {
+						innerObj = (JSONObject) jsonArrayOb.get(curr);
+						if (innerObj.get("RequestID").equals("stopFollow")){
+		                	String eventID = innerObj.get("eventID").toString();
+		                	cmidFromKey = new ArrayList<String>();
+		                	cmidFromKey = sqlDataBase.getListOfKeys(jsonObject);
+							for(j=0; j < cmidFromKey.size(); j++) {
+								sqlDataBase.updateRoutine(cmidFromKey.get(j));
+							}
+		               	}
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	                
             }
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
