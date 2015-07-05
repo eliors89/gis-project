@@ -259,7 +259,12 @@ public class SQL_db {
 			connect();
 			statement.execute("USE GIS_DB;");
 			ResultSet rs=statement.executeQuery("SELECT * FROM updatedLocation WHERE cmid='"+cmid+"';");
-			eventID = rs.getString("eventID");
+			if(!rs.next()){
+				eventID = rs.getString("eventID");
+			}
+			else{
+				eventID=null;
+			}
 		}
 		catch(SQLException se){
 		      //Handle errors for JDBC
