@@ -41,9 +41,9 @@ public class Connection {
 
 		try {
 			json.put("RequestID", "routineLocation");
-			json.put("comunity_member_id","8888");
-			json.put("x",5.5);
-			json.put("y", 6.6);
+			json.put("community_member_id","8888");
+			json.put("x",7.5);
+			json.put("y", 9.6);
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -125,7 +125,7 @@ public class Connection {
 		//		JSONObject json=new JSONObject();
 		//
 		//		json.put("RequestID", "test");
-		//		json.put("comunity_member_id","8888");
+		//		json.put("community_member_id","8888");
 		//		json.put("x",5.5);
 		//		json.put("y", 6.6);
 		//

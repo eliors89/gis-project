@@ -63,15 +63,15 @@ public class FollowUser extends HttpServlet {
 			JSONArray jarr = new JSONArray(jfString);
 	
 			// take each value from the json array separately
-			int len = jarr.length();
-			for(int curr=0;curr<len;curr++) {
+			int arrLen = jarr.length();
+			for(int curr=0;curr<arrLen;curr++) {
              	JSONObject innerObj;
              	try {
              		innerObj = (JSONObject) jarr.getJSONObject(curr);
 					if (innerObj.getString("RequestID").equals("followUser")){
 						//get from Json the data
 						String eventID = innerObj.getString("eventID");
-						String cmid  = innerObj.getString("comunity_member_id");	                	
+						String cmid  = innerObj.getString("community_member_id");	                	
 						sqlDataBase.updateEmergency(cmid, eventID);
 					}
 				} catch (JSONException e) {

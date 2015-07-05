@@ -65,9 +65,8 @@ public class ArriveTime extends HttpServlet {
 				e.printStackTrace();
 			}
 			// take each value from the json array separately
-			//int i = 0;
-			int curr =0; 
-			int i = jsonArrayOb.length();
+			//int i = 0; 
+			int arrLen = jsonArrayOb.length();
 			
 			List<String> cmidAtRadius = new ArrayList<String>();
 			String walking="", driving="",
@@ -83,10 +82,10 @@ public class ArriveTime extends HttpServlet {
 			org.json.JSONArray jsonToSend=new org.json.JSONArray();
 			JSONObject obj=new JSONObject();
 	//		JSONObject send=new JSONObject();
-			while (curr < i) {
+			for (int curr =0;curr < arrLen;curr++) {
 				JSONObject innerObj;
 				try {
-					innerObj = (JSONObject) jsonArrayOb.get(i);
+					innerObj = (JSONObject) jsonArrayOb.get(curr);
 					if (innerObj.get("RequestID").equals("Times")){
 						
 						eventID = innerObj.get("eventID").toString();
@@ -128,10 +127,6 @@ public class ArriveTime extends HttpServlet {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				
-				
-				
 				jsonToSend.put(obj);
 	//			send.put("JSONFile", jsonToSend.toString());
 //				connection con=new connection();

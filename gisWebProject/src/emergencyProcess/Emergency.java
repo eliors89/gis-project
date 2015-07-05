@@ -65,18 +65,17 @@ public class Emergency extends HttpServlet {
 				e.printStackTrace();
 			}
 			// take each value from the json array separately
-			int arrSize = jsonArrayOb.length();
-			int i = 0;
+			int arrLen = jsonArrayOb.length();
 			List<String> cmidAtRadius = new ArrayList<String>();
 			double x = 0,y = 0;
 			int radius = 0;
-	        while (i<arrSize) {
+	        for (int curr=0;curr<arrLen;curr++) {
 	             	JSONObject innerObj;
 	             	int region_type;
 	             	String eventID = null,cmid = null,state = null,medical_condition_description = null;
 	             	float age = 0;
 					try {
-						innerObj = (JSONObject) jsonArrayOb.get(i);
+						innerObj = (JSONObject) jsonArrayOb.get(curr);
 						if (innerObj.get("RequestID").equals("AroundLocation")){
 		                	
 		                	//get from Json the data
@@ -109,19 +108,19 @@ public class Emergency extends HttpServlet {
 	               	}
             
 //	        JSONArray jsonToSend=new JSONArray();
-	        JSONArray obj=new JSONArray();
+	        JSONObject obj=new JSONObject();
 //	        JSONObject send=new JSONObject();
 	        RequestGoogle req=new RequestGoogle();
 	        String address=req.getAddress(x, y);
 	        String[] split=address.split(",");
 	        try {
-				obj.put(new JSONObject().append("RequestID", "AroundLocation"));
-				obj.put(new JSONObject().append("state", split[2]));
-		        obj.put(new JSONObject().append("location_remark",address));
-		        obj.put(new JSONObject().append("region_type", sqlDataBase.getregion_type()));
-		        obj.put(new JSONObject().append("radius", radius));
+				obj.put("RequestID", "AroundLocation");
+				obj.put("state", split[2]);
+		        obj.put("location_remark",address);
+		        obj.put("region_type", sqlDataBase.getregion_type());
+		        obj.put("radius", radius);
 		        for (int j=0; j<cmidAtRadius.size();j++) {
-		        	obj.put(new JSONObject().append(cmidAtRadius.get(j), "NULL"));
+		        	obj.put(cmidAtRadius.get(j), "NULL");
 		        }
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block

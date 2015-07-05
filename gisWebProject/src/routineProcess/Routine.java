@@ -198,7 +198,7 @@ public class Routine extends HttpServlet {
 				try {
 					innerObj = (JSONObject) jarr.getJSONObject(curr);
 					if (innerObj.getString("RequestID").equals("routineLocation")){
-						cmid  = innerObj.getString("comunity_member_id");
+						cmid  = innerObj.getString("community_member_id");
 						x = innerObj.getDouble("x");
 						y = innerObj.getDouble("y");
 						sqlDataBase.updateLocation(cmid, x, y);
@@ -209,7 +209,7 @@ public class Routine extends HttpServlet {
 							split=address.split(",");
 							obj.put("RequestID", "followUser");
 							obj.put("location_remark",address);
-							obj.put("comunity_member_id", cmid);
+							obj.put("community_member_id", cmid);
 							
 							eventId = sqlDataBase.getEventIDFromUpdate(cmid);
 							sickCmid = sqlDataBase.getCmidByEventId(eventId);
