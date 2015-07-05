@@ -28,8 +28,8 @@ public class SQL_db {
 			statement.execute("USE GIS_DB;");
 			statement.execute("CREATE TABLE IF NOT EXISTS updatedLocation (cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), eventID VARCHAR(20), createdDate DATE, createdTime TIME, lastUpdatedDate DATE, lastUpdatedTime TIME);");/*  */
 			statement.execute("CREATE TABLE IF NOT EXISTS locationHistory (cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), createdDate DATE, createdTime TIME, lastUpdatedDate DATE, lastUpdatedTime TIME);");
-			statement.execute("CREATE TABLE IF NOT EXISTS decisionTable (eventID VARCHAR(20), cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), state VARCHAR(20), region_type VARCHAR(20), medical_condition VARCHAR(30), age DOUBLE(5,2), radius INT);");
-			statement.execute("CREATE TABLE IF NOT EXISTS emergencyProcess (eventID VARCHAR(20), cmid VARCHAR(20), radius INT, type INT);");
+			statement.execute("CREATE TABLE IF NOT EXISTS decisionTable (eventID VARCHAR(20), cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), state VARCHAR(20), region_type INT, medical_condition VARCHAR(30), age DOUBLE(5,2), radius INT);");
+	//		statement.execute("CREATE TABLE IF NOT EXISTS emergencyProcess (eventID VARCHAR(20), cmid VARCHAR(20), radius INT, type INT);");
 		}
 		catch(SQLException se){
 		      //Handle errors for JDBC
@@ -46,13 +46,13 @@ public class SQL_db {
 		}
 	}
 	//TODO
-	public String getregion_type() {
-		String region_type = " ";
+	public int getregion_type() {
+		int region_type = 1;
 		return region_type;
 	}
 	//TODO
 	//if we dont have a radius we take radius from decision table
-	public int getRadiusFromDesicionTable(String eventID, String cmid, double x, double y, String state, String region_type, String medical_condition_description, float age) {
+	public int getRadiusFromDesicionTable(String eventID, String cmid, double x, double y, String state, int region_type, String medical_condition_description, float age) {
 		//for test at future need to insert func 
 		int radius=5;
 		
@@ -183,7 +183,7 @@ public class SQL_db {
 		}
 	}
 	//update the table of decisionTable
-	public void updateDecisionTable(String eventID, String cmid, double x, double y, String state, String region_type, String medical_condition_description, float age, int radius){
+	public void updateDecisionTable(String eventID, String cmid, double x, double y, String state, int region_type, String medical_condition_description, float age, int radius){
 		try {
 			connect();
 			statement.execute("USE GIS_DB;");
@@ -197,7 +197,7 @@ public class SQL_db {
 				double x_val = rs.getDouble("x");
 				double y_val = rs.getDouble("y");
 				String state_val = rs.getString("state");
-				String region_type_val = rs.getString("region_type");
+				int region_type_val = rs.getInt("region_type");
 				String medical_condition_description_val = rs.getString("medical_condition_description");
 				float age_val = rs.getFloat("age");
 				int radius_val = rs.getInt("radius");

@@ -72,7 +72,7 @@ public class Emergency extends HttpServlet {
 			int radius = 0;
 	        while (i<arrSize) {
 	             	JSONObject innerObj;
-	             	String region_type;
+	             	int region_type;
 	             	String eventID = null,cmid = null,state = null,medical_condition_description = null;
 	             	float age = 0;
 					try {
@@ -132,8 +132,8 @@ public class Emergency extends HttpServlet {
 	  //      send.put("JSONFile", jsonToSend.toString());
 	   //     connection con=new connection();
 	        //TODO
-	       
-	        con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis");
+	       //check
+//	        con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis");
 	        //obj.sendResponse();
 	        //send with sendResponse
 		} catch (ParseException ex1) {
