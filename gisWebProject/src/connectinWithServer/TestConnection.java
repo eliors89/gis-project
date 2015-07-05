@@ -40,7 +40,7 @@ public class TestConnection extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
 		// TODO Auto-generated method stub
 		Writer writer=null;
 		try {
@@ -48,18 +48,19 @@ public class TestConnection extends HttpServlet {
 		          new FileOutputStream("testclass.txt"), "utf-8"));
 		    writer.write("enter 112 ");
 		    StringBuffer jb = new StringBuffer();
-			String stringToParse = null;
-			
-			BufferedReader reader = request.getReader();
-			while ((stringToParse = reader.readLine()) != null){
-				writer.write("enter 122 ");
-				jb.append(stringToParse);
-			}
-			writer.write("enter 132 ");
-			writer.write(reader.toString());
-			writer.write("enter 14 ");
-		    writer.write(request.getInputStream().toString());
-		    writer.write("enter 15 ");
+	//		String stringToParse =null;
+			String jfString = request.getParameter("JSONFile");
+			writer.write(jfString);
+//			BufferedReader reader = request.getReader();
+//			while ((stringToParse = reader.readLine()) != null){
+//				writer.write("enter 122 ");
+//				jb.append(stringToParse);
+//			}
+//			writer.write("enter 132 ");
+//			writer.write(reader.toString());
+//			writer.write("enter 14 ");
+//		    writer.write(request.getInputStream().toString());
+//		    writer.write("enter 15 ");
 		} catch (IOException ex) {}
 		finally
 		{

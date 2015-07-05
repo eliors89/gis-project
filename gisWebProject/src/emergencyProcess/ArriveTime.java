@@ -101,8 +101,8 @@ public class ArriveTime extends HttpServlet {
 								cmidJson.put("subRequest", "cmid");
 								cmidPoint = sqlDataBase.getPointByCmid(cmidFromKey.get(j));
 								try{
-									walking = RequestGoogle.sendGet("walking", cmidPoint[1], cmidPoint[0],sickPoint[1], sickPoint[0]);
-									driving = RequestGoogle.sendGet("driving", cmidPoint[1], cmidPoint[0],sickPoint[1], sickPoint[0]);
+									walking = googleReq.sendGet("walking", cmidPoint[1], cmidPoint[0],sickPoint[1], sickPoint[0]);
+									driving = googleReq.sendGet("driving", cmidPoint[1], cmidPoint[0],sickPoint[1], sickPoint[0]);
 								}
 								catch(Exception ex){}
 								location_remark = googleReq.getAddress(cmidPoint[0], cmidPoint[1]);
@@ -137,7 +137,7 @@ public class ArriveTime extends HttpServlet {
 //				connection con=new connection();
 				//TODO
 				//need to ask from server what url to send
-				con.sendJsonObject(jsonToSend, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis-times");
+			//	con.sendJsonObject(jsonToSend, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis-times");
 				//send with sendResponse
 			}
 		} catch (ParseException ex) {

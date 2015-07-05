@@ -81,7 +81,7 @@ public class RequestGoogle extends HttpServlet {
 		}
 	}
 	// requte for get time by mod and source and target
-	public static String sendGet(String mod,double yCurrent,double xCurrent,double needToY,double needToX) throws Exception {
+	public String sendGet(String mod,double yCurrent,double xCurrent,double needToY,double needToX) throws Exception {
 		//the user browser
 		String USER_AGENT="Chrome";
 		//key to use google maps api

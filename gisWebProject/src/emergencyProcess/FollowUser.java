@@ -1,6 +1,7 @@
 package emergencyProcess;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Iterator;
 
 import javax.servlet.ServletException;
@@ -11,12 +12,13 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+
+
 import org.json.JSONException;
 //import org.json.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+
 
 import connectinWithServer.Connection;
 import SQL_DataBase.SQL_db;
@@ -40,6 +42,7 @@ public class FollowUser extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		try {
 			SQL_db sqlDataBase = new SQL_db();
 //			StringBuffer jb = new StringBuffer();
@@ -54,31 +57,21 @@ public class FollowUser extends HttpServlet {
 //			JSONParser parser = new JSONParser();
 //			//convert the data to json object
 			Connection con=new Connection();
-			org.json.JSONObject jsonObject = con.getRequest(request);
+			String jfString = request.getParameter("JSONFile");
 			
-			JSONArray jsonArrayOb = null;
-			try {
-				jsonArrayOb = (JSONArray) jsonObject.get("JSONFile");
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
+			JSONArray jarr = new JSONArray(jfString);
+	
 			// take each value from the json array separately
-			int i = 0;
-			int a = jsonArrayOb.length();
-			while(i < a) {
-             	JSONObject innerObj = null;
-				try {
-					innerObj = (JSONObject) jsonArrayOb.get(i);
-				} catch (JSONException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-                try {
-					if (innerObj.get("RequestID").equals("followUser")){
+			int len = jarr.length();
+			for(int curr=0;curr<len;curr++) {
+             	JSONObject innerObj;
+             	try {
+             		innerObj = (JSONObject) jarr.getJSONObject(curr);
+					if (innerObj.getString("RequestID").equals("followUser")){
 						//get from Json the data
-						String eventID = innerObj.get("eventID").toString();
-						String cmid  = innerObj.get("comunity_member_id").toString();	                	
+						String eventID = innerObj.getString("eventID");
+						String cmid  = innerObj.getString("comunity_member_id");	                	
 						sqlDataBase.updateEmergency(cmid, eventID);
 					}
 				} catch (JSONException e) {
@@ -88,6 +81,9 @@ public class FollowUser extends HttpServlet {
             }
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 	}
 }

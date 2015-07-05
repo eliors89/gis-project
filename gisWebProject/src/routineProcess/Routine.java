@@ -130,6 +130,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+
 import org.json.JSONException;
 //import org.json.*;
 import org.json.JSONArray;
@@ -175,43 +176,40 @@ public class Routine extends HttpServlet {
 			
 			//JSONArray jsonToSend=new JSONArray();
 			Connection con=new Connection();
-			org.json.JSONObject jsonObject = con.getRequest(request);
-			org.json.JSONArray obj=new org.json.JSONArray();
+			String jfString = request.getParameter("JSONFile");
+			JSONArray jarr = new JSONArray(jfString);
+//			org.json.JSONObject jsonObject = con.getRequest(request);
+			org.json.JSONObject obj=new org.json.JSONObject();
 			//JSONObject send =new JSONObject();
 			RequestGoogle req=new RequestGoogle();
-			JSONArray jsonArrayOb = null;
-			try {
-				jsonArrayOb = (JSONArray) jsonObject.get("JSONFile");
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+
 			// take each value from the json array separately
 			String routineOrEmerg;
-			int i = jsonArrayOb.length();
-			int curr = 0;
+			int len = jarr.length();
+			
 			double x, y;
 			String eventId, cmid, sickCmid;
 			String[] split;
 			double[] sickPoint = new double[2]; 
 			String address="";
-			while (curr < i) {
+			for(int curr=0; curr<len;curr++) {
 				JSONObject innerObj;
 				try {
-					innerObj = (JSONObject) jsonArrayOb.get(curr);
-					if (innerObj.get("RequestID").equals("routineLocation")){
-						cmid  = innerObj.get("comunity_member_id").toString();
-						x = Double.parseDouble(innerObj.get("x").toString());
-						y = Double.parseDouble(innerObj.get("y").toString());
+					innerObj = (JSONObject) jarr.getJSONObject(curr);
+					if (innerObj.getString("RequestID").equals("routineLocation")){
+						cmid  = innerObj.getString("comunity_member_id");
+						x = innerObj.getDouble("x");
+						y = innerObj.getDouble("y");
 						sqlDataBase.updateLocation(cmid, x, y);
 						routineOrEmerg = sqlDataBase.checkRoutineOrEmerg(cmid);
 						//enum for emergency 
 						if(routineOrEmerg != null){
 							address=req.getAddress(x, y);
 							split=address.split(",");
-							obj.put(new JSONObject().put("RequestID", "followUser"));
-							obj.put(new JSONObject().put("location_remark",address));
-							obj.put(new JSONObject().put("comunity_member_id", cmid));
+							obj.put("RequestID", "followUser");
+							obj.put("location_remark",address);
+							obj.put("comunity_member_id", cmid);
 							
 							eventId = sqlDataBase.getEventIDFromUpdate(cmid);
 							sickCmid = sqlDataBase.getCmidByEventId(eventId);
@@ -219,15 +217,15 @@ public class Routine extends HttpServlet {
 
 							try{
 								String driving=req.sendGet("driving", x, y, sickPoint[0], sickPoint[1]);
-								obj.put(new JSONObject().put("eta_by_car",driving));
+								obj.put("eta_by_car",driving);
 								String walking=req.sendGet("walking", x ,y, sickPoint[0], sickPoint[1]);
-								obj.put(new JSONObject().put("eta_by_foot", walking));
-								obj.put(new JSONObject().put("event_id", sqlDataBase.getEventID(cmid)));
+								obj.put("eta_by_foot", walking);
+								obj.put("event_id", sqlDataBase.getEventID(cmid));
 					//			jsonToSend.add(obj);
 					//			send.put("JSONFile", jsonToSend.toString());
 					//			connection con= new connection();
 								//need to check with server url for this
-								con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis");
+								con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/gisWebProject/test");
 							}
 							catch (Exception ex){/*error report*/}
 
@@ -248,6 +246,9 @@ public class Routine extends HttpServlet {
 
 			ex.printStackTrace();
 
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 
 	}
