@@ -41,9 +41,9 @@ public class Connection {
 
 		try {
 			json.put("RequestID", "routineLocation");
-			json.put("community_member_id","8888");
-			json.put("x",7.5);
-			json.put("y", 9.6);
+			json.put("community_member_id","1172");
+			json.put("x",359.455);
+			json.put("y", 722.311);
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

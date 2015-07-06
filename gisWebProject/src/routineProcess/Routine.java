@@ -116,6 +116,7 @@
 package routineProcess;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 //import java.io.PrintWriter;
 import java.util.Iterator;
 
@@ -123,6 +124,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 
 
@@ -162,6 +164,10 @@ public class Routine extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
+			JSONArray arr=new JSONArray();
+			JSONObject jsonObject=new JSONObject();
+			jsonObject.put("status", "success");
+			arr.put(jsonObject);
 			SQL_db sqlDataBase = new SQL_db();
 //			StringBuffer jb = new StringBuffer();
 //			String stringToParse = null;
@@ -204,7 +210,15 @@ public class Routine extends HttpServlet {
 						sqlDataBase.updateLocation(cmid, x, y);
 						routineOrEmerg = sqlDataBase.checkRoutineOrEmerg(cmid);
 						//enum for emergency 
-						if(routineOrEmerg != null){
+						
+
+response.setContentType("application/json"); 
+// Get the printwriter object from response to write the required json object to the output stream 
+PrintWriter out = response.getWriter(); 
+// Assuming your json object is **jsonObject**, perform the following, it will return your json object 
+out.print(arr);
+out.flush();			
+if(routineOrEmerg != null){
 							address=req.getAddress(x, y);
 							split=address.split(",");
 							obj.put("RequestID", "followUser");
@@ -235,7 +249,6 @@ public class Routine extends HttpServlet {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				curr++;
 				
 			}
 		} catch (ParseException ex) {
@@ -253,6 +266,3 @@ public class Routine extends HttpServlet {
 
 	}
 }
-
-
-
