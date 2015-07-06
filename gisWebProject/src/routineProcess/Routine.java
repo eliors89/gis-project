@@ -210,15 +210,13 @@ public class Routine extends HttpServlet {
 						sqlDataBase.updateLocation(cmid, x, y);
 						routineOrEmerg = sqlDataBase.checkRoutineOrEmerg(cmid);
 						//enum for emergency 
-						
-
-response.setContentType("application/json"); 
-// Get the printwriter object from response to write the required json object to the output stream 
-PrintWriter out = response.getWriter(); 
-// Assuming your json object is **jsonObject**, perform the following, it will return your json object 
-out.print(arr);
-out.flush();			
-if(routineOrEmerg != null){
+						response.setContentType("application/json"); 
+						// Get the printwriter object from response to write the required json object to the output stream 
+						PrintWriter out = response.getWriter(); 
+						// Assuming your json object is **jsonObject**, perform the following, it will return your json object 
+						out.print(arr);
+						out.flush();			
+						if(routineOrEmerg != null){
 							address=req.getAddress(x, y);
 							split=address.split(",");
 							obj.put("RequestID", "followUser");
@@ -228,28 +226,24 @@ if(routineOrEmerg != null){
 							eventId = sqlDataBase.getEventIDFromUpdate(cmid);
 							sickCmid = sqlDataBase.getCmidByEventId(eventId);
 							sickPoint = sqlDataBase.getPointByCmid(sickCmid);
-
 							try{
 								String driving=req.sendGet("driving", x, y, sickPoint[0], sickPoint[1]);
 								obj.put("eta_by_car",driving);
 								String walking=req.sendGet("walking", x ,y, sickPoint[0], sickPoint[1]);
 								obj.put("eta_by_foot", walking);
 								obj.put("event_id", sqlDataBase.getEventID(cmid));
-					//			jsonToSend.add(obj);
-					//			send.put("JSONFile", jsonToSend.toString());
-					//			connection con= new connection();
+						//			jsonToSend.add(obj);
+						//			send.put("JSONFile", jsonToSend.toString());
+						//			connection con= new connection();
 								//need to check with server url for this
 								con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/gisWebProject/test");
-							}
-							catch (Exception ex){/*error report*/}
-
+							}catch (Exception ex){/*error report*/}
 						}
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
 			}
 		} catch (ParseException ex) {
 
