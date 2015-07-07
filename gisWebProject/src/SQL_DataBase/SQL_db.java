@@ -281,10 +281,10 @@ public class SQL_db {
 		if(eventID != null)
 			return eventID;
 		else
-			//routin
+			//routine
 			return null;
 	}
-	//status of cmid change to emergeny
+	//status of cmid change to emergency
 	public void updateEmergency(String cmid, String eventID) {
 		try {
 			connect();
@@ -352,27 +352,6 @@ public class SQL_db {
 		return eventID;
 	}
 	
-	public String getEventIDFromUpdate(String cmid) {
-		String eventID="";
-		try {
-			connect();
-			statement.execute("USE GIS_DB;");
-			ResultSet rs=statement.executeQuery("SELECT * FROM updateLocation WHERE cmid='"+cmid+"';");
-			eventID = rs.getString("eventID");
-		}
-		catch(SQLException se){
-		      //Handle errors for JDBC
-		      se.printStackTrace();
-		 }
-		 catch(Exception e){
-		      //Handle errors for Class.forName
-		      e.printStackTrace();
-		 }
-		finally {
-			disconnect();
-		}
-		return eventID;
-	}
 	
 	public ArrayList<String> getListOfKeys(org.json.JSONObject jsonObject)
 	{

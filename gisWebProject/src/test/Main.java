@@ -13,8 +13,10 @@ import emergencyProcess.RequestGoogle;
 //
 //import routineProcess.Routine;
 import SQL_DataBase.SQL_db;
+
 import java.util.Iterator;
 import java.util.Set;
+
 
 //import org.json.simple.JSONObject;
 import org.json.JSONArray;
@@ -30,6 +32,7 @@ public class Main {
 				sqlDataBase.updateRoutine("1234");
 				sqlDataBase.updateLocation("1234", 8.8, 9.9);
 				
+				System.out.println(sqlDataBase.checkRoutineOrEmerg("1234"));
 	}
 }
 		//		RequestGoogle req=new RequestGoogle();
