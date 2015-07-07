@@ -31,8 +31,14 @@ public class Main {
 				sqlDataBase.updateLocation("1234", 7.7, 8.7);
 				sqlDataBase.updateRoutine("1234");
 				sqlDataBase.updateLocation("1234", 8.8, 9.9);
+				sqlDataBase.getCMIDByPoint(8.8, 9.9);
+				System.out.println(sqlDataBase.getCmidByEventId("1234"));
+				sqlDataBase.updateDecisionTable("1234", "1234", 5.5, 6.6, "israel", 1, "aaa", 15, 3);
+				sqlDataBase.updateEmergency("1234", "1234");
+				System.out.println(sqlDataBase.getCmidByEventId("1234"));
+				sqlDataBase.getPointByCmid("1234");
+				sqlDataBase.getPointByCmid("1234");
 				
-				System.out.println(sqlDataBase.checkRoutineOrEmerg("1234"));
 	}
 }
 		//		RequestGoogle req=new RequestGoogle();

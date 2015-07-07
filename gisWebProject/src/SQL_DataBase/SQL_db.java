@@ -110,7 +110,14 @@ public class SQL_db {
 			connect();
 			statement.execute("USE GIS_DB;");
 			ResultSet rs=statement.executeQuery("SELECT * FROM updatedLocation WHERE x='"+x+"' AND y='"+y+"';");
-			cmidNum = rs.getString("cmid");
+			if(!rs.next())
+			{
+				cmidNum=null;
+			}
+			else
+			{
+				cmidNum = rs.getString("cmid");
+			}
 		}
 		catch(SQLException se){
 		      //Handle errors for JDBC
@@ -218,37 +225,7 @@ public class SQL_db {
 			disconnect();
 		}
 	}
-	//update the table of emergency process
-	public void updateEmergencyProcess(String eventID,String cmid,int radius,int type)
-	{
-		try {
-			connect();
-			statement.execute("USE GIS_DB;");
-			ResultSet rs=statement.executeQuery("SELECT * FROM emergencyProcess WHERE cmid='"+cmid+"';");
-			if(!rs.next()){
-				statement.executeUpdate("INSERT INTO emergencyProcess VALUES ('"+eventID+"','"+cmid+"',"+radius+",'"+type+"');");
-			}
-			else {
-				String ID=rs.getString("eventID");
-				String cmID=rs.getString("cmid");
-				int radiusEvent=rs.getInt("radius");
-				int typeOfPerson=rs.getInt("type");
-				statement.executeUpdate("UPDATE emergencyProcess SET eventID="+ID+", cmid="+cmID+", radius="+radiusEvent+",type= "+typeOfPerson+" WHERE cmid='"+cmid+"';");
-			}
-		}
-		catch(SQLException se) {
-			//Handle errors for JDBC
-			se.printStackTrace();
-		}
-		catch(Exception e) {
-			//Handle errors for Class.forName
-			e.printStackTrace();
-		}
-		// disconnect
-		finally {
-			disconnect();
-		}
-	}
+
 	
 
 	
@@ -391,7 +368,14 @@ public class SQL_db {
 			connect();
 			statement.execute("USE GIS_DB;");
 			ResultSet rs=statement.executeQuery("SELECT * FROM decisionTable WHERE eventID='"+eventID+"';");
-			cmidNum = rs.getString("cmid");
+			if(!rs.next())
+			{
+				cmidNum=null;
+			}
+			else
+			{
+				cmidNum = rs.getString("cmid");
+			}
 		}
 		catch(SQLException se){
 		      //Handle errors for JDBC
@@ -413,8 +397,15 @@ public class SQL_db {
 			connect();
 			statement.execute("USE GIS_DB;");
 			ResultSet rs=statement.executeQuery("SELECT * FROM updateLocation WHERE cmid='"+cmid+"';");
-			point[0] = rs.getDouble("x");
-			point[1] = rs.getDouble("y");
+			if(!rs.next())
+			{
+				point=null;
+			}
+			else
+			{
+				point[0] = rs.getDouble("x");
+				point[1] = rs.getDouble("y");
+			}
 		}
 		catch(SQLException se){
 		      //Handle errors for JDBC
@@ -436,7 +427,14 @@ public class SQL_db {
 			connect();
 			statement.execute("USE GIS_DB;");
 			ResultSet rs=statement.executeQuery("SELECT * FROM decisionTable WHERE eventID='"+eventID+"';");
-			radius = rs.getInt("radius");
+			if(!rs.next())
+			{
+				radius=0;
+			}
+			else
+			{
+				radius = rs.getInt("radius");
+			}
 		}
 		catch(SQLException se){
 		      //Handle errors for JDBC
