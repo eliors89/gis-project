@@ -2,6 +2,10 @@ package routineProcess;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+<<<<<<< HEAD
+=======
+//import java.io.PrintWriter;
+>>>>>>> branch 'master' of https://github.com/eliors89/gis-project.git
 import java.util.Iterator;
 
 import javax.servlet.ServletException;
@@ -83,6 +87,7 @@ public class Routine extends HttpServlet {
 						sqlDataBase.updateLocation(cmid, x, y);
 						routineOrEmerg = sqlDataBase.checkRoutineOrEmerg(cmid);
 						//enum for emergency 
+<<<<<<< HEAD
 						response.setContentType("application/json"); 
 						// Get the printwriter object from response to write the required json object to the output stream 
 						PrintWriter out = response.getWriter(); 
@@ -90,6 +95,17 @@ public class Routine extends HttpServlet {
 						out.print(arr);
 						out.flush();			
 						if(routineOrEmerg != null){
+=======
+						
+
+response.setContentType("application/json"); 
+// Get the printwriter object from response to write the required json object to the output stream 
+PrintWriter out = response.getWriter(); 
+// Assuming your json object is **jsonObject**, perform the following, it will return your json object 
+out.print(arr);
+out.flush();			
+if(routineOrEmerg != null){
+>>>>>>> branch 'master' of https://github.com/eliors89/gis-project.git
 							address=req.getAddress(x, y);
 							split=address.split(",");
 							obj.put("RequestID", "followUser");
