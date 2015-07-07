@@ -39,9 +39,7 @@ public class Routine extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-	}
+
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -96,7 +94,7 @@ public class Routine extends HttpServlet {
 							obj.put("location_remark",address);
 							obj.put("community_member_id", cmid);
 
-							eventId = sqlDataBase.getEventIDFromUpdate(cmid);
+							eventId = sqlDataBase.getEventID(cmid);
 							sickCmid = sqlDataBase.getCmidByEventId(eventId);
 							sickPoint = sqlDataBase.getPointByCmid(sickCmid);
 							try{
