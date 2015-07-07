@@ -11,8 +11,8 @@
 	<classpathentry kind="lib" path="C:/Users/שלומי אלבז/לימודים/ג נוכחי/פרוייקט רפואת חירום/לפרוייקט jar קבצי/catalina.jar"/>
 	<classpathentry kind="lib" path="C:/Users/שלומי אלבז/לימודים/ג נוכחי/פרוייקט רפואת חירום/לפרוייקט jar קבצי/json-simple-1.1.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/שלומי אלבז/לימודים/ג נוכחי/פרוייקט רפואת חירום/לפרוייקט jar קבצי/jsoup-1.8.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/שלומי אלבז/לימודים/ג נוכחי/פרוייקט רפואת חירום/לפרוייקט jar קבצי/mysql-connector-java-5.1.14-bin.jar"/>
 	<classpathentry kind="lib" path="C:/Users/שלומי אלבז/לימודים/ג נוכחי/פרוייקט רפואת חירום/לפרוייקט jar קבצי/org.json-20120521.jar"/>
 	<classpathentry kind="lib" path="C:/Users/שלומי אלבז/לימודים/ג נוכחי/פרוייקט רפואת חירום/לפרוייקט jar קבצי/servlet-api.jar"/>
+	<classpathentry kind="lib" path="C:/Users/שלומי אלבז/לימודים/ג נוכחי/פרוייקט רפואת חירום/לפרוייקט jar קבצי/mysql-connector-java-5.1.36.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
