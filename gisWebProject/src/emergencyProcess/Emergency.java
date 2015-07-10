@@ -14,10 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
-import org.json.JSONException;
+
+
+
+
 import org.json.*;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -44,49 +45,33 @@ public class Emergency extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 			try{
 				SQL_db sqlDataBase = new SQL_db();
-//			StringBuffer jb = new StringBuffer();
-//			String stringToParse = null;
-//			try {
-//				BufferedReader reader = request.getReader();
-//			    while ((stringToParse = reader.readLine()) != null){
-//			    	jb.append(stringToParse);
-//			    }
-//			  } catch (Exception e) { /*report an error*/ }
-//			JSONParser parser = new JSONParser();
-//			JSONObject jsonObject = (JSONObject) parser.parse(stringToParse);
-//			
 			Connection con=new Connection();
-			org.json.JSONObject jsonObject = con.getRequest(request);
-			JSONArray jsonArrayOb = null;
-			try {
-				jsonArrayOb = (JSONArray) jsonObject.get("JSONFile");
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			String jfString = request.getParameter("JSONFile");
+			
+
+			JSONArray jarr = new JSONArray(jfString);
 			// take each value from the json array separately
-			int arrLen = jsonArrayOb.length();
+			int arrLen = jarr.length();
 			List<String> cmidAtRadius = new ArrayList<String>();
 			double x = 0,y = 0;
 			int radius = 0;
 	        for (int curr=0;curr<arrLen;curr++) {
-	             	JSONObject innerObj;
+	        		JSONObject innerObj;
 	             	int region_type;
 	             	String eventID = null,cmid = null,state = null,medical_condition_description = null;
-	             	float age = 0;
+	             	double age = 0;
 					try {
-						innerObj = (JSONObject) jsonArrayOb.get(curr);
-						if (innerObj.get("RequestID").equals("AroundLocation")){
-		                	
+						innerObj = (JSONObject) jarr.getJSONObject(curr);
+						if (innerObj.getString("RequestID").equals("AroundLocation")){
+							
 		                	//get from Json the data
-		                	eventID = innerObj.get("eventID").toString();
-		                	cmid  = innerObj.get("comunity_member_id").toString();
-		                	x = Double.parseDouble(innerObj.get("x").toString());
-		                    y = Double.parseDouble(innerObj.get("y").toString());
-		                	state = innerObj.get("region_type").toString();	                	
-		                	medical_condition_description  = innerObj.get("medical_condition_description").toString();
-		                	age = Float.parseFloat(innerObj.get("age").toString());
-		                	radius = Integer.parseInt(innerObj.get("radius").toString());
+		                	eventID = innerObj.getString("eventID");
+		                	cmid  = innerObj.getString("comunity_member_id");
+		                	x = innerObj.getDouble("x");
+		                    y = innerObj.getDouble("y");	                	
+		                	medical_condition_description  = innerObj.getString("medical_condition_description");
+		                	age = innerObj.getDouble("age");
+		                	radius = innerObj.getInt("radius");
 						}
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
@@ -135,7 +120,7 @@ public class Emergency extends HttpServlet {
 //	        con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis");
 	        //obj.sendResponse();
 	        //send with sendResponse
-		} catch (ParseException ex1) {
+		} catch (ParseException | JSONException ex1) {
 			ex1.printStackTrace();
 		} 
 	}

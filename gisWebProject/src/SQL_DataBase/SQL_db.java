@@ -52,7 +52,7 @@ public class SQL_db {
 	}
 	//TODO
 	//if we dont have a radius we take radius from decision table
-	public int getRadiusFromDesicionTable(String eventID, String cmid, double x, double y, String state, int region_type, String medical_condition_description, float age) {
+	public int getRadiusFromDesicionTable(String eventID, String cmid, double x, double y, String state, int region_type, String medical_condition_description, double age) {
 		//for test at future need to insert func 
 		int radius=5;
 		
@@ -190,7 +190,7 @@ public class SQL_db {
 		}
 	}
 	//update the table of decisionTable
-	public void updateDecisionTable(String eventID, String cmid, double x, double y, String state, int region_type, String medical_condition_description, float age, int radius){
+	public void updateDecisionTable(String eventID, String cmid, double x, double y, String state, int region_type, String medical_condition_description, double age, int radius){
 		try {
 			connect();
 			statement.execute("USE GIS_DB;");
@@ -206,7 +206,7 @@ public class SQL_db {
 				String state_val = rs.getString("state");
 				int region_type_val = rs.getInt("region_type");
 				String medical_condition_description_val = rs.getString("medical_condition_description");
-				float age_val = rs.getFloat("age");
+				double age_val = rs.getFloat("age");
 				int radius_val = rs.getInt("radius");
 				statement.executeUpdate("UPDATE decisionTable SET eventID="+eventID_val+", cmid="+cmid_val+", x="+x_val+", y="+y_val+", state= "+state_val+", region_type="+region_type_val+", medical_condition_description="+medical_condition_description_val+", age="+age_val+", radius="+radius_val+", WHERE cmid='"+cmid+"';");
 

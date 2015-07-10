@@ -1,21 +1,10 @@
 package emergencyProcess;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Writer;
-import java.util.Iterator;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-
-
-
-
-
 import org.json.JSONException;
-//import org.json.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -45,17 +34,6 @@ public class FollowUser extends HttpServlet {
 		
 		try {
 			SQL_db sqlDataBase = new SQL_db();
-//			StringBuffer jb = new StringBuffer();
-//			String stringToParse = null;
-//			//get data of requset from server
-//			try {
-//				BufferedReader reader = request.getReader();
-//			    while ((stringToParse = reader.readLine()) != null){
-//			    	jb.append(stringToParse);
-//			    }
-//			  } catch (Exception e) { /*report an error*/ }
-//			JSONParser parser = new JSONParser();
-//			//convert the data to json object
 			Connection con=new Connection();
 			String jfString = request.getParameter("JSONFile");
 			

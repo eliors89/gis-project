@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+
 import org.json.JSONException;
 //import org.json.*;
 import org.json.JSONArray;
@@ -47,38 +48,23 @@ public class StopFollow extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			SQL_db sqlDataBase = new SQL_db();
-//			StringBuffer jb = new StringBuffer();
-//			String stringToParse = null;
-//			try {
-//				BufferedReader reader = request.getReader();
-//			    while ((stringToParse = reader.readLine()) != null){
-//			    	jb.append(stringToParse);
-//			    }
-//			  } catch (Exception e) { /*report an error*/ }
-//			JSONParser parser = new JSONParser();
-//			JSONObject jsonObject = (JSONObject) parser.parse(stringToParse);
 			Connection con=new Connection();
-			org.json.JSONObject jsonObject = con.getRequest(request);
-			JSONArray jsonArrayOb = null;
-			try {
-				jsonArrayOb = (JSONArray) jsonObject.get("JSONFile");
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			String jfString = request.getParameter("JSONFile");
+			JSONArray jarr = new JSONArray(jfString);
+		
 			// take each value from the json array separately
 			
-			int len = jsonArrayOb.length();
+			int len = jarr.length();
 			int j;
 			ArrayList<String> cmidFromKey;
 	        for(int curr=0;curr<len;curr++){
              	JSONObject innerObj;
 				try {
-					innerObj = (JSONObject) jsonArrayOb.get(curr);
-					if (innerObj.get("RequestID").equals("stopFollow")){
-	                	String eventID = innerObj.get("eventID").toString();
+					innerObj = (JSONObject) jarr.get(curr);
+					if (innerObj.getString("RequestID").equals("stopFollow")){
+	                	String eventID = innerObj.getString("eventID");
 	                	cmidFromKey = new ArrayList<String>();
-	                	cmidFromKey = sqlDataBase.getListOfKeys(jsonObject);
+	                	cmidFromKey = sqlDataBase.getListOfKeys(innerObj);
 						for(j=0; j < cmidFromKey.size(); j++) {
 							sqlDataBase.updateRoutine(cmidFromKey.get(j));
 						}
@@ -88,7 +74,7 @@ public class StopFollow extends HttpServlet {
 					e.printStackTrace();
 				}      
             }
-		} catch (NullPointerException ex) {
+		} catch (NullPointerException | JSONException ex) {
 			ex.printStackTrace();
 		}
 	}
