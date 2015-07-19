@@ -1,13 +1,19 @@
 package routineProcess;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.Iterator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+
 
 
 
@@ -45,6 +51,8 @@ public class Routine extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		
 		try {
 			JSONArray arr=new JSONArray();
 			JSONObject jsonObject=new JSONObject();
@@ -86,8 +94,9 @@ public class Routine extends HttpServlet {
 						PrintWriter out = response.getWriter(); 
 						// Assuming your json object is **jsonObject**, perform the following, it will return your json object 
 						out.print(arr);
-						out.flush();			
+						out.flush();	
 						if(routineOrEmerg != null){
+							
 							address=req.getAddress(x, y);
 							split=address.split(",");
 							obj.put("RequestID", "followUser");
@@ -108,14 +117,20 @@ public class Routine extends HttpServlet {
 								//			connection con= new connection();
 								//need to check with server url for this
 								con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/gisWebProject/test");
+								
 							}catch (Exception ex){/*error report*/}
+				
+							
 						}
+
 					}
+					
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
+			
 		} catch (ParseException ex) {
 
 			ex.printStackTrace();

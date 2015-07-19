@@ -2,6 +2,7 @@ package emergencyProcess;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -169,35 +170,34 @@ public class RequestGoogle extends HttpServlet {
 		String lat=Double.toString(y);
 		//send url and get geo json
 		URL url = new URL("http://maps.googleapis.com/maps/api/geocode/json?latlng="
-				+ lat + "," + lng + "&sensor=true");
-		//open connection
-		HttpURLConnection con= (HttpURLConnection) url.openConnection();
-		String formattedAddress = "";
-
-
-
-		BufferedReader in = new BufferedReader(
-				new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-		}
-
-		JSONParser parser = new JSONParser();
-		JSONObject rsp = (JSONObject) parser.parse(response.toString());
-		//parse json obj we get
-		if (rsp.containsKey("results")) {
-			JSONArray matches = (JSONArray) rsp.get("results");
-			JSONObject data = (JSONObject) matches.get(0); 
-			formattedAddress = (String) data.get("formatted_address");
-		}
-
-		//disconnect
-		con.disconnect();
-		return formattedAddress;
-
-	}
+                + lat + "," + lng + "&sensor=true");
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        String formattedAddress = "";
+ 
+        try {
+            InputStream in = url.openStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            String result, line = reader.readLine();
+            result = line;
+            while ((line = reader.readLine()) != null) {
+                result += line;
+            }
+ 
+            JSONParser parser = new JSONParser();
+            JSONObject rsp = (JSONObject) parser.parse(result);
+ 
+            if (rsp.containsKey("results")) {
+                JSONArray matches = (JSONArray) rsp.get("results");
+                JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists
+                formattedAddress = (String) data.get("formatted_address");
+            }
+ 
+            return "";
+        } finally {
+            urlConnection.disconnect();
+            return formattedAddress;
+        }
+    }
 }
 
 

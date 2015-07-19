@@ -40,10 +40,14 @@ public class Connection {
 		JSONObject json=new JSONObject();
 
 		try {
-			json.put("RequestID", "routineLocation");
-			json.put("community_member_id","1172");
-			json.put("x",359.455);
-			json.put("y", 722.311);
+			json.put("RequestID", "AroundLocation");
+			json.put("eventID", "888");
+			json.put("community_member_id","0000");
+			json.put("x",34.783961);
+			json.put("y", 32.054121);
+			json.put("medical_condition_description", "2222");
+			json.put("age", 15.555);
+			json.put("radius", 5);
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -62,12 +66,12 @@ public class Connection {
 		String data = jsonarr.toString();
 		String result = null;
 		try{
-			org.jsoup.Connection.Response resp = Jsoup.connect(url)
+			org.jsoup.Connection.Response resp = Jsoup.connect("http://mba4.ad.biu.ac.il/gisWebProject/mapping")
 					//            .data("username", targets.get(i+1))
 					//            .data("password", targets.get(i+2))
 					.data("JSONFile", data)
 					.header("Content-Type", "Application/json")
-					//            .timeout(100 * 1000 * 100) // milliseconds
+			//		.timeout(100 * 1000 * 100) // milliseconds
 					.method(org.jsoup.Connection.Method.POST)
 					.execute();
 
