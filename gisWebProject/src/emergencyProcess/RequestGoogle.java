@@ -21,31 +21,22 @@ import org.json.simple.parser.ParseException;
 
 import SQL_DataBase.SQL_db;
 
-/**
- * Servlet implementation class RequsteGoogle
- */
 @WebServlet("/RequsteGoogle")
 public class RequestGoogle extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
+	
 	public RequestGoogle() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			//init sql data base 
@@ -157,12 +148,7 @@ public class RequestGoogle extends HttpServlet {
 		return str;
 	}
 
-	/**
-	 *
-	 * @param lng
-	 * @param lat
-	 * @return
-	 */
+	
 	public String getAddress(double x, double y)
 			throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
 		//get double and convert them to string for url format
@@ -192,10 +178,9 @@ public class RequestGoogle extends HttpServlet {
                 formattedAddress = (String) data.get("formatted_address");
             }
  
-            return "";
+            return formattedAddress;
         } finally {
             urlConnection.disconnect();
-            return formattedAddress;
         }
     }
 }

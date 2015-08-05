@@ -13,6 +13,7 @@ import java.sql.Time;
 
 //import org.json.JSONObject;
 
+
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 
@@ -29,7 +30,6 @@ public class SQL_db {
 			statement.execute("CREATE TABLE IF NOT EXISTS updatedLocation (cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), eventID VARCHAR(20), createdDate DATE, createdTime TIME, lastUpdatedDate DATE, lastUpdatedTime TIME);");/*  */
 			statement.execute("CREATE TABLE IF NOT EXISTS locationHistory (cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), createdDate DATE, createdTime TIME, lastUpdatedDate DATE, lastUpdatedTime TIME);");
 			statement.execute("CREATE TABLE IF NOT EXISTS decisionTable (eventID VARCHAR(20), cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), state VARCHAR(20), region_type INT, medical_condition VARCHAR(30), age DOUBLE(5,2), radius INT);");
-	//		statement.execute("CREATE TABLE IF NOT EXISTS emergencyProcess (eventID VARCHAR(20), cmid VARCHAR(20), radius INT, type INT);");
 		}
 		catch(SQLException se){
 		      //Handle errors for JDBC
@@ -72,20 +72,21 @@ public class SQL_db {
 		try {
 			connect();
 			statement.execute("USE GIS_DB;");
-			ResultSet rs=statement.executeQuery("SELECT * FROM updatedLocation;");
-	    	//List<Cmid> listOfObjects = new ArrayList<Cmid>();
-			while(rs.next() && countCMIDAtRadius < maxCMID){
-	    		secondCmid = rs.getString(1);
-	    		secondX = rs.getDouble(2);
-	    		secondY= rs.getDouble(3);
-	    	    //Cmid newCmid = new Cmid (secondCmid, secondX, secondY);
-	    	    distance = Math.sqrt((x-secondX)*(x-secondX) + (y-secondY)*(y-secondY));
-	    	    if(distance <= radius) {
-	    	    	//listOfObjects.add(newCmid);
-	    	    	cmidAtRadius.add(secondCmid);
-	    	    	countCMIDAtRadius++;
-	    	    }
+			ResultSet rs=statement.executeQuery("SELECT cmid, (6371 * acos (cos ( radians("+x+") )* cos( radians( x ) )* cos( radians( y ) - radians("+y+") )+ sin ( radians("+x+") )* sin( radians( x ) ))) AS distance FROM updatedLocation HAVING distance < "+radius+" ORDER BY distance LIMIT 0 , 20;");
+			while(rs.next()){
+				System.out.println(rs.getString("cmid")+"   ");
 			}
+//			ResultSet rs=statement.executeQuery("SELECT * FROM updatedLocation;");
+//			while(rs.next() && countCMIDAtRadius < maxCMID){
+//	    		secondCmid = rs.getString(1);
+//	    		secondX = rs.getDouble(2);
+//	    		secondY= rs.getDouble(3);
+//	    	    distance = Math.sqrt((x-secondX)*(x-secondX) + (y-secondY)*(y-secondY));
+//	    	    if(distance <= radius) {
+//	    	    	cmidAtRadius.add(secondCmid);
+//	    	    	countCMIDAtRadius++;
+//	    	    }
+//			}
 			
 		}
 		catch(SQLException se){

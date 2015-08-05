@@ -1,32 +1,17 @@
 package emergencyProcess;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Iterator;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-
-
-
-
-
-
 import org.json.JSONException;
-//import org.json.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import connectinWithServer.Connection;
 import SQL_DataBase.SQL_db;
 
 public class StopFollow extends HttpServlet {
@@ -59,7 +44,6 @@ public class StopFollow extends HttpServlet {
 					writer.write("enter1\n");
 				} catch (IOException ex) {}
 			SQL_db sqlDataBase = new SQL_db();
-			Connection con=new Connection();
 			String jfString = request.getParameter("JSONFile");
 			
 			JSONArray jarr = new JSONArray(jfString);

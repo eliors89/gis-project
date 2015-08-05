@@ -1,12 +1,6 @@
 package emergencyProcess;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,10 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import org.json.JSONException;
-//import org.json.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
+
 import org.json.simple.parser.ParseException;
 
 import connectinWithServer.Connection;
@@ -32,28 +25,14 @@ public class ArriveTime extends HttpServlet {
 		super();
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			SQL_db sqlDataBase = new SQL_db();
-//			StringBuffer jb = new StringBuffer();
-//			String stringToParse = null;
-//			try {
-//				BufferedReader reader = request.getReader();
-//				while ((stringToParse = reader.readLine()) != null){
-//					jb.append(stringToParse);
-//				}
-//			} catch (Exception e) { /*report an error*/ }
-//			JSONParser parser = new JSONParser();
 			Connection con=new Connection();
 			org.json.JSONObject jsonObject = con.getRequest(request);
 
@@ -65,23 +44,15 @@ public class ArriveTime extends HttpServlet {
 				e.printStackTrace();
 			}
 			// take each value from the json array separately
-			//int i = 0; 
 			int arrLen = jsonArrayOb.length();
-			
-			List<String> cmidAtRadius = new ArrayList<String>();
-			String walking="", driving="",
-				   location_remark="",  eventID = "";
-			double x, y;
+			String walking="", driving="",location_remark="",  eventID = "";
 			int j;
 			double[] sickPoint = new double[2]; 
 			double[] cmidPoint = new double[2];
 			ArrayList<String> cmidFromKey;
 			String sickCmid;
-			//String[] split;
-			//JSONArray jsonarr=new JSONArray();
 			org.json.JSONArray jsonToSend=new org.json.JSONArray();
 			JSONObject obj=new JSONObject();
-	//		JSONObject send=new JSONObject();
 			for (int curr =0;curr < arrLen;curr++) {
 				JSONObject innerObj;
 				try {
@@ -129,11 +100,7 @@ public class ArriveTime extends HttpServlet {
 				}
 				jsonToSend.put(obj);
 	//			send.put("JSONFile", jsonToSend.toString());
-//				connection con=new connection();
-				//TODO
-				//need to ask from server what url to send
 			//	con.sendJsonObject(jsonToSend, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis-times");
-				//send with sendResponse
 			}
 		} catch (ParseException ex) {
 			ex.printStackTrace();

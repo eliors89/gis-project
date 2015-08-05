@@ -1,13 +1,6 @@
 package routineProcess;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.Writer;
-import java.util.Iterator;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +20,6 @@ import org.json.JSONException;
 //import org.json.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import connectinWithServer.Connection;
@@ -42,14 +34,6 @@ public class Routine extends HttpServlet {
 		super();
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		
@@ -59,13 +43,10 @@ public class Routine extends HttpServlet {
 			jsonObject.put("status", "success");
 			arr.put(jsonObject);
 			SQL_db sqlDataBase = new SQL_db();
-			//JSONArray jsonToSend=new JSONArray();
 			Connection con=new Connection();
 			String jfString = request.getParameter("JSONFile");
 			JSONArray jarr = new JSONArray(jfString);
-			//			org.json.JSONObject jsonObject = con.getRequest(request);
 			org.json.JSONObject obj=new org.json.JSONObject();
-			//JSONObject send =new JSONObject();
 			RequestGoogle req=new RequestGoogle();
 
 
@@ -96,7 +77,6 @@ public class Routine extends HttpServlet {
 						out.print(arr);
 						out.flush();	
 						if(routineOrEmerg != null){
-							
 							address=req.getAddress(x, y);
 							split=address.split(",");
 							obj.put("RequestID", "followUser");
@@ -112,9 +92,6 @@ public class Routine extends HttpServlet {
 								String walking=req.sendGet("walking", x ,y, sickPoint[0], sickPoint[1]);
 								obj.put("eta_by_foot", walking);
 								obj.put("event_id", sqlDataBase.getEventID(cmid));
-								//			jsonToSend.add(obj);
-								//			send.put("JSONFile", jsonToSend.toString());
-								//			connection con= new connection();
 								//need to check with server url for this
 								con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/gisWebProject/test");
 								

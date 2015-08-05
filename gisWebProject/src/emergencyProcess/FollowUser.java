@@ -9,7 +9,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 
-import connectinWithServer.Connection;
 import SQL_DataBase.SQL_db;
 
 public class FollowUser extends HttpServlet {
@@ -20,21 +19,16 @@ public class FollowUser extends HttpServlet {
 		super();
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		try {
 			SQL_db sqlDataBase = new SQL_db();
-			Connection con=new Connection();
 			String jfString = request.getParameter("JSONFile");
 			
 
