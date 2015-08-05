@@ -40,14 +40,15 @@ public class Connection {
 		JSONObject json=new JSONObject();
 
 		try {
-			json.put("RequestID", "AroundLocation");
+			json.put("RequestID", "stopFollow");
 			json.put("eventID", "888");
-			json.put("community_member_id","0000");
-			json.put("x",34.783961);
-			json.put("y", 32.054121);
-			json.put("medical_condition_description", "2222");
-			json.put("age", 15.555);
-			json.put("radius", 5);
+			json.put("6666","NULL");
+			json.put("4444","NULL");
+//			json.put("x",34.783961);
+//			json.put("y", 32.054121);
+//			json.put("medical_condition_description", "2222");
+//			json.put("age", 15.555);
+//			json.put("radius", 5);
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
