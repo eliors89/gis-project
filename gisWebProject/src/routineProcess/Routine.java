@@ -93,7 +93,7 @@ public class Routine extends HttpServlet {
 								obj.put("eta_by_foot", walking);
 								obj.put("event_id", sqlDataBase.getEventID(cmid));
 								//need to check with server url for this
-								con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/gisWebProject/test");
+								con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis");
 								
 							}catch (Exception ex){/*error report*/}
 				

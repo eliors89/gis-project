@@ -66,7 +66,7 @@ public class Emergency extends HttpServlet {
 					innerObj = (JSONObject) jarr.getJSONObject(curr);
 					if (innerObj.getString("RequestID").equals("AroundLocation")){
 						//get from Json the data
-						eventID = innerObj.getString("eventID");
+						eventID = innerObj.getString("event_id");
 						cmid  = innerObj.getString("community_member_id");
 						x = innerObj.getDouble("x");
 						y = innerObj.getDouble("y");
@@ -100,6 +100,7 @@ public class Emergency extends HttpServlet {
 							for (int j=0; j<cmidAtRadius.size();j++) {
 								obj.put(cmidAtRadius.get(j), "NULL");
 							}
+					//		con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/gisWebProject/test");
 							con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis");
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block

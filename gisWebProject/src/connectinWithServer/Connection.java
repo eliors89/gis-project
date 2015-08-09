@@ -2,6 +2,7 @@ package connectinWithServer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONArray;
@@ -16,10 +17,14 @@ public class Connection {
 	public static void main(String[] args) throws ParseException {
 		JSONObject json=new JSONObject();
 		try {
-			json.put("RequestID", "stopFollow");
+			json.put("RequestID", "Times");
 			json.put("eventID", "888");
+			
 			json.put("6666","NULL");
-			json.put("4444","NULL");
+			json.put("7777","NULL");
+//			json.put("medical_condition_description", "444");
+//			json.put("age", 17);
+//			json.put("radius", 3);
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -83,6 +88,27 @@ public class Connection {
 		catch (IOException e) {
 			e.printStackTrace();
 		} 
+	}
+
+	public void sendJsonArray(JSONArray jsonToSend, String to) {
+		// TODO Auto-generated method stub
+		
+			String url = to;
+			String data = jsonToSend.toString();
+			try{
+				org.jsoup.Connection.Response resp = Jsoup.connect(url)
+						.data("JSONFile", data)
+						.header("Content-Type", "Application/json")
+						.method(org.jsoup.Connection.Method.POST)
+						.execute();
+
+				System.out.println(resp.body());
+			}
+
+			catch (IOException e) {
+				e.printStackTrace();
+			} 
+		
 	}
 }
 

@@ -67,14 +67,22 @@ public class SQL_db {
 		List<String> cmidAtRadius = new ArrayList<String>();
 		int countCMIDAtRadius=0;
     	double secondX, secondY;
+    	String cmid;
     	String secondCmid;
     	double distance;
 		try {
 			connect();
 			statement.execute("USE GIS_DB;");
-			ResultSet rs=statement.executeQuery("SELECT cmid, (6371 * acos (cos ( radians("+x+") )* cos( radians( x ) )* cos( radians( y ) - radians("+y+") )+ sin ( radians("+x+") )* sin( radians( x ) ))) AS distance FROM updatedLocation HAVING distance < "+radius+" ORDER BY distance LIMIT 0 , 20;");
+			//query that compute the distance by kilometer from users
+			ResultSet rs=statement.executeQuery("SELECT cmid, "
+					+ "(6371 * acos (cos ( radians("+x+") )* cos( radians( x ) )*"
+					+ " cos( radians( y ) - radians("+y+") )+ sin ( radians("+x+") )"
+					+ "* sin( radians( x ) ))) AS distance "
+					+ "FROM updatedLocation HAVING distance < "+radius+" ORDER BY distance LIMIT 0 , 20;");
 			while(rs.next()){
 				System.out.println(rs.getString("cmid")+"   ");
+				cmid=rs.getString("cmid");
+				cmidAtRadius.add(cmid);
 			}
 //			ResultSet rs=statement.executeQuery("SELECT * FROM updatedLocation;");
 //			while(rs.next() && countCMIDAtRadius < maxCMID){

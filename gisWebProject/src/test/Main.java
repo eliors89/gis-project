@@ -12,19 +12,19 @@ import SQL_DataBase.SQL_db;
 public class Main {
 	public static void main(String[] args) throws MalformedURLException, IOException, ParseException, JSONException {
 				SQL_db sqlDataBase = new SQL_db();
-				sqlDataBase.updateLocation("111", 78.3232, 65.3234);
-				sqlDataBase.updateLocation("112", 78.3235, 65.3234);
-				sqlDataBase.updateLocation("113", 78.3237, 65.3234);
-				sqlDataBase.updateLocation("114", 78.3232, 65.3236);
-				sqlDataBase.updateLocation("115", 78.3235, 65.3237);
-				sqlDataBase.updateLocation("116", 78.3237, 65.3250);
-				sqlDataBase.updateLocation("117", 78.3232, 65.3234);
-				sqlDataBase.updateLocation("118", 78.3235, 65.3534);
-				sqlDataBase.updateLocation("119", 78.3237, 65.3244);
-				sqlDataBase.updateLocation("120", 78.3732, 65.3634);
-				sqlDataBase.updateLocation("121", 78.3235, 65.3235);
-				sqlDataBase.updateLocation("122", 78.3237, 65.3238);
-				sqlDataBase.getCMIDByRadius(3, 78.3232, 65.3234);
+//				sqlDataBase.updateLocation("111", 78.3232, 65.3234);
+//				sqlDataBase.updateLocation("112", 78.3235, 65.3234);
+//				sqlDataBase.updateLocation("113", 78.3237, 65.3234);
+//				sqlDataBase.updateLocation("114", 78.3232, 65.3236);
+//				sqlDataBase.updateLocation("115", 78.3235, 65.3237);
+//				sqlDataBase.updateLocation("116", 78.3237, 65.3250);
+//				sqlDataBase.updateLocation("117", 78.3232, 65.3234);
+//				sqlDataBase.updateLocation("118", 78.3235, 65.3534);
+//				sqlDataBase.updateLocation("119", 78.3237, 65.3244);
+//				sqlDataBase.updateLocation("120", 78.3732, 65.3634);
+//				sqlDataBase.updateLocation("121", 78.3235, 65.3235);
+//				sqlDataBase.updateLocation("122", 78.3237, 65.3238);
+//				sqlDataBase.getCMIDByRadius(3, 78.3232, 65.3234);
 //				sqlDataBase.updateLocation("1234", 7.7, 65.3234);
 //				sqlDataBase.updateRoutine("1234");
 //				sqlDataBase.updateLocation("1234", 8.8, 65.3234);
@@ -35,9 +35,9 @@ public class Main {
 //				System.out.println(sqlDataBase.getCmidByEventId("1234"));
 //				sqlDataBase.getPointByCmid("1234");
 //				sqlDataBase.getPointByCmid("1234");
-//				RequestGoogle req=new RequestGoogle();
-//			    String add=req.getAddress(34.729817,31.879638);
-//				System.out.println(req.getAddress(34.729817,31.879638));
+				RequestGoogle req=new RequestGoogle();
+			    String add=req.getAddress(34.749927,31.879650);
+				System.out.println(req.getAddress(34.729937,31.879838));
 //				String[] split=add.split(",");
 //				String state=split[2];
 				

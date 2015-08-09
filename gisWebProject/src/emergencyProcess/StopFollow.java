@@ -64,7 +64,7 @@ public class StopFollow extends HttpServlet {
 	                	writer.write(cmidFromKey.toString());
 	                	
 						for(j=0; j < cmidFromKey.size(); j++) {
-							if(!cmidFromKey.get(j).equals("eventID")&&
+							if(!cmidFromKey.get(j).equals("event_id")&&
 							  (!cmidFromKey.get(j).equals("RequestID")))
 							{
 								String cmid=cmidFromKey.get(j);
