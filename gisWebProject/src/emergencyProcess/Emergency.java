@@ -1,5 +1,9 @@
 package emergencyProcess;
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +11,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+
 
 
 
@@ -42,7 +48,15 @@ public class Emergency extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		Writer writer=null;
+		try {
+		    writer = new BufferedWriter(new OutputStreamWriter(
+		          new FileOutputStream("emergencyclass.txt"), "utf-8"));
+		    writer.write("enter 112 ");
+			
+			
+			
+		} catch (IOException ex) {}
 		try{
 			SQL_db sqlDataBase = new SQL_db();
 			Connection con=new Connection();
@@ -59,7 +73,7 @@ public class Emergency extends HttpServlet {
 				JSONObject innerObj;
 				int region_type;
 				double x ,y ;
-				int radius = 0 ;
+				int radius  ;
 				String eventID = "",cmid = "",state = "",medical_condition_description = "";
 				double age;
 				try {
@@ -76,6 +90,10 @@ public class Emergency extends HttpServlet {
 						region_type = sqlDataBase.getregion_type();
 						medical_condition_description  = innerObj.getString("medical_condition_description");
 						age = innerObj.getDouble("age");
+
+						String[] split=address.split(",");
+						state=split[2].replace(" ","");
+						
 						//check if we have radius
 						if (innerObj.has("radius"))
 						{
@@ -84,23 +102,29 @@ public class Emergency extends HttpServlet {
 						//if we haven't a radius
 						else
 						{
-							//need to implement the function
+							radius=sqlDataBase.getRadiusFromDesicionTable(eventID, cmid, x, y, state, region_type,
+									                                       medical_condition_description, age); 
 						}
-						String[] split=address.split(",");
-						state=split[2];
 						sqlDataBase.updateDecisionTable(eventID, cmid, x, y, state, region_type, medical_condition_description, age, radius);
-						cmidAtRadius = sqlDataBase.getCMIDByRadius(radius, x, y);
+						cmidAtRadius = sqlDataBase.getCMIDByRadius(cmid,radius, x, y);
+						for(int i=0;i<cmidAtRadius.size();i++)
+						{
+							writer.write(" "+cmidAtRadius.get(i)+" ");
+						}
 						JSONObject obj=new JSONObject();
 						try {
 							obj.put("RequestID", "AroundLocation");
-							obj.put("state", split[2]);
+							obj.put("event_id", eventID);
+							obj.put("state","israel");
 							obj.put("location_remark",address);
+							obj.put("x", x);
+							obj.put("y", y);
 							obj.put("region_type", sqlDataBase.getregion_type());
 							obj.put("radius", radius);
 							for (int j=0; j<cmidAtRadius.size();j++) {
 								obj.put(cmidAtRadius.get(j), "NULL");
 							}
-					//		con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/gisWebProject/test");
+						//	con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/gisWebProject/test");
 							con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis");
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
@@ -120,6 +144,7 @@ public class Emergency extends HttpServlet {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		writer.close();
 	}
 }
 

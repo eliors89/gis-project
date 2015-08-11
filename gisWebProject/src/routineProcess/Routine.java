@@ -81,6 +81,8 @@ public class Routine extends HttpServlet {
 							split=address.split(",");
 							obj.put("RequestID", "followUser");
 							obj.put("location_remark",address);
+							obj.put("x", x);
+							obj.put("y", y);
 							obj.put("community_member_id", cmid);
 
 							eventId = sqlDataBase.getEventID(cmid);

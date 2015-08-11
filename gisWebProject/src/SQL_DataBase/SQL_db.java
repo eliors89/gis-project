@@ -63,7 +63,7 @@ public class SQL_db {
 	
 	
 	// get cmid that relevant in this radius for emergency process
-	public List<String> getCMIDByRadius(int radius, double x, double y) {
+	public List<String> getCMIDByRadius(String communityMember,int radius, double x, double y) {
 		List<String> cmidAtRadius = new ArrayList<String>();
 		int countCMIDAtRadius=0;
     	double secondX, secondY;
@@ -82,7 +82,8 @@ public class SQL_db {
 			while(rs.next()){
 				System.out.println(rs.getString("cmid")+"   ");
 				cmid=rs.getString("cmid");
-				cmidAtRadius.add(cmid);
+				if(!communityMember.equals(cmid))
+					cmidAtRadius.add(cmid);
 			}
 //			ResultSet rs=statement.executeQuery("SELECT * FROM updatedLocation;");
 //			while(rs.next() && countCMIDAtRadius < maxCMID){
@@ -405,7 +406,7 @@ public class SQL_db {
 		try {
 			connect();
 			statement.execute("USE GIS_DB;");
-			ResultSet rs=statement.executeQuery("SELECT * FROM updateLocation WHERE cmid='"+cmid+"';");
+			ResultSet rs=statement.executeQuery("SELECT * FROM updatedLocation WHERE cmid='"+cmid+"';");
 			if(!rs.next())
 			{
 				point=null;

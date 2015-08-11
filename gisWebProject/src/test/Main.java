@@ -34,7 +34,7 @@ public class Main {
 //				sqlDataBase.updateEmergency("1234", "1234");
 //				System.out.println(sqlDataBase.getCmidByEventId("1234"));
 //				sqlDataBase.getPointByCmid("1234");
-//				sqlDataBase.getPointByCmid("1234");
+				sqlDataBase.getPointByCmid("1234");
 				RequestGoogle req=new RequestGoogle();
 			    String add=req.getAddress(34.749927,31.879650);
 				System.out.println(req.getAddress(34.729937,31.879838));

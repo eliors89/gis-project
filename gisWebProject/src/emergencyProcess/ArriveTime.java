@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+
+
+
 import org.json.JSONException;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,16 +40,26 @@ public class ArriveTime extends HttpServlet {
 
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Writer writer=null;
 		try {
+		    writer = new BufferedWriter(new OutputStreamWriter(
+		          new FileOutputStream("arrive.txt"), "utf-8"));
+		    writer.write("enter 112 ");
+			
+			
+			
+		} catch (IOException ex) {}
+		try {
+			
 			SQL_db sqlDataBase = new SQL_db();
 			Connection con=new Connection();
 			String jfString = request.getParameter("JSONFile");
-
-
 			JSONArray jarr = new JSONArray(jfString);
+			writer.write(jarr.toString());
+			RequestGoogle req=new RequestGoogle();
 			// take each value from the json array separately
 			int arrLen = jarr.length();
-			String walking="", driving="",location_remark="",  eventID = "";
+			String address="",walking="", driving="",location_remark="",  eventID = "";
 			int j;
 			double[] sickPoint = new double[2]; 
 			double[] cmidPoint = new double[2];
@@ -60,38 +73,53 @@ public class ArriveTime extends HttpServlet {
 					innerObj = (JSONObject) jarr.getJSONObject(curr);
 					if (innerObj.get("RequestID").equals("Times")){
 						
-						eventID = innerObj.getString("eventID");
+						eventID = innerObj.getString("event_id");
 						sickCmid = sqlDataBase.getCmidByEventId(eventID);
 						sickPoint = sqlDataBase.getPointByCmid(sickCmid);
-						RequestGoogle googleReq = new RequestGoogle();
+						writer.write(sickPoint.toString()+" ");
+						writer.write(" "+sickCmid+" ");
+						
 						cmidFromKey = new ArrayList<String>();
 						cmidFromKey=sqlDataBase.getListOfKeys(innerObj);
 						for(j=0; j < cmidFromKey.size(); j++) {
 							if(!(cmidFromKey.get(j).equals("event_id"))&&
 							   !(cmidFromKey.get(j).equals("RequestID"))) {
+								writer.write("if");
+								writer.write(cmidFromKey.get(j));
+								String cmidHelper=cmidFromKey.get(j);
 								JSONObject cmidJson = new JSONObject();
 								cmidJson.put("subRequest", "cmid");
 								cmidPoint = sqlDataBase.getPointByCmid(cmidFromKey.get(j));
-								Writer writer=null;
-								try {
-								    writer = new BufferedWriter(new OutputStreamWriter(
-								          new FileOutputStream("arrive.txt"), "utf-8"));
-								    writer.write("enter 112 ");
-									writer.write(jfString);
-									
-									writer.close();
-								} catch (IOException ex) {}
+								
+								
+								
 								try{
-									location_remark = googleReq.getAddress(cmidPoint[0], cmidPoint[1]);
-									walking = googleReq.sendGet("walking", cmidPoint[1], cmidPoint[0],sickPoint[1], sickPoint[0]);
-									driving = googleReq.sendGet("driving", cmidPoint[1], cmidPoint[0],sickPoint[1], sickPoint[0]);
-								}
-								catch(Exception ex){}
-		
+									writer.write("try");
+									location_remark=req.getAddress(cmidPoint[0], cmidPoint[1]);
+									writer.write(address);
+									driving=req.sendGet("driving", cmidPoint[0], cmidPoint[1], sickPoint[0], sickPoint[1]);
+									obj.put("eta_by_car",driving);
+									walking=req.sendGet("walking",cmidPoint[0], cmidPoint[1], sickPoint[0], sickPoint[1]);
+									obj.put("eta_by_foot", walking);
+									
+									//need to check with server url for this
+									
+								}catch (Exception ex){ex.printStackTrace();}
+//								try{
+//									writer.write("try");
+//									//writer.write(googleReq.getAddress(cmidPoint[0], cmidPoint[1]));
+//									//location_remark=googleReq.getAddress(cmidPoint[0], cmidPoint[1]);
+//									walking = googleReq.sendGet("walking", cmidPoint[1], cmidPoint[0],sickPoint[1], sickPoint[0]);
+//									writer.write(walking);
+//									driving = googleReq.sendGet("driving", cmidPoint[1], cmidPoint[0],sickPoint[1], sickPoint[0]);
+//									writer.write(driving);
+//								}
+//								catch(Exception ex){writer.write("catch");}
+								
 								cmidJson.put("eta_by_foot",walking);
 								cmidJson.put("eta_by_car",driving);
 								cmidJson.put("location_remark",location_remark);
-								obj.put(sickCmid, cmidJson.toString());
+								obj.put(cmidHelper, cmidJson.toString());
 								jsonToSend.put(obj);
 							}
 						}
@@ -111,9 +139,11 @@ public class ArriveTime extends HttpServlet {
 					e.printStackTrace();
 				}
 				jsonToSend.put(obj);
-				con.sendJsonArray(jsonToSend, "http://mba4.ad.biu.ac.il/gisWebProject/test");
+				writer.write(obj.toString());
+				writer.close();
+				//con.sendJsonArray(jsonToSend, "http://mba4.ad.biu.ac.il/gisWebProject/test");
 	//			send.put("JSONFile", jsonToSend.toString());
-			//	con.sendJsonObject(jsonToSend, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis-times");
+				con.sendJsonArray(jsonToSend, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis-times");
 			}
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
