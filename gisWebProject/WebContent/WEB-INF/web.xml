@@ -9,7 +9,7 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-    <servlet>
+  <servlet>
     <servlet-name>Mapping</servlet-name>
     <servlet-class>mapping.Mapping</servlet-class>
   </servlet>
@@ -64,5 +64,13 @@
   <servlet-mapping>
     <servlet-name>Emergency</servlet-name>
     <url-pattern>/aroundLocation</url-pattern>
+  </servlet-mapping>
+    <servlet>
+    <servlet-name>cancelEvent</servlet-name>
+    <servlet-class>emergencyProcess.cancelEvent</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Emergency</servlet-name>
+    <url-pattern>/cancelEvent</url-pattern>
   </servlet-mapping>
 </web-app>

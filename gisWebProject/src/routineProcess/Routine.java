@@ -1,10 +1,18 @@
 package routineProcess;
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Writer;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+
+
 
 
 
@@ -46,6 +54,13 @@ public class Routine extends HttpServlet {
 			Connection con=new Connection();
 			String jfString = request.getParameter("JSONFile");
 			JSONArray jarr = new JSONArray(jfString);
+			Writer writer=null;
+			try {
+			    writer = new BufferedWriter(new OutputStreamWriter(
+			          new FileOutputStream("routinetest.txt"), "utf-8"));
+			    writer.write("enter 112 ");
+				writer.write(jfString);
+			} catch (IOException ex) {}
 			org.json.JSONObject obj=new org.json.JSONObject();
 			RequestGoogle req=new RequestGoogle();
 
@@ -76,7 +91,9 @@ public class Routine extends HttpServlet {
 						// Assuming your json object is **jsonObject**, perform the following, it will return your json object 
 						out.print(arr);
 						out.flush();	
-						if(routineOrEmerg != null){
+						writer.write(routineOrEmerg);
+						writer.close();
+						if(!routineOrEmerg.equals("null")){
 							address=req.getAddress(x, y);
 							split=address.split(",");
 							obj.put("RequestID", "followUser");
@@ -90,10 +107,14 @@ public class Routine extends HttpServlet {
 							sickPoint = sqlDataBase.getPointByCmid(sickCmid);
 							try{
 								String driving=req.sendGet("driving", x, y, sickPoint[0], sickPoint[1]);
-								obj.put("eta_by_car",driving);
+								String drive=driving.replace(" min", "");
+								obj.put("eta_by_car",drive);
 								String walking=req.sendGet("walking", x ,y, sickPoint[0], sickPoint[1]);
-								obj.put("eta_by_foot", walking);
+								String walk=walking.replace(" min", "");
+								obj.put("eta_by_foot", walk);
 								obj.put("event_id", sqlDataBase.getEventID(cmid));
+							//	writer.write(obj.toString());
+								
 								//need to check with server url for this
 								con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis");
 								

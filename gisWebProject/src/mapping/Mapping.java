@@ -4,27 +4,29 @@ import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.Writer;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 
 @WebServlet("/Mapping")
 public class Mapping extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	//private Connection m_connection;
-	//private String m_url;
+	
 
 	
 	public Mapping() {
 		super();
-		//m_connection = new Connection();
-		//m_url = "http://mba4.ad.biu.ac.il/gisWebProject";
+		
 	}
 
 	
@@ -82,6 +84,26 @@ public class Mapping extends HttpServlet {
 				writer.write("AroundLocation");
 				RequestDispatcher rd = request.getRequestDispatcher("aroundLocation");
 				rd.forward(request, response);
+			}
+			else if (req.equals("cancelEvent"))
+			{
+				writer.write("cancelEvent");
+				RequestDispatcher rd = request.getRequestDispatcher("cancelEvent");
+				rd.forward(request, response);
+			}
+			else
+			{
+				JSONArray arr=new JSONArray();
+				JSONObject jsonObject=new JSONObject();
+				jsonObject.put("status", "dont have this RequestID");
+				arr.put(jsonObject);
+				response.setContentType("application/json"); 
+				// Get the printwriter object from response to write the required json object to the output stream 
+				PrintWriter out = response.getWriter(); 
+				// Assuming your json object is **jsonObject**, perform the following, it will return your json object 
+				out.print(arr);
+				out.flush();
+				
 			}
 		}catch (Exception ex){
 			response.setStatus(403);

@@ -67,6 +67,7 @@ public class ArriveTime extends HttpServlet {
 			String sickCmid;
 			org.json.JSONArray jsonToSend=new org.json.JSONArray();
 			JSONObject obj=new JSONObject();
+		
 			for (int curr =0;curr < arrLen;curr++) {
 				JSONObject innerObj;
 				try {
@@ -90,20 +91,31 @@ public class ArriveTime extends HttpServlet {
 								JSONObject cmidJson = new JSONObject();
 								cmidJson.put("subRequest", "cmid");
 								cmidPoint = sqlDataBase.getPointByCmid(cmidFromKey.get(j));
-								
-								
+								cmidJson.put("community_member_id", cmidHelper);
+								try {
+									obj.put("RequestID", "UsersArrivalTimes");
+									obj.put("event_id", eventID);
+									int radius = sqlDataBase.getRadiusByEventID(eventID);
+									obj.put("radius",radius);
+								} catch (JSONException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								jsonToSend.put(obj);
 								
 								try{
 									writer.write("try");
 									location_remark=req.getAddress(cmidPoint[0], cmidPoint[1]);
 									writer.write(address);
 									driving=req.sendGet("driving", cmidPoint[0], cmidPoint[1], sickPoint[0], sickPoint[1]);
-									obj.put("eta_by_car",driving);
+									String drive=driving.replace(" min", "");
+									cmidJson.put("eta_by_car",drive);
 									walking=req.sendGet("walking",cmidPoint[0], cmidPoint[1], sickPoint[0], sickPoint[1]);
-									obj.put("eta_by_foot", walking);
-									
+									String walk=walking.replace(" min", "");
+									cmidJson.put("eta_by_foot", walk);
+									cmidJson.put("location_remark",location_remark);
 									//need to check with server url for this
-									
+									jsonToSend.put(cmidJson);
 								}catch (Exception ex){ex.printStackTrace();}
 //								try{
 //									writer.write("try");
@@ -116,11 +128,10 @@ public class ArriveTime extends HttpServlet {
 //								}
 //								catch(Exception ex){writer.write("catch");}
 								
-								cmidJson.put("eta_by_foot",walking);
-								cmidJson.put("eta_by_car",driving);
-								cmidJson.put("location_remark",location_remark);
-								obj.put(cmidHelper, cmidJson.toString());
-								jsonToSend.put(obj);
+								
+								
+								
+								
 							}
 						}
 					}
@@ -129,16 +140,7 @@ public class ArriveTime extends HttpServlet {
 					e.printStackTrace();
 				}
 				
-				try {
-					obj.put("RequestID", "UsersArrivalTimes");
-					obj.put("eventID", eventID);
-					int radius = sqlDataBase.getRadiusByEventID(eventID);
-					obj.put("radius",radius);
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				jsonToSend.put(obj);
+				
 				writer.write(obj.toString());
 				writer.close();
 				//con.sendJsonArray(jsonToSend, "http://mba4.ad.biu.ac.il/gisWebProject/test");
