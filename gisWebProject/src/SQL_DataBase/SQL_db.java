@@ -47,7 +47,7 @@ public class SQL_db {
 	}
 	//TODO
 	public int getregion_type() {
-		int region_type = 1;
+		int region_type = 0;
 		return region_type;
 	}
 	//TODO
@@ -80,7 +80,7 @@ public class SQL_db {
 					+ "* sin( radians( x ) ))) AS distance "
 					+ "FROM updatedLocation HAVING distance < "+radius+" ORDER BY distance LIMIT 0 , 20;");
 			while(rs.next()){
-				System.out.println(rs.getString("cmid")+"   ");
+				
 				cmid=rs.getString("cmid");
 				if(!communityMember.equals(cmid))
 					cmidAtRadius.add(cmid);
@@ -159,7 +159,7 @@ public class SQL_db {
 				}
 			}
 			else{
-				//rs.previous();
+				
 				double x_val = rs.getDouble("x");
 				double y_val = rs.getDouble("y");
 				String cmid_val = rs.getString("cmid");
@@ -205,6 +205,7 @@ public class SQL_db {
 			disconnect();
 		}
 	}
+	//update decision table
 	public void updateDecisionTable(String eventID, String cmid, double x, double y, String states, int region_type, String medical_condition_description, double age, int radius){
 		try {
 			connect();
@@ -249,7 +250,7 @@ public class SQL_db {
 
 
 
-	//check if the cmid at routine process return 0 or emergency process return 1
+	//check if the cmid at routine process return null or emergency process return eventID
 	public String checkRoutineOrEmerg(String cmid) {
 		String eventID = "";
 		try {
@@ -275,9 +276,9 @@ public class SQL_db {
 		finally {
 			disconnect();
 		}
-		//routine
+		
 
-			return eventID;
+		return eventID;
 	}
 	//status of cmid change to emergency
 	public void updateEmergency(String cmid, String eventID) {
@@ -410,28 +411,6 @@ public class SQL_db {
 			disconnect();
 		}
 	}
-	private void connect() {
-		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			String dbUrl = "jdbc:mysql://localhost";
-			connection = DriverManager.getConnection(dbUrl,"root", "");
-			MysqlDataSource ds = new MysqlConnectionPoolDataSource();
-			ds.setServerName("localhost");
-			ds.setDatabaseName("GIS_DB");
-			statement=connection.createStatement();
-			String dbName = new String("GIS_DB");
-			statement.execute("CREATE DATABASE IF NOT EXISTS " + dbName);
-		}
-		catch(SQLException se){
-			//Handle errors for JDBC
-			se.printStackTrace();
-		}
-		catch(Exception e){
-			//Handle errors for Class.forName
-			e.printStackTrace();
-		}
-	}
-
 	public String getCmidByEventId(String eventID) {
 		String cmidNum = "";
 		try {
@@ -519,6 +498,29 @@ public class SQL_db {
 		}
 		return radius;
 	}
+	private void connect() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			String dbUrl = "jdbc:mysql://localhost";
+			connection = DriverManager.getConnection(dbUrl,"root", "");
+			MysqlDataSource ds = new MysqlConnectionPoolDataSource();
+			ds.setServerName("localhost");
+			ds.setDatabaseName("GIS_DB");
+			statement=connection.createStatement();
+			String dbName = new String("GIS_DB");
+			statement.execute("CREATE DATABASE IF NOT EXISTS " + dbName);
+		}
+		catch(SQLException se){
+			//Handle errors for JDBC
+			se.printStackTrace();
+		}
+		catch(Exception e){
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}
+	}
+
+	
 
 
 	private void disconnect() {
