@@ -1,6 +1,5 @@
 package connectinWithServer;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -79,7 +78,7 @@ public class Connection {
 			org.jsoup.Connection.Response resp = Jsoup.connect(url)
 					.data("JSONFile", data)
 					.ignoreContentType(true)
-					.timeout(10 * 1000 * 20)//milliseconds
+					.timeout(10 * 1000 )//milliseconds
 					.method(org.jsoup.Connection.Method.POST)
 					.execute();
 
@@ -100,7 +99,7 @@ public class Connection {
 			org.jsoup.Connection.Response resp = Jsoup.connect(url)
 					.data("JSONFile", data)
 					.ignoreContentType(true)
-					.timeout(10 * 1000 * 20)//milliseconds
+					.timeout(10 * 1000 )//milliseconds
 					.method(org.jsoup.Connection.Method.POST)
 					.execute();
 

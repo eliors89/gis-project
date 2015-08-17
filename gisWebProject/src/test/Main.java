@@ -42,14 +42,14 @@ public class Main {
 //				System.out.println(sqlDataBase.getCmidByEventId("1234"));
 //				sqlDataBase.getPointByCmid("1234");
 //				sqlDataBase.getPointByCmid("1234");
-//				RequestGoogle req=new RequestGoogle();
-//			    String add=req.getAddress(34.749927,31.879650);
+				RequestGoogle req=new RequestGoogle();
+			    String add=req.getAddress(32.026627,34.846347);
 //				System.out.println(req.getAddress(34.729937,31.879838));
 //				String[] split=add.split(",");
 //				String state=split[2];
 				sqlDataBase.deleteEvent("2222");
 				System.out.println(sqlDataBase.checkRoutineOrEmerg("1234"));
-				
+				System.out.println(req.getNearbyEMS(34.749927, 31.879650, 10000));
 	}
 }
 		//		RequestGoogle req=new RequestGoogle();

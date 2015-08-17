@@ -91,6 +91,12 @@ public class Mapping extends HttpServlet {
 				RequestDispatcher rd = request.getRequestDispatcher("cancelEvent");
 				rd.forward(request, response);
 			}
+			else if(req.equals("closestEMS"))
+			{
+				writer.write("closestEMS");
+				RequestDispatcher rd = request.getRequestDispatcher("closestEMS");
+				rd.forward(request, response);
+			}
 			else
 			{
 				JSONArray arr=new JSONArray();

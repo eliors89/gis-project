@@ -25,13 +25,13 @@ import SQL_DataBase.SQL_db;
 public class RequestGoogle extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	
+
 	public RequestGoogle() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 	}
@@ -81,7 +81,7 @@ public class RequestGoogle extends HttpServlet {
 		// ask google time by mod 
 		String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+
 				xCurrent+","+yCurrent+"&destination="+needToX+","+needToY+"&departure_time=now&mode="+mod+"&key="+API_KEY;
-		
+
 		URL obj = new URL(url);
 		//open connection
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -92,7 +92,7 @@ public class RequestGoogle extends HttpServlet {
 		//add request header
 		con.setRequestProperty("User-Agent", USER_AGENT);
 
-	//	int responseCode = con.getResponseCode();
+		//	int responseCode = con.getResponseCode();
 
 
 		BufferedReader in = new BufferedReader(
@@ -148,7 +148,7 @@ public class RequestGoogle extends HttpServlet {
 		return str;
 	}
 
-	
+
 	public String getAddress(double x, double y)
 			throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
 		//get double and convert them to string for url format
@@ -156,33 +156,87 @@ public class RequestGoogle extends HttpServlet {
 		String lat=Double.toString(y);
 		//send url and get geo json
 		URL url = new URL("http://maps.googleapis.com/maps/api/geocode/json?latlng="
-                + lat + "," + lng + "&sensor=true");
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        String formattedAddress = "";
- 
-        try {
-            InputStream in = url.openStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            String result, line = reader.readLine();
-            result = line;
-            while ((line = reader.readLine()) != null) {
-                result += line;
-            }
- 
-            JSONParser parser = new JSONParser();
-            JSONObject rsp = (JSONObject) parser.parse(result);
- 
-            if (rsp.containsKey("results")) {
-                JSONArray matches = (JSONArray) rsp.get("results");
-                JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists
-                formattedAddress = (String) data.get("formatted_address");
-            }
- 
-            return formattedAddress;
-        } finally {
-            urlConnection.disconnect();
-        }
-    }
+				+ lat + "," + lng + "&sensor=true");
+		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+		String formattedAddress = "";
+
+		try {
+			InputStream in = url.openStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+			String result, line = reader.readLine();
+			result = line;
+			while ((line = reader.readLine()) != null) {
+				result += line;
+			}
+
+			JSONParser parser = new JSONParser();
+			JSONObject rsp = (JSONObject) parser.parse(result);
+
+			if (rsp.containsKey("results")) {
+				JSONArray matches = (JSONArray) rsp.get("results");
+				if(matches.isEmpty())
+				{
+					return "wrong address";
+				}
+				JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists			
+				formattedAddress = (String) data.get("formatted_address");
+			}
+
+			return formattedAddress;
+		} finally {
+			urlConnection.disconnect();
+		}
+	}
+	public String getNearbyEMS(double x, double y, int radius)
+			throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
+		//get double and convert them to string for url format
+		String lng=Double.toString(x);
+		String lat=Double.toString(y);
+		String rad=Integer.toString(radius);
+		String API_KEY2="AIzaSyD_RZV_mPtJda32KgGgMGcJxPPA83KyEI0";
+		//send url and get geo json
+		URL url = new URL("https://maps.googleapis.com/maps/api/place/radarsearch/json?location="
+				+ lat + "," + lng + "&radius="+ rad +"&types=hospital&key="+API_KEY2);
+		//System.out.print(url+"\n");
+		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+		String formattedAddress = "";
+
+		InputStream in = url.openStream();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		String result, line = reader.readLine();
+		result = line;
+		while ((line = reader.readLine()) != null) {
+			result += line;
+		}
+
+		JSONParser parser = new JSONParser();
+		JSONObject rsp = (JSONObject) parser.parse(result);
+		JSONArray latLong = new JSONArray();
+		if (rsp.containsKey("results")) {
+			JSONArray results = (JSONArray) rsp.get("results");
+			//                System.out.print(results.toString());
+			int resultSize = results.size();
+			for (int i = 0; i < resultSize; i++) {
+				JSONObject firstMatch = (JSONObject) results.get(0);
+				JSONObject geometry = (JSONObject)firstMatch.get("geometry");
+				JSONObject location = (JSONObject)geometry.get("location");
+				Double retLat = (Double)location.get("lat");
+				Double retLng = (Double)location.get("lng");
+				latLong.add(0, retLat);
+				latLong.add(1, retLng);
+				formattedAddress = getAddress(retLng, retLat);
+				i=resultSize;
+			}
+
+			// check print
+			//System.out.print(formattedAddress+"\n");
+			//System.out.print("lat: "+latLong.get(0).toString()+"long: "+latLong.get(1).toString()+"\n");
+
+
+		}
+
+		return formattedAddress;
+	}
 }
 
 

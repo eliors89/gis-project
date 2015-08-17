@@ -68,13 +68,13 @@ public class Emergency extends HttpServlet {
 			SQL_db sqlDataBase = new SQL_db();
 			Connection con=new Connection();
 			String jfString = request.getParameter("JSONFile");
-
+			writer.write("aa");
 
 			JSONArray jarr = new JSONArray(jfString);
 			// take each value from the json array separately
 			int arrLen = jarr.length();
 			List<String> cmidAtRadius = new ArrayList<String>();
-
+			writer.write(jarr.toString());
 
 			for (int curr=0;curr<arrLen;curr++) {
 				JSONObject innerObj;
@@ -97,9 +97,11 @@ public class Emergency extends HttpServlet {
 						region_type = sqlDataBase.getregion_type();
 						medical_condition_description  = innerObj.getString("medical_condition_description");
 						age = innerObj.getDouble("age");
-
-						String[] split=address.split(",");
-						state=split[2].replace(" ","");
+						if(!address.equals("wrong address"))
+						{
+							String[] split=address.split(",");
+							state=split[2].replace(" ","");
+						}
 						
 						//check if we have radius
 						if (innerObj.has("radius"))
@@ -112,7 +114,9 @@ public class Emergency extends HttpServlet {
 							radius=sqlDataBase.getRadiusFromDesicionTable(eventID, cmid, x, y, state, region_type,
 									                                       medical_condition_description, age); 
 						}
+						writer.write("before");
 						sqlDataBase.updateDecisionTable(eventID, cmid, x, y, state, region_type, medical_condition_description, age, radius);
+						writer.write("after");
 						cmidAtRadius = sqlDataBase.getCMIDByRadius(cmid,radius, x, y);
 						for(int i=0;i<cmidAtRadius.size();i++)
 						{
@@ -122,7 +126,7 @@ public class Emergency extends HttpServlet {
 						try {
 							obj.put("RequestID", "AroundLocation");
 							obj.put("event_id", eventID);
-							obj.put("state","israel");
+							obj.put("state",state);
 							obj.put("location_remark",address);
 							obj.put("x", x);
 							obj.put("y", y);
@@ -157,8 +161,10 @@ public class Emergency extends HttpServlet {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-			
-		writer.close();
+		finally
+		{
+			writer.close();
+		}
 	}
 }
 

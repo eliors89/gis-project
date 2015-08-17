@@ -208,12 +208,12 @@ public class SQL_db {
 	//update decision table
 	public void updateDecisionTable(String eventID, String cmid, double x, double y, String states, int region_type, String medical_condition_description, double age, int radius){
 		try {
+			updateLocation(cmid, x, y);
 			connect();
 			statement.execute("USE GIS_DB;");
-
+			
 			ResultSet rs=statement.executeQuery("SELECT * FROM decisionTable WHERE eventID='"+eventID+"';");
-			int count=rs.getRow();
-			System.out.println(count);
+			
 			if( !rs.first() ) {
 				statement.executeUpdate("INSERT INTO decisionTable VALUES ('"+eventID+"','"+cmid+"',"+x+","+y+",'"+states+"','"+region_type+"','"+medical_condition_description+"',"+age+", "+radius+");");
 			}
@@ -244,6 +244,7 @@ public class SQL_db {
 		// disconnect
 		finally {
 			disconnect();
+			
 		}
 	}
 
