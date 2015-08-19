@@ -10,7 +10,7 @@ import org.json.simple.parser.ParseException;
 
 import SQL_DataBase.SQL_db;
 public class Main {
-	public static void main(String[] args) throws MalformedURLException, IOException, ParseException, JSONException {
+	public static void main(String[] args) throws Exception {
 				SQL_db sqlDataBase = new SQL_db();
 				sqlDataBase.updateLocation("111", 78.3232, 65.3234);
 				sqlDataBase.updateLocation("112", 78.3235, 65.3234);
@@ -24,7 +24,7 @@ public class Main {
 				sqlDataBase.updateLocation("120", 78.3732, 65.3634);
 				sqlDataBase.updateLocation("121", 78.3235, 65.3235);
 				sqlDataBase.updateLocation("122", 78.3237, 65.3238);
-				
+				sqlDataBase.getPointByCmid("122");
 				sqlDataBase.updateLocation("1234", 7.7, 65.3234);
 				sqlDataBase.updateRoutine("1234");
 				sqlDataBase.updateLocation("1234", 8.8, 65.3234);
@@ -36,24 +36,26 @@ public class Main {
 				sqlDataBase.updateDecisionTable("2222", "112", 5.5, 6.6, "israel", 1, "222", 15, 3);
 				sqlDataBase.updateDecisionTable("2222", "112", 5.5, 6.6, "israel", 1, "222", 15, 3);
 				sqlDataBase.updateDecisionTable("2223", "113", 5.5, 6.6, "israel", 1, "222", 15, 3);
-				sqlDataBase.updateEmergency("116","2222");
 				sqlDataBase.routineAllMembersByEventID("2222");
 //				sqlDataBase.updateEmergency("1234", "1234");
 //				System.out.println(sqlDataBase.getCmidByEventId("1234"));
 //				sqlDataBase.getPointByCmid("1234");
 //				sqlDataBase.getPointByCmid("1234");
 				RequestGoogle req=new RequestGoogle();
-			    String add=req.getAddress(34.881993,32.036233);
+			    String add=req.getAddress(32.036233,34.881993);
 //				System.out.println(req.getAddress(34.729937,31.879838));
 //				String[] split=add.split(",");
 //				String state=split[2];
+				
+			    System.out.println(req.sendGet("walking",31.880611,34.731161,31.812951,34.663870));
+				
 				sqlDataBase.deleteEvent("2222");
 				System.out.println(sqlDataBase.checkRoutineOrEmerg("1234"));
-				System.out.println(req.getNearbyEMS(34.749927, 31.879650, 10000));
+				System.out.println(req.getNearbyEMS(31.879650,34.749927 , 10000));
 	}
 }
 		//		RequestGoogle req=new RequestGoogle();
-		//		String timeWalk=req.sendGet("walking",34.731161,31.880611,34.663870,31.812951);
+		
 		//		System.out.println(timeWalk);
 		//		String timeDrive=req.sendGet("driving",34.731161,31.880611,34.663870,31.812951);
 		//		System.out.println(timeDrive);

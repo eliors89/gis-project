@@ -73,14 +73,14 @@ public class RequestGoogle extends HttpServlet {
 		}
 	}
 	// requte for get time by mod and source and target
-	public String sendGet(String mod,double yCurrent,double xCurrent,double needToY,double needToX) throws Exception {
+	public String sendGet(String mod,double latCurrent,double lngCurrent,double needTolat,double needTolng) throws Exception {
 		//the user browser
 		String USER_AGENT="Chrome";
 		//key to use google maps api
 		String API_KEY="AIzaSyD_RZV_mPtJda32KgGgMGcJxPPA83KyEI0";
 		// ask google time by mod 
 		String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+
-				xCurrent+","+yCurrent+"&destination="+needToX+","+needToY+"&departure_time=now&mode="+mod+"&key="+API_KEY;
+				latCurrent+","+lngCurrent+"&destination="+needTolat+","+needTolng+"&departure_time=now&mode="+mod+"&key="+API_KEY;
 
 		URL obj = new URL(url);
 		//open connection
@@ -149,11 +149,11 @@ public class RequestGoogle extends HttpServlet {
 	}
 
 
-	public String getAddress(double x, double y)
+	public String getAddress(double lat, double lng)
 			throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
 		//get double and convert them to string for url format
-		String lng=Double.toString(x);
-		String lat=Double.toString(y);
+//		String lng=Double.toString(x);
+//		String lat=Double.toString(Lat);
 		//send url and get geo json
 		URL url = new URL("http://maps.googleapis.com/maps/api/geocode/json?latlng="
 				+ lat + "," + lng + "&sensor=true");
@@ -187,11 +187,11 @@ public class RequestGoogle extends HttpServlet {
 			urlConnection.disconnect();
 		}
 	}
-	public String getNearbyEMS(double x, double y, int radius)
+	public String getNearbyEMS(double lat, double lng, int radius)
 			throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
 		//get double and convert them to string for url format
-		String lng=Double.toString(x);
-		String lat=Double.toString(y);
+//		String lng=Double.toString(x);
+//		String lat=Double.toString(y);
 		String rad=Integer.toString(radius);
 		String API_KEY2="AIzaSyD_RZV_mPtJda32KgGgMGcJxPPA83KyEI0";
 		//send url and get geo json
@@ -224,7 +224,7 @@ public class RequestGoogle extends HttpServlet {
 				Double retLng = (Double)location.get("lng");
 				latLong.add(0, retLat);
 				latLong.add(1, retLng);
-				formattedAddress = getAddress(retLng, retLat);
+				formattedAddress = getAddress(retLat, retLng);
 				i=resultSize;
 			}
 
