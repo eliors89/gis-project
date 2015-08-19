@@ -169,13 +169,8 @@ public class SQL_db {
 				Time lastUpdatedTime_val = rs.getTime("lastUpdatedTime");
 				// if the location changed
 				if((x!=x_val)||(y!=y_val)){
-					rs=statement.executeQuery("SELECT * FROM locationHistory WHERE cmid='"+cmid+"';");
-					if(!rs.next())
-						statement.executeUpdate("INSERT INTO locationHistory VALUES ('"+cmid_val+"',"+x_val+","+y_val+",'"+date_val+"','"+time_val+"','"+lastUpdatedDate_val+"','"+lastUpdatedTime_val+"');");
-					else
-					{
-						statement.executeUpdate("UPDATE locationHistory SET x="+x+", y="+y+", createdDate = CURDATE(), createdTime = CURTIME(), lastUpdatedDate = CURDATE(), lastUpdatedTime = CURTIME() WHERE cmid='"+cmid+"';");
-					}
+					statement.executeUpdate("INSERT INTO locationHistory VALUES ('"+cmid_val+"',"+x_val+","+y_val+",'"+date_val+"','"+time_val+"','"+lastUpdatedDate_val+"','"+lastUpdatedTime_val+"');");
+					
 					if(ID!=null)
 					{
 						statement.executeUpdate("UPDATE updatedLocation SET x="+x+", y="+y+",eventID="+ID+", createdDate = CURDATE(), createdTime = CURTIME(), lastUpdatedDate = CURDATE(), lastUpdatedTime = CURTIME() WHERE cmid='"+cmid+"';");

@@ -43,7 +43,7 @@ public class Main {
 //				sqlDataBase.getPointByCmid("1234");
 //				sqlDataBase.getPointByCmid("1234");
 				RequestGoogle req=new RequestGoogle();
-			    String add=req.getAddress(32.026627,34.846347);
+			    String add=req.getAddress(34.881993,32.036233);
 //				System.out.println(req.getAddress(34.729937,31.879838));
 //				String[] split=add.split(",");
 //				String state=split[2];
