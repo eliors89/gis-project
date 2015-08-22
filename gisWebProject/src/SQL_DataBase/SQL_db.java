@@ -27,9 +27,9 @@ public class SQL_db {
 		try {
 			connect();
 			statement.execute("USE GIS_DB;");
-			statement.execute("CREATE TABLE IF NOT EXISTS updatedLocation (cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), eventID VARCHAR(20), createdDate DATE, createdTime TIME, lastUpdatedDate DATE, lastUpdatedTime TIME);");/*  */
-			statement.execute("CREATE TABLE IF NOT EXISTS locationHistory (cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), createdDate DATE, createdTime TIME, lastUpdatedDate DATE, lastUpdatedTime TIME);");
-			statement.execute("CREATE TABLE IF NOT EXISTS decisionTable (eventID VARCHAR(20), cmid VARCHAR(20), x DOUBLE(9,6), y DOUBLE(9,6), state VARCHAR(20), region_type INT, medical_condition VARCHAR(30), age DOUBLE(5,2), radius INT);");
+			statement.execute("CREATE TABLE IF NOT EXISTS updatedLocation (cmid VARCHAR(20), x DOUBLE(9,7), y DOUBLE(9,7), eventID VARCHAR(20), createdDate DATE, createdTime TIME, lastUpdatedDate DATE, lastUpdatedTime TIME);");/*  */
+			statement.execute("CREATE TABLE IF NOT EXISTS locationHistory (cmid VARCHAR(20), x DOUBLE(9,7), y DOUBLE(9,7), createdDate DATE, createdTime TIME, lastUpdatedDate DATE, lastUpdatedTime TIME);");
+			statement.execute("CREATE TABLE IF NOT EXISTS decisionTable (eventID VARCHAR(20), cmid VARCHAR(20), x DOUBLE(9,7), y DOUBLE(9,7), state VARCHAR(20), region_type INT, medical_condition VARCHAR(30), age DOUBLE(5,2), radius INT);");
 		}
 		catch(SQLException se){
 			//Handle errors for JDBC
@@ -142,6 +142,10 @@ public class SQL_db {
 		}
 		return cmidNum;
 	}
+	
+	
+	
+	
 	//update location table
 	public void updateLocation(String cmid, double x, double y) {
 		try {
@@ -204,6 +208,7 @@ public class SQL_db {
 	public void updateDecisionTable(String eventID, String cmid, double x, double y, String states, int region_type, String medical_condition_description, double age, int radius){
 		try {
 			updateLocation(cmid, x, y);
+			updateEmergency(cmid, eventID);
 			connect();
 			statement.execute("USE GIS_DB;");
 			

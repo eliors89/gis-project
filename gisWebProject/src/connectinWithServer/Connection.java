@@ -28,7 +28,7 @@ public class Connection {
 		JSONArray mJSONArray = new JSONArray(Arrays.asList(map));
 		String data = mJSONArray.toString();
 		try{
-			org.jsoup.Connection.Response resp = Jsoup.connect("http://mba4.ad.biu.ac.il/gisWebProject/mapping")
+			org.jsoup.Connection.Response resp = Jsoup.connect("http://mba4.ad.biu.ac.il/gisWebProject/Mapping")
 					.data("JSONFile", data)
 					.ignoreContentType(true)
 					.method(org.jsoup.Connection.Method.POST)

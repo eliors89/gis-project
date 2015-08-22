@@ -21,7 +21,7 @@ import org.json.simple.parser.ParseException;
 
 import SQL_DataBase.SQL_db;
 
-@WebServlet("/RequsteGoogle")
+//@WebServlet("/RequsteGoogle")
 public class RequestGoogle extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -72,6 +72,9 @@ public class RequestGoogle extends HttpServlet {
 			ex.printStackTrace();
 		}
 	}
+	
+	
+
 	// requte for get time by mod and source and target
 	public String sendGet(String mod,double latCurrent,double lngCurrent,double needTolat,double needTolng) throws Exception {
 		//the user browser
@@ -237,6 +240,25 @@ public class RequestGoogle extends HttpServlet {
 
 		return formattedAddress;
 	}
+
+	public int getTimeInInt(String times){
+		int minutes=0;
+		String[] parts = times.split(" ");
+		int timesLen = parts.length;
+		for(int i=0;i<timesLen;i=i+2){
+			int curr = Integer.parseInt(parts[i]);
+			if((parts[i+1].equals("hours"))||(parts[i+1].equals("hour"))){
+				minutes+=(curr*60);
+			}
+			else if((parts[i+1].equals("mins"))||(parts[i+1].equals("min"))){
+				minutes+=curr;
+			}
+		}
+		System.out.println(minutes);
+		return minutes;
+	}
+
+
 }
 
 

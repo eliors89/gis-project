@@ -7,9 +7,11 @@ import java.io.PrintWriter;
 import java.io.Writer;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 
 
@@ -34,7 +36,7 @@ import connectinWithServer.Connection;
 import emergencyProcess.RequestGoogle;
 import SQL_DataBase.SQL_db;
 
-
+//@WebServlet("/routine")
 public class Routine extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -63,7 +65,6 @@ public class Routine extends HttpServlet {
 			} catch (IOException ex) {}
 			org.json.JSONObject obj=new org.json.JSONObject();
 			RequestGoogle req=new RequestGoogle();
-
 
 			// take each value from the json array separately
 			String routineOrEmerg;
@@ -107,13 +108,13 @@ public class Routine extends HttpServlet {
 							sickPoint = sqlDataBase.getPointByCmid(sickCmid);
 							try{
 								String driving=req.sendGet("driving", x, y, sickPoint[0], sickPoint[1]);
-								String drive=driving.replace(" min", "");
-								obj.put("eta_by_car",drive);
+								int IntDriving = req.getTimeInInt(driving);
+								obj.put("eta_by_car",IntDriving);
 								String walking=req.sendGet("walking", x ,y, sickPoint[0], sickPoint[1]);
-								String walk=walking.replace(" min", "");
-								obj.put("eta_by_foot", walk);
+								int IntWalking = req.getTimeInInt(walking);
+								obj.put("eta_by_foot", IntWalking);
 								obj.put("event_id", sqlDataBase.getEventID(cmid));
-							//	writer.write(obj.toString());
+							
 								
 								//need to check with server url for this
 								con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis");

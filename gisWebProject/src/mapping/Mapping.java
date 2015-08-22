@@ -18,7 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 
-@WebServlet("/Mapping")
+//@WebServlet("/Mapping")
 public class Mapping extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	

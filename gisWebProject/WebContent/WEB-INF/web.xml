@@ -18,7 +18,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Mapping</servlet-name>
-		<url-pattern>/mapping</url-pattern>
+		<url-pattern>/Mapping</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>Routine</servlet-name>
@@ -73,7 +73,7 @@
 		<servlet-class>emergencyProcess.cancelEvent</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>Emergency</servlet-name>
+		<servlet-name>cancelEvent</servlet-name>
 		<url-pattern>/cancelEvent</url-pattern>
 	</servlet-mapping>
 	<servlet>
@@ -81,7 +81,7 @@
 		<servlet-class>emergencyProcess.closestEMS</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>Emergency</servlet-name>
+		<servlet-name>closestEMS</servlet-name>
 		<url-pattern>/closestEMS</url-pattern>
 	</servlet-mapping>
 </web-app>

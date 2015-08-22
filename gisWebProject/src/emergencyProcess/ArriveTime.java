@@ -7,9 +7,11 @@ import java.io.Writer;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 
 
@@ -27,6 +29,9 @@ import org.json.simple.parser.ParseException;
 import connectinWithServer.Connection;
 import SQL_DataBase.SQL_db;
 
+
+
+//@WebServlet("/arriveTime")
 public class ArriveTime extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -108,11 +113,11 @@ public class ArriveTime extends HttpServlet {
 									location_remark=req.getAddress(cmidPoint[0], cmidPoint[1]);
 									writer.write(address);
 									driving=req.sendGet("driving", cmidPoint[0], cmidPoint[1], sickPoint[0], sickPoint[1]);
-									String drive=driving.replace(" min", "");
-									cmidJson.put("eta_by_car",drive);
+									int IntDriving = req.getTimeInInt(driving);
+									cmidJson.put("eta_by_car",IntDriving);
 									walking=req.sendGet("walking",cmidPoint[0], cmidPoint[1], sickPoint[0], sickPoint[1]);
-									String walk=walking.replace(" min", "");
-									cmidJson.put("eta_by_foot", walk);
+									int IntWalking = req.getTimeInInt(walking);
+									cmidJson.put("eta_by_foot", IntWalking);
 									cmidJson.put("location_remark",location_remark);
 									//need to check with server url for this
 									jsonToSend.put(cmidJson);
