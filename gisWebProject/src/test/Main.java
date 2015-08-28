@@ -34,6 +34,7 @@ public class Main {
 				System.out.println(sqlDataBase.getEventID("1234"));
 				//sqlDataBase.updateDecisionTable("2222", "112", 5.5, 6.6, "israel", 1, "aaa", 15, 3);
 				sqlDataBase.updateDecisionTable("1111", "111", 78.3232, 65.3234, "israel", 1, "aaa", 15, 3);
+				sqlDataBase.setRadiusDecisionTable(6, "1111");
 				sqlDataBase.updateDecisionTable("1112", "112", 78.3235, 65.3234, "israel", 1, "aaa", 15, 3);
 				sqlDataBase.updateDecisionTable("1113", "113", 78.3237, 65.3234, "israel", 1, "aaa", 15, 3);
 				sqlDataBase.updateDecisionTable("1114", "114", 78.3232, 65.3236, "israel", 1, "aaa", 15, 3);
@@ -98,6 +99,8 @@ public class Main {
 			    System.out.println(req.sendGet("walking",31.880611,34.731161,31.812951,34.663870));
 				
 				sqlDataBase.deleteEvent("2222");
+				
+				sqlDataBase.getCmidByEventId("2222").equals("null");
 				System.out.println(sqlDataBase.checkRoutineOrEmerg("1234"));
 				System.out.println(req.getNearbyEMS(31.879650,34.749927 , 10000));
 	}

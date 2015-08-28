@@ -19,18 +19,29 @@ public class Connection {
 
 	public static void main(String[] args) throws ParseException {
 
-		HashMap<String, String> map=new HashMap<String, String>();
-		map.put("RequestID", "Times");
-		map.put("event_id", "1045");
-
-		map.put("6666","NULL");
-		map.put("7777", "NULL");
+		JSONObject map=new JSONObject();
+		try {
+			map.put("RequestID", "AroundLocation");
+			map.put("community_member_id", "2222");
+			map.put("event_id", "3333");
+			map.put("x",32.0686403);
+			map.put("y", 34.8438252);
+			map.put("medical_condition_description","have");
+			map.put("age",0);
+			map.put("radius",10);
+			
+		
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		JSONArray mJSONArray = new JSONArray(Arrays.asList(map));
 		String data = mJSONArray.toString();
 		try{
 			org.jsoup.Connection.Response resp = Jsoup.connect("http://mba4.ad.biu.ac.il/gisWebProject/Mapping")
 					.data("JSONFile", data)
 					.ignoreContentType(true)
+					.timeout(10 * 1000 )//milliseconds
 					.method(org.jsoup.Connection.Method.POST)
 					.execute();
 
@@ -47,32 +58,12 @@ public class Connection {
 
 	}
 
-	//	public JSONObject getRequest(HttpServletRequest request)
-	//	{
-	//		StringBuffer jb = new StringBuffer();
-	//		String stringToParse = null;
-	//		//get data of requset from server
-	//		try {
-	//			BufferedReader reader = request.getReader();
-	//			while ((stringToParse = reader.readLine()) != null){
-	//				jb.append(stringToParse);
-	//			}
-	//		} catch (Exception e) { /*report an error*/ }
-	//		JSONParser parser = new JSONParser();
-	//		//convert the data to json object
-	//		JSONObject jsonObject = new JSONObject();;
-	//		try {
-	//			jsonObject = (JSONObject) parser.parse(jb.toString());
-	//		} catch (ParseException e) {
-	//			// TODO Auto-generated catch block
-	//			e.printStackTrace();
-	//		}
-	//		return jsonObject;
-	//	}
-
+	//send json object to server
 	public void sendJsonObject(org.json.JSONObject obj,String to)
 	{
+		//url we need to send 
 		String url = to;
+		//get the string from json object
 		String data = obj.toString();
 		try{
 			org.jsoup.Connection.Response resp = Jsoup.connect(url)
@@ -89,11 +80,12 @@ public class Connection {
 			e.printStackTrace();
 		} 
 	}
-
+	//send json array to server
 	public void sendJsonArray(JSONArray jsonToSend, String to) {
-		// TODO Auto-generated method stub
-
+		
+		//url we need to send 
 		String url = to;
+		//get the string from json array
 		String data = jsonToSend.toString();
 		try{
 			org.jsoup.Connection.Response resp = Jsoup.connect(url)

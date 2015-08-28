@@ -14,6 +14,8 @@ import java.sql.Time;
 //import org.json.JSONObject;
 
 
+
+
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 
@@ -247,6 +249,22 @@ public class SQL_db {
 			
 		}
 	}
+	public void setRadiusDecisionTable(int radius,String eventID)
+	{
+		try {
+			connect();
+			statement.execute("USE GIS_DB;");
+			statement.executeUpdate("UPDATE decisionTable SET radius="+radius+" WHERE eventID='"+eventID+"';");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// disconnect
+		finally {
+			disconnect();
+			
+		}
+	}
 
 
 
@@ -420,7 +438,7 @@ public class SQL_db {
 			ResultSet rs=statement.executeQuery("SELECT * FROM decisionTable WHERE eventID='"+eventID+"';");
 			if(!rs.next())
 			{
-				cmidNum=null;
+				cmidNum="null";
 			}
 			else
 			{
@@ -540,6 +558,8 @@ public class SQL_db {
 			se.printStackTrace();
 		}//end finally try
 	}
+
+	
 
 
 

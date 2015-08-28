@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.Writer;
 
 import javax.servlet.ServletException;
@@ -54,7 +55,16 @@ public class cancelEvent extends HttpServlet {
 
 		} catch (IOException ex) {}
 		try {
-
+			JSONArray arr=new JSONArray();
+			JSONObject jsonObject=new JSONObject();
+			jsonObject.put("status", "success");
+			arr.put(jsonObject);
+			response.setContentType("application/json"); 
+			// Get the printwriter object from response to write the required json object to the output stream 
+			PrintWriter out = response.getWriter(); 
+			// Assuming your json object is **jsonObject**, perform the following, it will return your json object 
+			out.print(arr);
+			out.flush();
 			SQL_db sqlDataBase = new SQL_db();
 			Connection con=new Connection();
 			String jfString = request.getParameter("JSONFile");

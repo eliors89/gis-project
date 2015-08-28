@@ -16,22 +16,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 //@WebServlet("/test")
+//servlet to check if connection is ok 
+//send the data he get and send him back
 public class TestConnection extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
     public TestConnection() {
         super();
-        // TODO Auto-generated constructor stub
+        
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 	}
 	protected void doPost(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 		Writer writer=null;
 		try {
 		    writer = new BufferedWriter(new OutputStreamWriter(

@@ -3,6 +3,7 @@ import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 
@@ -11,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 
 
@@ -55,7 +57,16 @@ public class ArriveTime extends HttpServlet {
 			
 		} catch (IOException ex) {}
 		try {
-			
+			JSONArray arr=new JSONArray();
+			JSONObject jsonObject=new JSONObject();
+			jsonObject.put("status", "success");
+			arr.put(jsonObject);
+			response.setContentType("application/json"); 
+			// Get the printwriter object from response to write the required json object to the output stream 
+			PrintWriter out = response.getWriter(); 
+			// Assuming your json object is **jsonObject**, perform the following, it will return your json object 
+			out.print(arr);
+			out.flush();
 			SQL_db sqlDataBase = new SQL_db();
 			Connection con=new Connection();
 			String jfString = request.getParameter("JSONFile");
@@ -122,21 +133,7 @@ public class ArriveTime extends HttpServlet {
 									//need to check with server url for this
 									jsonToSend.put(cmidJson);
 								}catch (Exception ex){ex.printStackTrace();}
-//								try{
-//									writer.write("try");
-//									//writer.write(googleReq.getAddress(cmidPoint[0], cmidPoint[1]));
-//									//location_remark=googleReq.getAddress(cmidPoint[0], cmidPoint[1]);
-//									walking = googleReq.sendGet("walking", cmidPoint[1], cmidPoint[0],sickPoint[1], sickPoint[0]);
-//									writer.write(walking);
-//									driving = googleReq.sendGet("driving", cmidPoint[1], cmidPoint[0],sickPoint[1], sickPoint[0]);
-//									writer.write(driving);
-//								}
-//								catch(Exception ex){writer.write("catch");}
-								
-								
-								
-								
-								
+	
 							}
 						}
 					}
@@ -148,14 +145,13 @@ public class ArriveTime extends HttpServlet {
 				
 				writer.write(obj.toString());
 				writer.close();
-				//con.sendJsonArray(jsonToSend, "http://mba4.ad.biu.ac.il/gisWebProject/test");
-	//			send.put("JSONFile", jsonToSend.toString());
+
 				con.sendJsonArray(jsonToSend, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis-times");
 			}
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		}
 	}

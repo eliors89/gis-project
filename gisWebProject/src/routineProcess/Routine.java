@@ -48,13 +48,24 @@ public class Routine extends HttpServlet {
 
 		
 		try {
+			//sending response to server that we get the request from them
 			JSONArray arr=new JSONArray();
 			JSONObject jsonObject=new JSONObject();
 			jsonObject.put("status", "success");
 			arr.put(jsonObject);
+			response.setContentType("application/json"); 
+			// Get the printwriter object from response to write the required json object to the output stream 
+			PrintWriter out = response.getWriter(); 
+			// Assuming your json object is **jsonObject**, perform the following, it will return your json object 
+			out.print(arr);
+			out.flush();
+			//create new instance of sql 
 			SQL_db sqlDataBase = new SQL_db();
+			//create new instance of connection
 			Connection con=new Connection();
+			//get JSONFile string
 			String jfString = request.getParameter("JSONFile");
+			//create new json array from the string we get
 			JSONArray jarr = new JSONArray(jfString);
 			Writer writer=null;
 			try {
@@ -64,10 +75,12 @@ public class Routine extends HttpServlet {
 				writer.write(jfString);
 			} catch (IOException ex) {}
 			org.json.JSONObject obj=new org.json.JSONObject();
+			//create new instance of RequestGoogle
 			RequestGoogle req=new RequestGoogle();
 
 			// take each value from the json array separately
 			String routineOrEmerg;
+			//length of json array we get
 			int len = jarr.length();
 
 			double x, y;
@@ -79,21 +92,27 @@ public class Routine extends HttpServlet {
 				JSONObject innerObj;
 				try {
 					innerObj = (JSONObject) jarr.getJSONObject(curr);
+					//check the requstID from json array
 					if (innerObj.getString("RequestID").equals("routineLocation")){
+						//get community_member_id from json
 						cmid  = innerObj.getString("community_member_id");
+						//get lat from json
 						x = innerObj.getDouble("x");
+						//get lng from json
 						y = innerObj.getDouble("y");
+						//update the location of user at sql table
 						sqlDataBase.updateLocation(cmid, x, y);
+						//check if event is emergency or routine
 						routineOrEmerg = sqlDataBase.checkRoutineOrEmerg(cmid);
-						//enum for emergency 
-						response.setContentType("application/json"); 
-						// Get the printwriter object from response to write the required json object to the output stream 
-						PrintWriter out = response.getWriter(); 
-						// Assuming your json object is **jsonObject**, perform the following, it will return your json object 
-						out.print(arr);
-						out.flush();	
+						
+							
 						writer.write(routineOrEmerg);
 						writer.close();
+						//if the event is emergency we send to server 
+						// the new loction of this user
+						//location remark of this user
+						//traveling time of this user(at minutes)
+						//event id of this event
 						if(!routineOrEmerg.equals("null")){
 							address=req.getAddress(x, y);
 							split=address.split(",");
@@ -116,10 +135,10 @@ public class Routine extends HttpServlet {
 								obj.put("event_id", sqlDataBase.getEventID(cmid));
 							
 								
-								//need to check with server url for this
+								
 								con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis");
 								
-							}catch (Exception ex){/*error report*/}
+							}catch (Exception ex){ex.printStackTrace();}
 				
 							
 						}
@@ -141,7 +160,7 @@ public class Routine extends HttpServlet {
 			ex.printStackTrace();
 
 		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		}
 

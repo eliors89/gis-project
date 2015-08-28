@@ -3,6 +3,9 @@ package emergencyProcess;
 import java.io.IOException;
 
 
+import java.io.PrintWriter;
+import java.util.logging.Logger;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,7 +26,7 @@ import connectinWithServer.Connection;
 //@WebServlet("/closestEMS")
 public class closestEMS extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	private Logger logger = Logger.getLogger(this.getClass().getName());
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -44,12 +47,23 @@ public class closestEMS extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try{
-			
-			
+			logger.info(" "+"enter");
+			JSONArray arr=new JSONArray();
+			JSONObject jsonObject=new JSONObject();
+			jsonObject.put("status", "success");
+			arr.put(jsonObject);
+			response.setContentType("application/json"); 
+			// Get the printwriter object from response to write the required json object to the output stream 
+			PrintWriter out = response.getWriter(); 
+			// Assuming your json object is **jsonObject**, perform the following, it will return your json object 
+			out.print(arr);
+			out.flush();
+			double[] sickPoint = new double[2]; 
+			String address="",cmid="";
 			SQL_db sqlDataBase = new SQL_db();
 			Connection con=new Connection();
 			String jfString = request.getParameter("JSONFile");
-
+			RequestGoogle req=new RequestGoogle();
 
 			JSONArray jarr = new JSONArray(jfString);
 			// take each value from the json array separately
@@ -58,11 +72,16 @@ public class closestEMS extends HttpServlet {
 
 			for (int curr=0;curr<arrLen;curr++) {
 				JSONObject innerObj;
-
+				
 				try {
 					innerObj = (JSONObject) jarr.getJSONObject(curr);
 					if (innerObj.getString("RequestID").equals("closestEMS")){
 						String eventID=innerObj.getString("event_id");
+						logger.info(" "+eventID);
+						cmid  = innerObj.getString("community_member_id");
+						sickPoint=sqlDataBase.getPointByCmid(cmid);
+						address=req.getAddress(sickPoint[0], sickPoint[1]);
+						logger.info(" "+address);
 						JSONObject jsonobj=new JSONObject();
 						jsonobj.put("RequestID", "closestEMS");
 						jsonobj.put("event_id", eventID);
@@ -72,9 +91,11 @@ public class closestEMS extends HttpServlet {
 						jsonobj.put("state","israel");
 						jsonobj.put("radius",0);
 						jsonobj.put("ems_id","10000");
+						jsonobj.put("location_remark",address);
+						//con.sendJsonObject(jsonobj, "http://mba4.ad.biu.ac.il/gisWebProject/test");
 						con.sendJsonObject(jsonobj, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis");
 					}
-				}catch (JSONException e) {
+				}catch (JSONException | ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
