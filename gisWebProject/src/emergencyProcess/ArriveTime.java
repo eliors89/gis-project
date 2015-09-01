@@ -49,6 +49,7 @@ public class ArriveTime extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Writer writer=null;
 		try {
+			//output with format
 		    writer = new BufferedWriter(new OutputStreamWriter(
 		          new FileOutputStream("arrive.txt"), "utf-8"));
 		    writer.write("enter 112 ");
@@ -84,6 +85,7 @@ public class ArriveTime extends HttpServlet {
 			String sickCmid;
 			org.json.JSONArray jsonToSend=new org.json.JSONArray();
 			JSONObject obj=new JSONObject();
+			
 			
 			for (int curr =0;curr < arrLen;curr++) {
 				JSONObject innerObj;

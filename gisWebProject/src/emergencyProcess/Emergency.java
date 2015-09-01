@@ -125,7 +125,7 @@ public class Emergency extends HttpServlet {
 								logger.info(state);
 							}
 						}
-						//
+						
 						else
 						{
 							cmid  = innerObj.getString("community_member_id");

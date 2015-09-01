@@ -52,7 +52,6 @@ public class cancelEvent extends HttpServlet {
 			writer.write("enter 112 ");
 
 
-
 		} catch (IOException ex) {}
 		try {
 			JSONArray arr=new JSONArray();

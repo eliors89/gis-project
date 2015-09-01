@@ -234,8 +234,6 @@ public class RequestGoogle extends HttpServlet {
 			// check print
 			//System.out.print(formattedAddress+"\n");
 			//System.out.print("lat: "+latLong.get(0).toString()+"long: "+latLong.get(1).toString()+"\n");
-
-
 		}
 
 		return formattedAddress;

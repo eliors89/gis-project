@@ -13,4 +13,5 @@ public class Cmid {
 	        this.x = x;
 	        this.y =y;
 	}
+	
 }

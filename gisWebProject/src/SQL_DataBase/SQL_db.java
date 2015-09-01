@@ -57,7 +57,7 @@ public class SQL_db {
 			double x, double y, String state, int region_type,
 			String medical_condition_description, double age) {
 		// for test at future need to insert func
-		int radius = 5;
+		int radius = 20;
 
 		return radius;
 	}
@@ -327,6 +327,7 @@ public class SQL_db {
 		return eventID;
 	}
 
+	
 	// status of cmid change to emergency
 	public void updateEmergency(String cmid, String eventID) {
 		try {
