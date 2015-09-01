@@ -23,6 +23,7 @@ import SQL_DataBase.SQL_db;
 
 
 //@WebServlet("/stopFollow")
+//servlet to stop follow after user
 public class StopFollow extends HttpServlet {
 
 	/**
@@ -38,7 +39,7 @@ public class StopFollow extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 	}
 
 	/**
@@ -64,14 +65,15 @@ public class StopFollow extends HttpServlet {
 			// Assuming your json object is **jsonObject**, perform the following, it will return your json object 
 			out.print(arr);
 			out.flush();
+			//create instance od sql database
 			SQL_db sqlDataBase = new SQL_db();
+			//get string of json
 			String jfString = request.getParameter("JSONFile");
-
+			//create json from string
 			JSONArray jarr = new JSONArray(jfString);
 			writer.write(jarr.toString());
 			logger.info(jarr.toString());
-			// take each value from the json array separately
-
+			//length of array
 			int len = jarr.length();
 			int j;
 			ArrayList<String> cmidFromKey;
@@ -79,15 +81,18 @@ public class StopFollow extends HttpServlet {
 				JSONObject innerObj;
 				try {
 					innerObj = (JSONObject) jarr.get(curr);
+					//check if request id is ok
 					if (innerObj.getString("RequestID").equals("stopFollow")){
 						writer.write("if");
 						cmidFromKey = new ArrayList<String>();
+						//get all keys of json 
 						cmidFromKey = sqlDataBase.getListOfKeys(innerObj);
 						writer.write(cmidFromKey.toString());
 
 						for(j=0; j < cmidFromKey.size(); j++) {
+							//ignore event id and requst id keys
 							if(!cmidFromKey.get(j).equals("event_id")&&
-									(!cmidFromKey.get(j).equals("RequestID")))
+							  (!cmidFromKey.get(j).equals("RequestID")))
 							{
 								String cmid=cmidFromKey.get(j);
 								writer.write(cmid);
@@ -100,7 +105,7 @@ public class StopFollow extends HttpServlet {
 						writer.close();
 					}
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				}      
 			}

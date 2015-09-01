@@ -24,6 +24,8 @@ import connectinWithServer.Connection;
  * Servlet implementation class closetEMS
  */
 //@WebServlet("/closestEMS")
+//servlet to return closest EMS
+//this servlet need to improve at next ver
 public class closestEMS extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Logger logger = Logger.getLogger(this.getClass().getName());

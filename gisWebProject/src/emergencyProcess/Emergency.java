@@ -40,6 +40,7 @@ import connectinWithServer.Connection;
 import SQL_DataBase.SQL_db;
 
 //@WebServlet("/aroundLocation")
+//servlet to create new emergency event
 public class Emergency extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Logger logger = Logger.getLogger(this.getClass().getName());
@@ -80,13 +81,15 @@ public class Emergency extends HttpServlet {
 			// Assuming your json object is **jsonObject**, perform the following, it will return your json object 
 			out.print(arr);
 			out.flush();
+			//create instance of database and connection
 			SQL_db sqlDataBase = new SQL_db();
 			Connection con=new Connection();
+			//get the string of json array
 			String jfString = request.getParameter("JSONFile");
 			writer.write("aa");
-
+			//create json array from string
 			JSONArray jarr = new JSONArray(jfString);
-			// take each value from the json array separately
+			//length of array
 			int arrLen = jarr.length();
 			List<String> cmidAtRadius = new ArrayList<String>();
 			writer.write(jarr.toString());
@@ -101,14 +104,15 @@ public class Emergency extends HttpServlet {
 				try {
 					innerObj = (JSONObject) jarr.getJSONObject(curr);
 					if (innerObj.getString("RequestID").equals("AroundLocation")){
-						//get from Json the data
+						//get from event id
 						eventID = innerObj.getString("event_id");
-						
+						//check if this event already existent
 						existentEvent = sqlDataBase.getCmidByEventId(eventID);
 						logger.info(existentEvent);
-						//if the we not fount an event 
+						//if the we fount an event 
 						if(!existentEvent.equals("null"))
 						{
+							//update data of this wvent on table
 							cmid=existentEvent;
 							logger.info("if");
 							double[] sickpoint=new double[2];
@@ -117,7 +121,9 @@ public class Emergency extends HttpServlet {
 							sickpoint=sqlDataBase.getPointByCmid(existentEvent);
 							x=sickpoint[0];
 							y=sickpoint[1];
+							//get address by point
 							address=req.getAddress(x, y);
+							//if the adress is on sea
 							if(!address.equals("wrong address"))
 							{
 								String[] split=address.split(",");
@@ -125,7 +131,7 @@ public class Emergency extends HttpServlet {
 								logger.info(state);
 							}
 						}
-						
+						//create new event
 						else
 						{
 							cmid  = innerObj.getString("community_member_id");
@@ -147,6 +153,7 @@ public class Emergency extends HttpServlet {
 								radius=sqlDataBase.getRadiusFromDesicionTable(eventID, cmid, x, y, state, region_type,
 										                                       medical_condition_description, age); 
 							}
+							//address is on sea
 							if(!address.equals("wrong address"))
 							{
 								String[] split=address.split(",");
@@ -164,11 +171,13 @@ public class Emergency extends HttpServlet {
 						
 						
 						cmidAtRadius = sqlDataBase.getCMIDByRadius(cmid,radius, x, y);
+						//write all cmid at radius to file for test
 						for(int i=0;i<cmidAtRadius.size();i++)
 						{
 							writer.write(" "+cmidAtRadius.get(i)+" ");
 						}
 						JSONObject obj=new JSONObject();
+						//create json to send
 						try {
 							obj.put("RequestID", "AroundLocation");
 							obj.put("event_id", eventID);
@@ -182,6 +191,7 @@ public class Emergency extends HttpServlet {
 								obj.put(cmidAtRadius.get(j), "NULL");
 							}
 						//	con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/gisWebProject/test");
+							//send answer to server
 							con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis");
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block

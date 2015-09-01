@@ -154,15 +154,13 @@ public class RequestGoogle extends HttpServlet {
 
 	public String getAddress(double lat, double lng)
 			throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
-		//get double and convert them to string for url format
-//		String lng=Double.toString(x);
-//		String lat=Double.toString(Lat);
+
 		//send url and get geo json
 		URL url = new URL("http://maps.googleapis.com/maps/api/geocode/json?latlng="
 				+ lat + "," + lng + "&sensor=true");
 		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 		String formattedAddress = "";
-
+		
 		try {
 			InputStream in = url.openStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -174,14 +172,16 @@ public class RequestGoogle extends HttpServlet {
 
 			JSONParser parser = new JSONParser();
 			JSONObject rsp = (JSONObject) parser.parse(result);
-
+			//prase the json to get the address
 			if (rsp.containsKey("results")) {
 				JSONArray matches = (JSONArray) rsp.get("results");
+				//the address is on sea
 				if(matches.isEmpty())
 				{
 					return "wrong address";
 				}
-				JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists			
+				JSONObject data = (JSONObject) matches.get(0); 
+				//get the address
 				formattedAddress = (String) data.get("formatted_address");
 			}
 
@@ -190,17 +190,15 @@ public class RequestGoogle extends HttpServlet {
 			urlConnection.disconnect();
 		}
 	}
+	
+	//for next ver get all hospital at radius
 	public String getNearbyEMS(double lat, double lng, int radius)
 			throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
-		//get double and convert them to string for url format
-//		String lng=Double.toString(x);
-//		String lat=Double.toString(y);
 		String rad=Integer.toString(radius);
 		String API_KEY2="AIzaSyD_RZV_mPtJda32KgGgMGcJxPPA83KyEI0";
 		//send url and get geo json
 		URL url = new URL("https://maps.googleapis.com/maps/api/place/radarsearch/json?location="
 				+ lat + "," + lng + "&radius="+ rad +"&types=hospital&key="+API_KEY2);
-		//System.out.print(url+"\n");
 		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 		String formattedAddress = "";
 
@@ -238,7 +236,8 @@ public class RequestGoogle extends HttpServlet {
 
 		return formattedAddress;
 	}
-
+	
+	//compute traveling time by min
 	public int getTimeInInt(String times){
 		int minutes=0;
 		String[] parts = times.split(" ");

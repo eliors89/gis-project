@@ -26,6 +26,7 @@ import SQL_DataBase.SQL_db;
 
 
 //@WebServlet("/followUser")
+//pairing person to event
 public class FollowUser extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
@@ -37,7 +38,7 @@ public class FollowUser extends HttpServlet {
 
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 	}
 
 	
@@ -54,10 +55,11 @@ public class FollowUser extends HttpServlet {
 			// Assuming your json object is **jsonObject**, perform the following, it will return your json object 
 			out.print(arr);
 			out.flush();
+			//create instance of database 
 			SQL_db sqlDataBase = new SQL_db();
+			//get string of json
 			String jfString = request.getParameter("JSONFile");
-			
-
+			//create json from string 
 			JSONArray jarr = new JSONArray(jfString);
 			Writer writer=null;
 			try {
@@ -66,7 +68,7 @@ public class FollowUser extends HttpServlet {
 			    writer.write("enter 112 ");
 				writer.write(jfString);
 			} catch (IOException ex) {ex.printStackTrace();}
-			// take each value from the json array separately
+			//length of array
 			int arrLen = jarr.length();
 			for(int curr=0;curr<arrLen;curr++) {
              	JSONObject innerObj;
@@ -74,8 +76,9 @@ public class FollowUser extends HttpServlet {
              		innerObj = (JSONObject) jarr.getJSONObject(curr);
              		writer.write(innerObj.toString());
              		writer.close();
+             		//check if request id is ok
 					if (innerObj.getString("RequestID").equals("followUser")){
-						//get from Json the data
+						//get data from Json  
 						String eventID = innerObj.getString("event_id");
 						String cmid  = innerObj.getString("community_member_id");	
 						//update the status of the cmid to emergency

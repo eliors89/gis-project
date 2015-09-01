@@ -57,7 +57,7 @@ public class SQL_db {
 			double x, double y, String state, int region_type,
 			String medical_condition_description, double age) {
 		// for test at future need to insert func
-		int radius = 20;
+		int radius = 70;
 
 		return radius;
 	}

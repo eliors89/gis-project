@@ -23,6 +23,8 @@ import connectinWithServer.Connection;
  * Servlet implementation class cancelEvent
  */
 //@WebServlet("/cancelEvent")
+//servlet to cancel  event and change all users
+//of this event to routine
 public class cancelEvent extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -31,14 +33,14 @@ public class cancelEvent extends HttpServlet {
 	 */
 	public cancelEvent() {
 		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 	}
 
 	/**
@@ -64,20 +66,25 @@ public class cancelEvent extends HttpServlet {
 			// Assuming your json object is **jsonObject**, perform the following, it will return your json object 
 			out.print(arr);
 			out.flush();
+			//create instance of database and connection
 			SQL_db sqlDataBase = new SQL_db();
 			Connection con=new Connection();
+			//get string of json array
 			String jfString = request.getParameter("JSONFile");
+			//create json from string
 			JSONArray jarr = new JSONArray(jfString);
 			writer.write(jarr.toString());
 			writer.close();
+			//length of array
 			int arrLen = jarr.length();
 			for (int curr =0;curr < arrLen;curr++) {
 				JSONObject innerObj;
 				try {
 					innerObj = (JSONObject) jarr.getJSONObject(curr);
-					//we change the status of all the cmid in event to routine
+					
 					if (innerObj.get("RequestID").equals("cancelEvent")){
 						String eventID=innerObj.getString("event_id");
+						//we change the status of all the cmid in event to routine
 						sqlDataBase.routineAllMembersByEventID(eventID);
 						//and delete the event
 						sqlDataBase.deleteEvent(eventID);
