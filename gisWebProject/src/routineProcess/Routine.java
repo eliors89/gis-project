@@ -37,6 +37,7 @@ import emergencyProcess.RequestGoogle;
 import SQL_DataBase.SQL_db;
 
 //@WebServlet("/routine")
+//update location + send json to server if we need
 public class Routine extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -115,27 +116,39 @@ public class Routine extends HttpServlet {
 						//event id of this event
 						if(!routineOrEmerg.equals("null")){
 							address=req.getAddress(x, y);
+							//split the answer from google map
 							split=address.split(",");
 							obj.put("RequestID", "followUser");
+							//loction remark of this user
 							obj.put("location_remark",address);
+							//lat of this user
 							obj.put("x", x);
+							//lng of this user
 							obj.put("y", y);
+							//cmid of this user
 							obj.put("community_member_id", cmid);
-
+							//get eventID by cmid
 							eventId = sqlDataBase.getEventID(cmid);
+							//get sick person by eventID
 							sickCmid = sqlDataBase.getCmidByEventId(eventId);
+							//location of sick person
 							sickPoint = sqlDataBase.getPointByCmid(sickCmid);
 							try{
+								//adding traveling time by car and by foot from google maps 
 								String driving=req.sendGet("driving", x, y, sickPoint[0], sickPoint[1]);
+								//compute the time by min
 								int IntDriving = req.getTimeInInt(driving);
+								//add to json
 								obj.put("eta_by_car",IntDriving);
 								String walking=req.sendGet("walking", x ,y, sickPoint[0], sickPoint[1]);
+								//compute the time by min
 								int IntWalking = req.getTimeInInt(walking);
+								//add to json
 								obj.put("eta_by_foot", IntWalking);
 								obj.put("event_id", sqlDataBase.getEventID(cmid));
 							
 								
-								
+								//send to server (location)
 								con.sendJsonObject(obj, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis");
 								
 							}catch (Exception ex){ex.printStackTrace();}

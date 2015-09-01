@@ -51,7 +51,7 @@ public class SQL_db {
 		return region_type;
 	}
 
-	// TODO
+	
 	// if we dont have a radius we take a radius from the decision table
 	public int getRadiusFromDesicionTable(String eventID, String cmid,
 			double x, double y, String state, int region_type,
@@ -413,10 +413,7 @@ public class SQL_db {
 			ResultSet rs = statement
 					.executeQuery("SELECT * FROM updatedLocation WHERE eventID='"
 							+ eventID + "';");
-			//get the number of the row of this query
-			int count = rs.getRow();
-			//TODO we need this print????????????
-//			System.out.println(count);
+			
 			//change for each member from emergency to routine
 			while (rs.next()) {
 				cmid = rs.getString("cmid");
