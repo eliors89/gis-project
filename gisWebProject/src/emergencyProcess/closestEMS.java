@@ -79,9 +79,11 @@ public class closestEMS extends HttpServlet {
 						String eventID=innerObj.getString("event_id");
 						logger.info(" "+eventID);
 						cmid  = innerObj.getString("community_member_id");
+						//get the location of the sick user by cmid
 						sickPoint=sqlDataBase.getPointByCmid(cmid);
 						address=req.getAddress(sickPoint[0], sickPoint[1]);
 						logger.info(" "+address);
+						//create a new json to return 
 						JSONObject jsonobj=new JSONObject();
 						jsonobj.put("RequestID", "closestEMS");
 						jsonobj.put("event_id", eventID);

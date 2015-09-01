@@ -77,7 +77,8 @@ public class FollowUser extends HttpServlet {
 					if (innerObj.getString("RequestID").equals("followUser")){
 						//get from Json the data
 						String eventID = innerObj.getString("event_id");
-						String cmid  = innerObj.getString("community_member_id");	                	
+						String cmid  = innerObj.getString("community_member_id");	
+						//update the status of the cmid to emergency
 						sqlDataBase.updateEmergency(cmid, eventID);
 						logger.info(cmid + "move to emergency");
 					}

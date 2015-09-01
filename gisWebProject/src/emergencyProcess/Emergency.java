@@ -106,6 +106,7 @@ public class Emergency extends HttpServlet {
 						
 						existentEvent = sqlDataBase.getCmidByEventId(eventID);
 						logger.info(existentEvent);
+						//if the we not fount an event 
 						if(!existentEvent.equals("null"))
 						{
 							cmid=existentEvent;
@@ -124,6 +125,7 @@ public class Emergency extends HttpServlet {
 								logger.info(state);
 							}
 						}
+						//
 						else
 						{
 							cmid  = innerObj.getString("community_member_id");
@@ -131,7 +133,6 @@ public class Emergency extends HttpServlet {
 							y = innerObj.getDouble("y");
 							
 							address=req.getAddress(x, y);
-							//need to implement the function
 							region_type = sqlDataBase.getregion_type();
 							medical_condition_description  = innerObj.getString("medical_condition_description");
 							age = innerObj.getDouble("age");
@@ -151,6 +152,7 @@ public class Emergency extends HttpServlet {
 								String[] split=address.split(",");
 								state=split[2].replace(" ","");
 							}
+							//insert to db the values of the cmid
 							writer.write("before");
 							sqlDataBase.updateDecisionTable(eventID, cmid, x, y, state, region_type, medical_condition_description, age, radius);
 							writer.write("after");

@@ -77,19 +77,20 @@ public class ArriveTime extends HttpServlet {
 			int arrLen = jarr.length();
 			String address="",walking="", driving="",location_remark="",  eventID = "";
 			int j;
+			
 			double[] sickPoint = new double[2]; 
 			double[] cmidPoint = new double[2];
 			ArrayList<String> cmidFromKey;
 			String sickCmid;
 			org.json.JSONArray jsonToSend=new org.json.JSONArray();
 			JSONObject obj=new JSONObject();
-		
+			
 			for (int curr =0;curr < arrLen;curr++) {
 				JSONObject innerObj;
 				try {
 					innerObj = (JSONObject) jarr.getJSONObject(curr);
 					if (innerObj.get("RequestID").equals("Times")){
-						
+						//get values for event id and point of sick and helper users
 						eventID = innerObj.getString("event_id");
 						sickCmid = sqlDataBase.getCmidByEventId(eventID);
 						sickPoint = sqlDataBase.getPointByCmid(sickCmid);
@@ -108,6 +109,7 @@ public class ArriveTime extends HttpServlet {
 								cmidJson.put("subRequest", "cmid");
 								cmidPoint = sqlDataBase.getPointByCmid(cmidFromKey.get(j));
 								cmidJson.put("community_member_id", cmidHelper);
+								//get radius of this event
 								try {
 									obj.put("RequestID", "UsersArrivalTimes");
 									obj.put("event_id", eventID);
@@ -118,7 +120,7 @@ public class ArriveTime extends HttpServlet {
 									e.printStackTrace();
 								}
 								jsonToSend.put(obj);
-								
+								//try to get time for driving and walking from google
 								try{
 									writer.write("try");
 									location_remark=req.getAddress(cmidPoint[0], cmidPoint[1]);
@@ -141,7 +143,6 @@ public class ArriveTime extends HttpServlet {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
 				
 				writer.write(obj.toString());
 				writer.close();

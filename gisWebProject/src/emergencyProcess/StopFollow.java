@@ -90,7 +90,7 @@ public class StopFollow extends HttpServlet {
 							{
 								String cmid=cmidFromKey.get(j);
 								writer.write(cmid);
-
+								//update the status of this cmid to routine
 								sqlDataBase.updateRoutine(cmid);
 								logger.info(cmid + "move to routine");
 							}

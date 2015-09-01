@@ -76,9 +76,11 @@ public class cancelEvent extends HttpServlet {
 				JSONObject innerObj;
 				try {
 					innerObj = (JSONObject) jarr.getJSONObject(curr);
+					//we change the status of all the cmid in event to routine
 					if (innerObj.get("RequestID").equals("cancelEvent")){
 						String eventID=innerObj.getString("event_id");
 						sqlDataBase.routineAllMembersByEventID(eventID);
+						//and delete the event
 						sqlDataBase.deleteEvent(eventID);
 
 					}
