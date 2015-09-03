@@ -103,6 +103,10 @@ public class Main {
 				sqlDataBase.getCmidByEventId("2222").equals("null");
 				System.out.println(sqlDataBase.checkRoutineOrEmerg("1234"));
 				System.out.println(req.getNearbyEMS(31.879650,34.749927 , 10000));
+				sqlDataBase.insertNewEMS("10000", 31.892754, 34.811201);
+				sqlDataBase.getClosestEMS(31.89275, 34.811201, 5);
+				req.getAddress(31.89275,  34.811201);
+				sqlDataBase.getPointByEMSid("10000");
 	}
 }
 		//		RequestGoogle req=new RequestGoogle();

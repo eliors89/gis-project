@@ -21,14 +21,11 @@ public class Connection {
 
 		JSONObject map=new JSONObject();
 		try {
-			map.put("RequestID", "AroundLocation");
-			map.put("community_member_id", "2222");
-			map.put("event_id", "3333");
-			map.put("x",32.0686403);
-			map.put("y", 34.8438252);
-			map.put("medical_condition_description","have");
-			map.put("age",0);
-			map.put("radius",10);
+			map.put("RequestID", "closestEMS");
+			map.put("event_id", "1315");
+			map.put("community_member_id","10019");
+			
+			
 			
 		
 		} catch (JSONException e1) {

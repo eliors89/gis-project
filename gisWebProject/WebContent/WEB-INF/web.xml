@@ -84,4 +84,12 @@
 		<servlet-name>closestEMS</servlet-name>
 		<url-pattern>/closestEMS</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>newEMS</servlet-name>
+		<servlet-class>emergencyProcess.newEMS</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>newEMS</servlet-name>
+		<url-pattern>/newEMS</url-pattern>
+	</servlet-mapping>
 </web-app>

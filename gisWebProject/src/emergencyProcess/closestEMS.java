@@ -1,8 +1,6 @@
 package emergencyProcess;
 
 import java.io.IOException;
-
-
 import java.io.PrintWriter;
 import java.util.logging.Logger;
 
@@ -61,15 +59,17 @@ public class closestEMS extends HttpServlet {
 			// Assuming your json object is **jsonObject**, perform the following, it will return your json object 
 			out.print(arr);
 			out.flush();
+			String[] split;
 			double[] sickPoint = new double[2]; 
-			String address="",cmid="";
+			double[] emsPoint =new double[2];
+			String address="",cmid="",emsID="",state="";
 			SQL_db sqlDataBase = new SQL_db();
 			Connection con=new Connection();
 			String jfString = request.getParameter("JSONFile");
 			RequestGoogle req=new RequestGoogle();
 
 			JSONArray jarr = new JSONArray(jfString);
-			// take each value from the json array separately
+			//length of array
 			int arrLen = jarr.length();
 			
 
@@ -85,19 +85,30 @@ public class closestEMS extends HttpServlet {
 						//get the location of the sick user by cmid
 						sickPoint=sqlDataBase.getPointByCmid(cmid);
 						address=req.getAddress(sickPoint[0], sickPoint[1]);
+						//address is on sea
+						if(!address.equals("wrong address"))
+						{
+							split=address.split(",");
+							state = split[2].replace(" ","");
+						}
 						logger.info(" "+address);
+						
+						emsID=sqlDataBase.getClosestEMS(sickPoint[0], sickPoint[1], 50);
+						logger.info("emsID"+emsID);
+						emsPoint=sqlDataBase.getPointByEMSid(emsID);
+						
 						//create a new json to return 
 						JSONObject jsonobj=new JSONObject();
 						jsonobj.put("RequestID", "closestEMS");
 						jsonobj.put("event_id", eventID);
-						jsonobj.put("x", 31.892754);
-						jsonobj.put("y", 34.811201);
-						jsonobj.put("region_type", 1);
-						jsonobj.put("state","israel");
+						jsonobj.put("x", emsPoint[0]);
+						jsonobj.put("y", emsPoint[1]);
+						jsonobj.put("region_type", 0);
+						jsonobj.put("state",state);
 						jsonobj.put("radius",0);
-						jsonobj.put("ems_id","10000");
+						jsonobj.put("ems_id",emsID);
 						jsonobj.put("location_remark",address);
-						//con.sendJsonObject(jsonobj, "http://mba4.ad.biu.ac.il/gisWebProject/test");
+						logger.info(jsonobj.toString());
 						con.sendJsonObject(jsonobj, "http://mba4.ad.biu.ac.il/Erc-Server/requests/emergency-gis");
 					}
 				}catch (JSONException | ParseException e) {

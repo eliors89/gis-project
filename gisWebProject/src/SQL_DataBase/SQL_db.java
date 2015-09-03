@@ -14,6 +14,7 @@ import java.sql.Time;
 
 //import org.json.JSONObject;
 
+
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 
@@ -31,6 +32,7 @@ public class SQL_db {
 			statement.execute("CREATE TABLE IF NOT EXISTS updatedLocation (cmid VARCHAR(20), x DOUBLE(9,7), y DOUBLE(9,7), eventID VARCHAR(20), createdDate DATE, createdTime TIME, lastUpdatedDate DATE, lastUpdatedTime TIME);");/*  */
 			statement.execute("CREATE TABLE IF NOT EXISTS locationHistory (cmid VARCHAR(20), x DOUBLE(9,7), y DOUBLE(9,7), createdDate DATE, createdTime TIME, lastUpdatedDate DATE, lastUpdatedTime TIME);");
 			statement.execute("CREATE TABLE IF NOT EXISTS decisionTable (eventID VARCHAR(20), cmid VARCHAR(20), x DOUBLE(9,7), y DOUBLE(9,7), state VARCHAR(20), region_type INT, medical_condition VARCHAR(30), age DOUBLE(5,2), radius INT);");
+			statement.execute("CREATE TABLE IF NOT EXISTS EMSLocation (emsID VARCHAR(20),x DOUBLE(9,7), y DOUBLE(9,7));");
 		} catch (SQLException se) {
 			// Handle errors for JDBC
 			se.printStackTrace();
@@ -44,8 +46,105 @@ public class SQL_db {
 		}
 	}
 
+	public void insertNewEMS(String emsID,double x,double y)
+	{
+		try {
+			connect();
+			statement.execute("USE GIS_DB;");
+			ResultSet rs = statement
+					.executeQuery("SELECT * FROM EMSLocation WHERE emsID='"
+							+ emsID + "';");
+			if(!rs.next())
+			{
+				statement.executeUpdate("INSERT INTO EMSLocation VALUES ('"
+						+ emsID + "'," + x + "," + y + ");");
+			}
+			else
+			{
+				statement.executeUpdate("UPDATE EMSLocation SET emsID	="
+						+ emsID + ", x=" + x + ", y=" + y
+						+ " WHERE emsID='" + emsID
+						+ "';");
+			}
+		} catch (SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		}
+		// disconnect
+		finally {
+			disconnect();
+		}
+
+	}
+	public String getClosestEMS(double x,double y,int radius)
+	{
+		String EMS="";
+		try {
+			connect();
+			statement.execute("USE GIS_DB;");
+			// query that calculate the distance by kilometer from users
+			ResultSet rs = statement.executeQuery("SELECT emsID, "
+					+ "(6371 * acos (cos ( radians(" + x
+					+ ") )* cos( radians( x ) )*"
+					+ " cos( radians( y ) - radians(" + y
+					+ ") )+ sin ( radians(" + x + ") )"
+					+ "* sin( radians( x ) ))) AS distance "
+					+ "FROM EMSLocation HAVING distance < " + radius
+					+ " ORDER BY distance LIMIT 0 , 1;");
+			//if the distance smaller than the radius we add the cmid to our list
+			while (rs.next()) {
+				 EMS = rs.getString("emsID");
+				
+			}
+
+		} catch (SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		}
+		// disconnect
+		finally {
+			disconnect();
+		}
+		return EMS;
+	}
+	
+	public double[] getPointByEMSid(String emsID) {
+		double[] point = new double[2];
+		try {
+			connect();
+			statement.execute("USE GIS_DB;");
+			//get from update location the line with our cmid
+			ResultSet rs = statement
+					.executeQuery("SELECT * FROM EMSLocation WHERE emsID='"
+							+ emsID + "';");
+			//if we havnt this cmid return null
+			if (!rs.next()) {
+				point = null;
+			//if the emsID in the db we get from it the values
+			} else {
+				point[0] = rs.getDouble("x");
+				point[1] = rs.getDouble("y");
+			}
+		} catch (SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			disconnect();
+		}
+		return point;
+	}
+	
 	// TODO
-	//function that calculate the type of the region
+	//function that calculate the type of the region (next ver)
 	public int getregion_type() {
 		int region_type = 0;
 		return region_type;

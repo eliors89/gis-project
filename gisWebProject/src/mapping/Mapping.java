@@ -114,6 +114,14 @@ public class Mapping extends HttpServlet {
 				RequestDispatcher rd = request.getRequestDispatcher("closestEMS");
 				rd.forward(request, response);
 			}
+			//insert new EMS
+			else if(req.equals("newEMS"))
+			{
+				logger.info("go from mapping to newEMS");
+				writer.write("newEMS");
+				RequestDispatcher rd = request.getRequestDispatcher("newEMS");
+				rd.forward(request, response);
+			}
 			//return error message to server if we get request
 			//that we have not
 			else

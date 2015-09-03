@@ -191,7 +191,7 @@ public class RequestGoogle extends HttpServlet {
 		}
 	}
 	
-	//for next ver get all hospital at radius
+	//for next ver get closest hospital at radius
 	public String getNearbyEMS(double lat, double lng, int radius)
 			throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
 		String rad=Integer.toString(radius);
