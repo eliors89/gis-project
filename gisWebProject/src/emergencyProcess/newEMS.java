@@ -22,6 +22,7 @@ import connectinWithServer.Connection;
  * Servlet implementation class newEMS
  */
 //@WebServlet("/newEMS")
+//servlet for adding new ems
 public class newEMS extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Logger logger = Logger.getLogger(this.getClass().getName());   
@@ -58,9 +59,12 @@ public class newEMS extends HttpServlet {
 			out.flush();
 			String emsID="";
 			double x,y;
+			//create instance of database and connection
 			SQL_db sqlDataBase = new SQL_db();
 			Connection con=new Connection();
+			//get the string of json array
 			String jfString = request.getParameter("JSONFile");
+			//create json array from string
 			JSONArray jarr = new JSONArray(jfString);
 			//length of array
 			int arrLen = jarr.length();
@@ -71,10 +75,13 @@ public class newEMS extends HttpServlet {
 
 				try {
 					innerObj = (JSONObject) jarr.getJSONObject(curr);
+					//check if requestID is currect
 					if (innerObj.getString("RequestID").equals("newEMS")){
+						//get data about ems
 						emsID=innerObj.getString("ems_id");
 						x=innerObj.getDouble("x");
 						y=innerObj.getDouble("y");
+						//update sql table
 						sqlDataBase.insertNewEMS(emsID, x, y);
 					}
 

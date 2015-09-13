@@ -45,7 +45,7 @@ public class SQL_db {
 			disconnect();
 		}
 	}
-
+	//adding new ems to sql table
 	public void insertNewEMS(String emsID,double x,double y)
 	{
 		try {
@@ -54,11 +54,13 @@ public class SQL_db {
 			ResultSet rs = statement
 					.executeQuery("SELECT * FROM EMSLocation WHERE emsID='"
 							+ emsID + "';");
+			//check if we have'nt this ems
 			if(!rs.next())
 			{
 				statement.executeUpdate("INSERT INTO EMSLocation VALUES ('"
 						+ emsID + "'," + x + "," + y + ");");
 			}
+			//update data of ems
 			else
 			{
 				statement.executeUpdate("UPDATE EMSLocation SET emsID	="
@@ -79,13 +81,15 @@ public class SQL_db {
 		}
 
 	}
+	
+	//get closest EMS by radius
 	public String getClosestEMS(double x,double y,int radius)
 	{
 		String EMS="";
 		try {
 			connect();
 			statement.execute("USE GIS_DB;");
-			// query that calculate the distance by kilometer from users
+			// query that calculate the distance by kilometer from EMSLocation
 			ResultSet rs = statement.executeQuery("SELECT emsID, "
 					+ "(6371 * acos (cos ( radians(" + x
 					+ ") )* cos( radians( x ) )*"
